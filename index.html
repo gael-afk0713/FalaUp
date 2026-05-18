@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FalaUp</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --primary:#4a90e2;
+    --primary2:#dbeafe;
+    --danger:#ef4444;
+    --ok:#10b981;
+    --shadow:0 8px 24px rgba(0,0,0,.08);
+    --radius:22px;
+  }
+  body.dark{
+    --bg:#0f172a;
+    --card:#111827;
+    --text:#f3f4f6;
+    --muted:#94a3b8;
+    --primary:#60a5fa;
+    --primary2:#1e293b;
+    --danger:#f87171;
+    --ok:#34d399;
+    --shadow:0 8px 24px rgba(0,0,0,.28);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  button, input, select, textarea{
+    font:inherit;
+  }
+
+  header{
+    background:var(--primary);
+    color:#fff;
+    padding:18px 16px 16px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:10;
+    box-shadow:0 2px 12px rgba(0,0,0,.08);
+  }
+  header h1{
+    margin:0;
+    font-size:34px;
+    line-height:1.1;
+  }
+  header p{
+    margin:8px 0 0;
+    font-size:15px;
+    opacity:.95;
+  }
+  .top-actions{
+    margin-top:14px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+  }
+  .btn{
+    border:none;
+    border-radius:14px;
+    padding:12px 16px;
+    font-size:16px;
+    cursor:pointer;
+    background:var(--card);
+    color:var(--text);
+    box-shadow:var(--shadow);
+    transition:transform .12s ease;
+  }
+  .btn:active{transform:scale(.98)}
+  .btn.blue{background:#fff;color:#0f172a;font-weight:700}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.danger{background:var(--danger);color:#fff}
+  .btn.ok{background:var(--ok);color:#fff}
+  .btn.small{padding:10px 12px;font-size:14px;border-radius:12px}
+  .wrap{
+    max-width:1220px;
+    margin:0 auto;
+    padding:16px;
+  }
+
+  .compose{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:16px;
+    margin:12px 0 16px;
+  }
+  .compose h2{
+    margin:0 0 8px;
+    font-size:22px;
+  }
+  .hint{
+    font-size:14px;
+    color:var(--muted);
+    margin:0 0 12px;
+  }
+  .phrase-line{
+    min-height:64px;
+    padding:10px;
+    border:2px dashed #cbd5e1;
+    border-radius:18px;
+    background:rgba(148,163,184,.08);
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+  .chip{
+    background:var(--primary2);
+    color:var(--text);
+    border-radius:999px;
+    padding:10px 14px;
+    font-size:18px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .compose-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:12px;
+  }
+
+  .levels{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:4px 2px 10px;
+    margin-bottom:10px;
+  }
+  .level-btn{
+    white-space:nowrap;
+    border:none;
+    border-radius:999px;
+    padding:12px 16px;
+    font-size:16px;
+    background:var(--card);
+    color:var(--text);
+    box-shadow:var(--shadow);
+    cursor:pointer;
+  }
+  .level-btn.active{
+    background:var(--primary);
+    color:#fff;
+    font-weight:700;
+  }
+  .section-title{
+    margin:18px 0 10px;
+    font-size:20px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+    gap:14px;
+  }
+  .card{
+    background:var(--card);
+    border:none;
+    border-radius:22px;
+    padding:14px;
+    box-shadow:var(--shadow);
+    cursor:pointer;
+    min-height:168px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    transition:transform .12s ease;
+    color:var(--text);
+    text-align:center;
+  }
+  .card:active{transform:scale(.98)}
+  .icon{
+    width:78px;
+    height:78px;
+    border-radius:22px;
+    background:var(--primary2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    font-size:42px;
+  }
+  .icon img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  .card span{
+    font-size:20px;
+    font-weight:700;
+    line-height:1.15;
+  }
+
+  .modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    z-index:100;
+  }
+  .modal-content{
+    width:100%;
+    max-width:900px;
+    max-height:92vh;
+    overflow:auto;
+    background:var(--card);
+    color:var(--text);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:18px;
+  }
+  .modal-content h2,.modal-content h3{
+    margin:0 0 12px;
+  }
+  .grid-form{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:10px;
+  }
+  .field{
+    width:100%;
+    padding:13px 14px;
+    border-radius:14px;
+    border:1px solid #cbd5e1;
+    background:#fff;
+    color:#111827;
+  }
+  body.dark .field{
+    background:#0b1220;
+    color:#f3f4f6;
+    border-color:#334155;
+  }
+  .admin-box{
+    background:rgba(148,163,184,.12);
+    border-radius:18px;
+    padding:14px;
+    margin-top:14px;
+  }
+  .mini-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:10px;
+  }
+  .mini-item{
+    background:rgba(148,163,184,.14);
+    border-radius:14px;
+    padding:12px;
+  }
+  .mini-item strong{
+    display:block;
+    margin-bottom:4px;
+  }
+  .mini-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .tiny{
+    border:none;
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:14px;
+    cursor:pointer;
+    background:var(--primary);
+    color:#fff;
+  }
+  .tiny.gray{background:#64748b}
+  .tiny.danger{background:var(--danger)}
+  .tiny.ok{background:var(--ok)}
+  .split{
+    display:grid;
+    grid-template-columns:1.2fr .8fr;
+    gap:14px;
+  }
+  .note{
+    color:var(--muted);
+    font-size:14px;
+    margin-top:6px;
+  }
+  .inline{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  footer{
+    text-align:center;
+    padding:22px 14px 30px;
+    font-size:14px;
+    color:var(--muted);
+  }
+  @media (max-width: 780px){
+    .split{grid-template-columns:1fr}
+    header h1{font-size:30px}
+    .card{min-height:154px}
+    .card span{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>FalaUp</h1>
+  <p>Botões com fala para comunicação visual, progressiva e simples.</p>
+  <div class="top-actions">
+    <button class="btn blue" onclick="openConfig()">Configurações / Pais</button>
+    <button class="btn blue" onclick="toggleTheme()">Modo claro/escuro</button>
+    <button class="btn blue" onclick="speakCurrentPhrase()">Falar frase</button>
+    <button class="btn blue" onclick="clearPhrase()">Limpar frase</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="compose">
+    <h2>Frase montada</h2>
+    <p class="hint">A criança toca nos cartões e a frase aparece aqui. Depois pode tocar em “Falar frase”.</p>
+    <div id="phraseLine" class="phrase-line" aria-live="polite"></div>
+    <div class="compose-actions">
+      <button class="btn primary" onclick="speakCurrentPhrase()">Falar frase</button>
+      <button class="btn" onclick="clearPhrase()">Apagar tudo</button>
+      <button class="btn" onclick="backspacePhrase()">Apagar último</button>
+    </div>
+  </section>
+
+  <div id="levels" class="levels"></div>
+  <h2 class="section-title" id="levelTitle"></h2>
+  <div id="cards" class="grid"></div>
+</div>
+
+<footer>
+  Feito para uso no iPad, GitHub Pages e navegadores modernos.
+</footer>
+
+<div id="configModal" class="modal">
+  <div class="modal-content">
+    <h2>Configurações / Área dos pais</h2>
+
+    <div id="setupArea" class="admin-box" style="display:none">
+      <h3>Definir senha dos pais</h3>
+      <div class="grid-form">
+        <input class="field" id="newPass1" type="password" placeholder="Nova senha">
+        <input class="field" id="newPass2" type="password" placeholder="Confirmar nova senha">
+      </div>
+      <div class="mini-actions">
+        <button class="tiny ok" onclick="setFirstPassword()">Criar senha</button>
+      </div>
+      <p class="note">Essa senha fica salva apenas neste navegador/dispositivo.</p>
+    </div>
+
+    <div id="loginArea" class="admin-box" style="display:none">
+      <h3>Entrar</h3>
+      <div class="grid-form">
+        <input class="field" id="loginPass" type="password" placeholder="Senha dos pais">
+      </div>
+      <div class="mini-actions">
+        <button class="tiny ok" onclick="loginAdmin()">Entrar</button>
+      </div>
+    </div>
+
+    <div id="adminArea" style="display:none">
+      <div class="split">
+        <div>
+          <div class="admin-box">
+            <h3>Voz e leitura</h3>
+            <div class="grid-form">
+              <select class="field" id="voiceSelect"></select>
+              <input class="field" id="rateRange" type="range" min="0.6" max="1.4" step="0.1" value="1">
+            </div>
+            <div class="mini-actions">
+              <button class="tiny ok" onclick="saveVoiceSettings()">Salvar voz</button>
+              <button class="tiny gray" onclick="testVoice()">Testar voz</button>
+            </div>
+            <p class="note">A voz escolhida e a velocidade ficam guardadas no navegador.</p>
+          </div>
+
+          <div class="admin-box">
+            <h3>Alterar senha</h3>
+            <div class="grid-form">
+              <input class="field" id="oldPass" type="password" placeholder="Senha atual">
+              <input class="field" id="changePass1" type="password" placeholder="Nova senha">
+              <input class="field" id="changePass2" type="password" placeholder="Confirmar nova senha">
+            </div>
+            <div class="mini-actions">
+              <button class="tiny ok" onclick="changePassword()">Salvar nova senha</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="admin-box">
+            <h3>Escolher nível para editar</h3>
+            <div class="grid-form">
+              <select class="field" id="adminLevelSelect" onchange="renderAdminCards()"></select>
+            </div>
+          </div>
+
+          <div class="admin-box">
+            <h3>Adicionar / editar cartão</h3>
+            <div class="grid-form">
+              <input class="field" id="cardText" placeholder="Texto da fala">
+              <input class="field" id="cardEmoji" placeholder="Emoji (opcional, ex: 🍎)">
+              <input class="field" id="cardImage" placeholder="URL da imagem (opcional)">
+              <input class="field" id="cardFile" type="file" accept="image/*">
+            </div>
+            <input type="hidden" id="editingCardId">
+            <div class="mini-actions">
+              <button class="tiny ok" onclick="saveCard()">Salvar cartão</button>
+              <button class="tiny gray" onclick="cancelEdit()">Cancelar edição</button>
+            </div>
+            <p class="note">Se quiser usar foto, pode escolher um arquivo do iPad ou colar uma URL de imagem.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-box">
+        <h3>Editar cartões do nível selecionado</h3>
+        <div id="adminCardList" class="mini-list"></div>
+      </div>
+
+      <div class="mini-actions" style="margin-top:14px;">
+        <button class="btn" onclick="toggleTheme()">Modo claro/escuro</button>
+        <button class="btn danger" onclick="closeConfig()">Fechar</button>
+      </div>
+    </div>
+
+    <div class="mini-actions" style="margin-top:14px;">
+      <button class="btn danger" onclick="closeConfig()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = "falaup_tea_app_v1";
+const PASSWORD_KEY = "falaup_parent_password_v1";
+
+function uid(){
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return "id_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+const defaultData = {
+  settings: {
+    themeDark: false,
+    voiceURI: "",
+    rate: 1
+  },
+  levels: [
+    {
+      id: uid(),
+      name: "1. Básico",
+      cards: [
+        { id: uid(), text: "Sim", emoji: "✅", image: "" },
+        { id: uid(), text: "Não", emoji: "❌", image: "" },
+        { id: uid(), text: "Água", emoji: "💧", image: "" },
+        { id: uid(), text: "Mais", emoji: "➕", image: "" },
+        { id: uid(), text: "Acabou", emoji: "🛑", image: "" },
+        { id: uid(), text: "Ajuda", emoji: "🆘", image: "" },
+        { id: uid(), text: "Mamãe", emoji: "👩", image: "" },
+        { id: uid(), text: "Papai", emoji: "👨", image: "" },
+        { id: uid(), text: "Comer", emoji: "🍽️", image: "" },
+        { id: uid(), text: "Dormir", emoji: "😴", image: "" }
+      ]
+    },
+    {
+      id: uid(),
+      name: "2. Necessidades",
+      cards: [
+        { id: uid(), text: "Quero água", emoji: "🥤", image: "" },
+        { id: uid(), text: "Quero comer", emoji: "🍔", image: "" },
+        { id: uid(), text: "Quero brincar", emoji: "🧸", image: "" },
+        { id: uid(), text: "Quero descansar", emoji: "🛏️", image: "" },
+        { id: uid(), text: "Estou cansado", emoji: "😪", image: "" },
+        { id: uid(), text: "Estou com fome", emoji: "🍎", image: "" },
+        { id: uid(), text: "Estou com sede", emoji: "🥤", image: "" },
+        { id: uid(), text: "Quero ir ao banheiro", emoji: "🚽", image: "" },
+        { id: uid(), text: "Preciso de ajuda", emoji: "🆘", image: "" },
+        { id: uid(), text: "Quero um abraço", emoji: "🤗", image: "" }
+      ]
+    },
+    {
+      id: uid(),
+      name: "3. Social",
+      cards: [
+        { id: uid(), text: "Oi", emoji: "👋", image: "" },
+        { id: uid(), text: "Tchau", emoji: "👋", image: "" },
+        { id: uid(), text: "Obrigado", emoji: "🙏", image: "" },
+        { id: uid(), text: "Por favor", emoji: "🙂", image: "" },
+        { id: uid(), text: "Quero conversar", emoji: "💬", image: "" },
+        { id: uid(), text: "Posso brincar?", emoji: "🎮", image: "" },
+        { id: uid(), text: "Gostei disso", emoji: "👍", image: "" },
+        { id: uid(), text: "Não gostei", emoji: "👎", image: "" },
+        { id: uid(), text: "Estou triste", emoji: "😢", image: "" },
+        { id: uid(), text: "Estou feliz", emoji: "😊", image: "" }
+      ]
+    },
+    {
+      id: uid(),
+      name: "4. Frases",
+      cards: [
+        { id: uid(), text: "Minha barriga dói", emoji: "🤕", image: "" },
+        { id: uid(), text: "Minha cabeça dói", emoji: "🤒", image: "" },
+        { id: uid(), text: "Quero silêncio", emoji: "🤫", image: "" },
+        { id: uid(), text: "Posso ouvir música?", emoji: "🎵", image: "" },
+        { id: uid(), text: "Quero assistir desenho", emoji: "📺", image: "" },
+        { id: uid(), text: "Quero sair", emoji: "🚪", image: "" },
+        { id: uid(), text: "Quero voltar para casa", emoji: "🏠", image: "" },
+        { id: uid(), text: "Estou com medo", emoji: "😨", image: "" },
+        { id: uid(), text: "Preciso de um abraço", emoji: "🤗", image: "" },
+        { id: uid(), text: "Estou confuso", emoji: "❓", image: "" }
+      ]
+    },
+    {
+      id: uid(),
+      name: "5. Mais complexas",
+      cards: [
+        { id: uid(), text: "Não entendi a pergunta", emoji: "❔", image: "" },
+        { id: uid(), text: "Pode repetir por favor?", emoji: "🔁", image: "" },
+        { id: uid(), text: "Preciso de ajuda agora", emoji: "🚨", image: "" },
+        { id: uid(), text: "Quero fazer uma pausa", emoji: "⏸️", image: "" },
+        { id: uid(), text: "Quero escolher outra coisa", emoji: "🔄", image: "" },
+        { id: uid(), text: "Estou com dificuldade", emoji: "⚠️", image: "" },
+        { id: uid(), text: "Não quero isso agora", emoji: "✋", image: "" },
+        { id: uid(), text: "Quero falar com a mamãe", emoji: "👩", image: "" },
+        { id: uid(), text: "Quero falar com o papai", emoji: "👨", image: "" },
+        { id: uid(), text: "Preciso me acalmar", emoji: "🧘", image: "" }
+      ]
+    }
+  ]
+};
+
+let data = loadData();
+let phrase = [];
+let currentLevelIndex = 0;
+let voices = [];
+let selectedVoice = null;
+let parentPassword = localStorage.getItem(PASSWORD_KEY) || "";
+let editingCardId = "";
+let editingLevelId = "";
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultData;
+    const parsed = JSON.parse(raw);
+    if(!parsed || !parsed.settings || !parsed.levels) return defaultData;
+    return parsed;
+  }catch(e){
+    return defaultData;
+  }
+}
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function savePassword(pass){
+  parentPassword = pass;
+  localStorage.setItem(PASSWORD_KEY, pass);
+}
+
+function openConfig(){
+  document.getElementById("configModal").style.display = "flex";
+  const setupArea = document.getElementById("setupArea");
+  const loginArea = document.getElementById("loginArea");
+  const adminArea = document.getElementById("adminArea");
+
+  if(!parentPassword){
+    setupArea.style.display = "block";
+    loginArea.style.display = "none";
+    adminArea.style.display = "none";
+  }else{
+    setupArea.style.display = "none";
+    loginArea.style.display = "block";
+    adminArea.style.display = "none";
+  }
+  ensureVoices();
+  renderAdminSelectors();
+}
+
+function closeConfig(){
+  document.getElementById("configModal").style.display = "none";
+}
+
+function setFirstPassword(){
+  const p1 = document.getElementById("newPass1").value;
+  const p2 = document.getElementById("newPass2").value;
+  if(!p1 || !p2){
+    alert("Digite e confirme a senha.");
+    return;
+  }
+  if(p1 !== p2){
+    alert("As senhas não conferem.");
+    return;
+  }
+  savePassword(p1);
+  document.getElementById("setupArea").style.display = "none";
+  document.getElementById("loginArea").style.display = "block";
+  document.getElementById("loginPass").value = p1;
+  alert("Senha criada.");
+}
+
+function loginAdmin(){
+  const p = document.getElementById("loginPass").value;
+  if(p !== parentPassword){
+    alert("Senha incorreta.");
+    return;
+  }
+  document.getElementById("loginArea").style.display = "none";
+  document.getElementById("adminArea").style.display = "block";
+  renderAdminSelectors();
+  renderAdminCards();
+  ensureVoices();
+}
+
+function changePassword(){
+  const oldPass = document.getElementById("oldPass").value;
+  const n1 = document.getElementById("changePass1").value;
+  const n2 = document.getElementById("changePass2").value;
+
+  if(oldPass !== parentPassword){
+    alert("Senha atual incorreta.");
+    return;
+  }
+  if(!n1 || !n2){
+    alert("Digite a nova senha e confirme.");
+    return;
+  }
+  if(n1 !== n2){
+    alert("As senhas novas não conferem.");
+    return;
+  }
+  savePassword(n1);
+  document.getElementById("oldPass").value = "";
+  document.getElementById("changePass1").value = "";
+  document.getElementById("changePass2").value = "";
+  alert("Senha alterada.");
+}
+
+function renderLevels(){
+  const container = document.getElementById("levels");
+  container.innerHTML = "";
+  data.levels.forEach((level, idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "level-btn" + (idx === currentLevelIndex ? " active" : "");
+    btn.textContent = level.name;
+    btn.onclick = ()=>{
+      currentLevelIndex = idx;
+      renderAll();
+    };
+    container.appendChild(btn);
+  });
+}
+
+function renderCards(){
+  const level = data.levels[currentLevelIndex];
+  const title = document.getElementById("levelTitle");
+  const grid = document.getElementById("cards");
+  grid.innerHTML = "";
+  if(!level){
+    title.textContent = "";
+    return;
+  }
+  title.textContent = level.name;
+
+  level.cards.forEach(card=>{
+    const btn = document.createElement("button");
+    btn.className = "card";
+    btn.onclick = ()=>{
+      addToPhrase(card.text);
+      speak(card.text);
+    };
+
+    const icon = document.createElement("div");
+    icon.className = "icon";
+    if(card.image){
+      const img = document.createElement("img");
+      img.src = card.image;
+      img.alt = card.text;
+      icon.appendChild(img);
+    }else{
+      icon.textContent = card.emoji || "🔤";
+    }
+
+    const label = document.createElement("span");
+    label.textContent = card.text;
+
+    btn.appendChild(icon);
+    btn.appendChild(label);
+    grid.appendChild(btn);
+  });
+}
+
+function addToPhrase(text){
+  phrase.push(text);
+  renderPhrase();
+}
+
+function renderPhrase(){
+  const line = document.getElementById("phraseLine");
+  line.innerHTML = "";
+  if(phrase.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "hint";
+    empty.textContent = "A frase vai aparecer aqui conforme a criança tocar nos cartões.";
+    line.appendChild(empty);
+    return;
+  }
+  phrase.forEach(word=>{
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.textContent = word;
+    line.appendChild(chip);
+  });
+}
+
+function clearPhrase(){
+  phrase = [];
+  renderPhrase();
+}
+
+function backspacePhrase(){
+  phrase.pop();
+  renderPhrase();
+}
+
+function speakCurrentPhrase(){
+  if(phrase.length === 0){
+    speak("Selecione uma palavra ou frase primeiro.");
+    return;
+  }
+  speak(phrase.join(" "));
+}
+
+function ensureVoices(){
+  voices = speechSynthesis.getVoices() || [];
+  const select = document.getElementById("voiceSelect");
+  if(!select) return;
+
+  select.innerHTML = "";
+  if(voices.length === 0){
+    const opt = document.createElement("option");
+    opt.textContent = "Carregando vozes...";
+    opt.value = "";
+    select.appendChild(opt);
+    return;
+  }
+
+  voices.forEach(v=>{
+    const opt = document.createElement("option");
+    opt.value = v.voiceURI;
+    opt.textContent = `${v.name} (${v.lang})`;
+    if(data.settings.voiceURI && v.voiceURI === data.settings.voiceURI){
+      opt.selected = true;
+      selectedVoice = v;
+    }
+    select.appendChild(opt);
+  });
+
+  if(!data.settings.voiceURI && voices.length > 0){
+    const pt = voices.find(v => (v.lang || "").toLowerCase().includes("pt-br")) || voices[0];
+    data.settings.voiceURI = pt.voiceURI;
+    selectedVoice = pt;
+    saveData();
+    select.value = pt.voiceURI;
+  }
+
+  const rate = document.getElementById("rateRange");
+  if(rate) rate.value = data.settings.rate || 1;
+}
+
+if("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged = ensureVoices;
+}
+
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "pt-BR";
+  utter.rate = data.settings.rate || 1;
+
+  const voice = voices.find(v => v.voiceURI === data.settings.voiceURI) || selectedVoice || null;
+  if(voice) utter.voice = voice;
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
+}
+
+function toggleTheme(){
+  data.settings.themeDark = !data.settings.themeDark;
+  document.body.classList.toggle("dark", data.settings.themeDark);
+  saveData();
+}
+
+function saveVoiceSettings(){
+  const select = document.getElementById("voiceSelect");
+  const rate = document.getElementById("rateRange");
+  data.settings.voiceURI = select.value;
+  data.settings.rate = Number(rate.value);
+  selectedVoice = voices.find(v => v.voiceURI === data.settings.voiceURI) || null;
+  saveData();
+  alert("Voz salva.");
+}
+
+function testVoice(){
+  const rate = document.getElementById("rateRange");
+  data.settings.rate = Number(rate.value);
+  saveData();
+  speak("Olá. Esta é a voz escolhida pelos pais.");
+}
+
+function renderAdminSelectors(){
+  const select = document.getElementById("adminLevelSelect");
+  if(!select) return;
+  select.innerHTML = "";
+  data.levels.forEach((level, idx)=>{
+    const opt = document.createElement("option");
+    opt.value = idx;
+    opt.textContent = level.name;
+    select.appendChild(opt);
+  });
+  if(data.levels[currentLevelIndex]){
+    select.value = String(currentLevelIndex);
+  }
+}
+
+function renderAdminCards(){
+  const levelIndex = Number(document.getElementById("adminLevelSelect").value || 0);
+  editingLevelId = data.levels[levelIndex]?.id || "";
+  const level = data.levels[levelIndex];
+  const list = document.getElementById("adminCardList");
+  list.innerHTML = "";
+  if(!level) return;
+
+  level.cards.forEach(card=>{
+    const item = document.createElement("div");
+    item.className = "mini-item";
+    item.innerHTML = `
+      <strong>${card.text}</strong>
+      <div>Emoji: ${card.emoji || ""}</div>
+      <div>${card.image ? "Foto adicionada" : "Sem foto"}</div>
+      <div class="mini-actions">
+        <button class="tiny ok" onclick="editCard('${card.id}')">Editar</button>
+        <button class="tiny danger" onclick="deleteCard('${card.id}')">Excluir</button>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function saveCard(){
+  const levelIndex = Number(document.getElementById("adminLevelSelect").value || 0);
+  const level = data.levels[levelIndex];
+  if(!level) return;
+
+  const text = document.getElementById("cardText").value.trim();
+  const emoji = document.getElementById("cardEmoji").value.trim() || "🔤";
+  const imageUrl = document.getElementById("cardImage").value.trim();
+  const fileInput = document.getElementById("cardFile");
+
+  if(!text){
+    alert("Digite a fala do cartão.");
+    return;
+  }
+
+  const finish = (finalImage) => {
+    if(editingCardId){
+      const card = level.cards.find(c => c.id === editingCardId);
+      if(card){
+        card.text = text;
+        card.emoji = emoji;
+        card.image = finalImage;
+      }
+    }else{
+      level.cards.push({
+        id: uid(),
+        text,
+        emoji,
+        image: finalImage
+      });
+    }
+
+    saveData();
+    cancelEdit();
+    renderAll();
+    renderAdminCards();
+    alert("Cartão salvo.");
+  };
+
+  if(fileInput.files && fileInput.files[0]){
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      finish(String(ev.target.result || ""));
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  }else{
+    finish(imageUrl);
+  }
+}
+
+function editCard(cardId){
+  const found = findCard(cardId);
+  if(!found) return;
+  const { levelIndex, card } = found;
+  document.getElementById("adminLevelSelect").value = String(levelIndex);
+  editingLevelId = data.levels[levelIndex].id;
+  document.getElementById("cardText").value = card.text;
+  document.getElementById("cardEmoji").value = card.emoji || "";
+  document.getElementById("cardImage").value = card.image || "";
+  document.getElementById("cardFile").value = "";
+  editingCardId = card.id;
+}
+
+function deleteCard(cardId){
+  if(!confirm("Excluir este cartão?")) return;
+  const found = findCard(cardId);
+  if(!found) return;
+  found.level.cards = found.level.cards.filter(c => c.id !== cardId);
+  saveData();
+  renderAll();
+  renderAdminCards();
+}
+
+function findCard(cardId){
+  for(let i=0; i<data.levels.length; i++){
+    const level = data.levels[i];
+    const card = level.cards.find(c => c.id === cardId);
+    if(card) return { levelIndex:i, level, card };
+  }
+  return null;
+}
+
+function cancelEdit(){
+  editingCardId = "";
+  document.getElementById("cardText").value = "";
+  document.getElementById("cardEmoji").value = "";
+  document.getElementById("cardImage").value = "";
+  document.getElementById("cardFile").value = "";
+}
+
+function renderAll(){
+  document.body.classList.toggle("dark", !!data.settings.themeDark);
+  renderLevels();
+  renderCards();
+  renderPhrase();
+  renderAdminSelectors();
+  if(document.getElementById("adminArea").style.display === "block"){
+    renderAdminCards();
+  }
+  ensureVoices();
+}
+
+window.addEventListener("click", (e)=>{
+  const modal = document.getElementById("configModal");
+  if(e.target === modal) closeConfig();
+});
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  renderAll();
+  if(data.settings.themeDark) document.body.classList.add("dark");
+});
+</script>
+
+</body>
+</html>
