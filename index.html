@@ -6,8 +6,8 @@
 <title>FalaUp</title>
 <style>
   :root{
-    --bg1:#f9fbff;
-    --bg2:#eef6ff;
+    --bg1:#fff7fb;
+    --bg2:#f1f7ff;
     --card:#ffffff;
     --text:#1f2937;
     --muted:#6b7280;
@@ -21,6 +21,7 @@
     --orange:#ff9f43;
     --yellow:#f4c542;
     --red:#ff6b6b;
+    --teal:#2dd4bf;
   }
 
   body.dark{
@@ -34,13 +35,15 @@
 
   *{ box-sizing:border-box; }
   html,body{ margin:0; min-height:100%; }
+
   body{
     font-family:Arial, sans-serif;
     color:var(--text);
     background:
-      radial-gradient(circle at top left, rgba(74,144,226,.16), transparent 28%),
-      radial-gradient(circle at top right, rgba(255,120,180,.14), transparent 26%),
-      radial-gradient(circle at bottom left, rgba(70,198,138,.14), transparent 26%),
+      radial-gradient(circle at top left, rgba(255,120,180,.18), transparent 24%),
+      radial-gradient(circle at top right, rgba(139,124,246,.18), transparent 26%),
+      radial-gradient(circle at bottom left, rgba(70,198,138,.16), transparent 24%),
+      radial-gradient(circle at bottom right, rgba(255,159,67,.16), transparent 24%),
       linear-gradient(180deg, var(--bg1), var(--bg2));
   }
 
@@ -55,7 +58,8 @@
     color:#fff;
     padding:18px 16px 16px;
     text-align:center;
-    background:linear-gradient(135deg, #4a90e2, #7c6cff);
+    background:linear-gradient(135deg, #4a90e2, #ff78b4, #8b7cf6);
+    background-size:200% 200%;
     box-shadow:0 6px 22px rgba(0,0,0,.12);
   }
 
@@ -101,14 +105,10 @@
     color:#111827;
     font-weight:700;
   }
-  .btn.danger{
-    background:var(--red);
-    color:#fff;
-  }
-  .btn.blue{
-    background:var(--blue);
-    color:#fff;
-  }
+  .btn.danger{ background:var(--red); color:#fff; }
+  .btn.blue{ background:var(--blue); color:#fff; }
+  .btn.green{ background:var(--green); color:#fff; }
+  .btn.purple{ background:var(--purple); color:#fff; }
 
   .wrap{
     max-width:1280px;
@@ -131,10 +131,10 @@
   .hero::after{
     content:"";
     position:absolute;
-    right:-20px;
-    top:-20px;
-    width:180px;
-    height:180px;
+    right:-18px;
+    top:-18px;
+    width:190px;
+    height:190px;
     border-radius:50%;
     background:rgba(124,108,255,.10);
   }
@@ -156,7 +156,7 @@
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(135deg, rgba(74,144,226,.18), rgba(139,124,246,.18));
+    background:linear-gradient(135deg, rgba(74,144,226,.18), rgba(255,122,180,.18));
     font-size:22px;
   }
 
@@ -284,7 +284,7 @@
 
   .modal-content{
     width:100%;
-    max-width:980px;
+    max-width:1040px;
     max-height:92vh;
     overflow:auto;
     background:var(--card);
@@ -365,6 +365,8 @@
   .tiny.gray{ background:#64748b; }
   .tiny.danger{ background:var(--red); }
   .tiny.ok{ background:var(--green); }
+  .tiny.purple{ background:var(--purple); }
+  .tiny.orange{ background:var(--orange); }
 
   .split{
     display:grid;
@@ -377,6 +379,31 @@
     font-size:14px;
     margin-top:8px;
     line-height:1.4;
+  }
+
+  .record-box{
+    border:2px dashed rgba(139,124,246,.35);
+    border-radius:18px;
+    padding:14px;
+    margin-top:12px;
+    background:rgba(139,124,246,.06);
+  }
+
+  .record-status{
+    font-weight:700;
+    margin-top:8px;
+  }
+
+  .small-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(74,144,226,.12);
+    margin-bottom:10px;
+    font-size:13px;
+    font-weight:700;
   }
 
   footer{
@@ -494,12 +521,26 @@
               <input class="field" id="cardImage" placeholder="URL da imagem (opcional)">
               <input class="field" id="cardFile" type="file" accept="image/*">
             </div>
+
             <input type="hidden" id="editingCardId">
+
             <div class="mini-actions">
               <button class="tiny ok" onclick="saveCard()">Salvar cartão</button>
               <button class="tiny gray" onclick="cancelEdit()">Cancelar edição</button>
             </div>
             <p class="note">Você pode usar foto do iPad ou colar um link de imagem.</p>
+
+            <div class="record-box">
+              <div class="small-badge">🎤 Voz gravada do cartão selecionado</div>
+              <div id="selectedCardLabel" class="note">Nenhum cartão selecionado ainda.</div>
+              <div class="mini-actions">
+                <button class="tiny purple" onclick="startRecording()">Iniciar gravação</button>
+                <button class="tiny orange" onclick="stopRecording()">Parar gravação</button>
+                <button class="tiny gray" onclick="removeRecording()">Remover gravação</button>
+              </div>
+              <div id="recordStatus" class="record-status">Pronto para gravar.</div>
+              <div class="note">Clique em <b>Editar</b> em um cartão, depois grave a voz desse cartão. A gravação fica salva neste navegador.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -521,8 +562,10 @@
 </div>
 
 <script>
-const STORAGE_KEY = "falaup_tea_app_v3";
-const PASSWORD_KEY = "falaup_parent_password_v3";
+const STORAGE_KEY = "falaup_tea_app_v4";
+const PASSWORD_KEY = "falaup_parent_password_v4";
+const AUDIO_DB_NAME = "falaup_audio_db_v1";
+const AUDIO_STORE = "audio";
 
 function uid(){
   if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -541,16 +584,16 @@ const defaultData = {
       name: "1. Básico",
       color: "#4a90e2",
       cards: [
-        { id: uid(), text: "Sim", emoji: "✅", image: "" },
-        { id: uid(), text: "Não", emoji: "❌", image: "" },
-        { id: uid(), text: "Água", emoji: "💧", image: "" },
-        { id: uid(), text: "Mais", emoji: "➕", image: "" },
-        { id: uid(), text: "Acabou", emoji: "🛑", image: "" },
-        { id: uid(), text: "Ajuda", emoji: "🆘", image: "" },
-        { id: uid(), text: "Mamãe", emoji: "👩", image: "" },
-        { id: uid(), text: "Papai", emoji: "👨", image: "" },
-        { id: uid(), text: "Comer", emoji: "🍽️", image: "" },
-        { id: uid(), text: "Dormir", emoji: "😴", image: "" }
+        { id: uid(), text: "Sim", emoji: "✅", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Não", emoji: "❌", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Água", emoji: "💧", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Mais", emoji: "➕", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Acabou", emoji: "🛑", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Ajuda", emoji: "🆘", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Mamãe", emoji: "👩", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Papai", emoji: "👨", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Comer", emoji: "🍽️", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Dormir", emoji: "😴", image: "", hasRecordedVoice: false }
       ]
     },
     {
@@ -558,16 +601,16 @@ const defaultData = {
       name: "2. Necessidades",
       color: "#ff78b4",
       cards: [
-        { id: uid(), text: "Quero água", emoji: "🥤", image: "" },
-        { id: uid(), text: "Quero comer", emoji: "🍔", image: "" },
-        { id: uid(), text: "Quero brincar", emoji: "🧸", image: "" },
-        { id: uid(), text: "Quero descansar", emoji: "🛏️", image: "" },
-        { id: uid(), text: "Estou cansado", emoji: "😪", image: "" },
-        { id: uid(), text: "Estou com fome", emoji: "🍎", image: "" },
-        { id: uid(), text: "Estou com sede", emoji: "🥤", image: "" },
-        { id: uid(), text: "Quero ir ao banheiro", emoji: "🚽", image: "" },
-        { id: uid(), text: "Preciso de ajuda", emoji: "🆘", image: "" },
-        { id: uid(), text: "Quero um abraço", emoji: "🤗", image: "" }
+        { id: uid(), text: "Quero água", emoji: "🥤", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero comer", emoji: "🍔", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero brincar", emoji: "🧸", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero descansar", emoji: "🛏️", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Estou cansado", emoji: "😪", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Estou com fome", emoji: "🍎", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Estou com sede", emoji: "🥤", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero ir ao banheiro", emoji: "🚽", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Preciso de ajuda", emoji: "🆘", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero um abraço", emoji: "🤗", image: "", hasRecordedVoice: false }
       ]
     },
     {
@@ -575,16 +618,16 @@ const defaultData = {
       name: "3. Social",
       color: "#46c68a",
       cards: [
-        { id: uid(), text: "Oi", emoji: "👋", image: "" },
-        { id: uid(), text: "Tchau", emoji: "👋", image: "" },
-        { id: uid(), text: "Obrigado", emoji: "🙏", image: "" },
-        { id: uid(), text: "Por favor", emoji: "🙂", image: "" },
-        { id: uid(), text: "Quero conversar", emoji: "💬", image: "" },
-        { id: uid(), text: "Posso brincar?", emoji: "🎮", image: "" },
-        { id: uid(), text: "Gostei disso", emoji: "👍", image: "" },
-        { id: uid(), text: "Não gostei", emoji: "👎", image: "" },
-        { id: uid(), text: "Estou triste", emoji: "😢", image: "" },
-        { id: uid(), text: "Estou feliz", emoji: "😊", image: "" }
+        { id: uid(), text: "Oi", emoji: "👋", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Tchau", emoji: "👋", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Obrigado", emoji: "🙏", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Por favor", emoji: "🙂", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero conversar", emoji: "💬", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Posso brincar?", emoji: "🎮", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Gostei disso", emoji: "👍", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Não gostei", emoji: "👎", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Estou triste", emoji: "😢", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Estou feliz", emoji: "😊", image: "", hasRecordedVoice: false }
       ]
     },
     {
@@ -592,16 +635,16 @@ const defaultData = {
       name: "4. Frases",
       color: "#8b7cf6",
       cards: [
-        { id: uid(), text: "Minha barriga dói", emoji: "🤕", image: "" },
-        { id: uid(), text: "Minha cabeça dói", emoji: "🤒", image: "" },
-        { id: uid(), text: "Quero silêncio", emoji: "🤫", image: "" },
-        { id: uid(), text: "Posso ouvir música?", emoji: "🎵", image: "" },
-        { id: uid(), text: "Quero assistir desenho", emoji: "📺", image: "" },
-        { id: uid(), text: "Quero sair", emoji: "🚪", image: "" },
-        { id: uid(), text: "Quero voltar para casa", emoji: "🏠", image: "" },
-        { id: uid(), text: "Estou com medo", emoji: "😨", image: "" },
-        { id: uid(), text: "Preciso de um abraço", emoji: "🤗", image: "" },
-        { id: uid(), text: "Estou confuso", emoji: "❓", image: "" }
+        { id: uid(), text: "Minha barriga dói", emoji: "🤕", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Minha cabeça dói", emoji: "🤒", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero silêncio", emoji: "🤫", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Posso ouvir música?", emoji: "🎵", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero assistir desenho", emoji: "📺", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero sair", emoji: "🚪", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero voltar para casa", emoji: "🏠", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Estou com medo", emoji: "😨", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Preciso de um abraço", emoji: "🤗", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Estou confuso", emoji: "❓", image: "", hasRecordedVoice: false }
       ]
     },
     {
@@ -609,16 +652,16 @@ const defaultData = {
       name: "5. Mais complexas",
       color: "#ff9f43",
       cards: [
-        { id: uid(), text: "Não entendi a pergunta", emoji: "❔", image: "" },
-        { id: uid(), text: "Pode repetir por favor?", emoji: "🔁", image: "" },
-        { id: uid(), text: "Preciso de ajuda agora", emoji: "🚨", image: "" },
-        { id: uid(), text: "Quero fazer uma pausa", emoji: "⏸️", image: "" },
-        { id: uid(), text: "Quero escolher outra coisa", emoji: "🔄", image: "" },
-        { id: uid(), text: "Estou com dificuldade", emoji: "⚠️", image: "" },
-        { id: uid(), text: "Não quero isso agora", emoji: "✋", image: "" },
-        { id: uid(), text: "Quero falar com mamãe", emoji: "👩", image: "" },
-        { id: uid(), text: "Quero falar com papai", emoji: "👨", image: "" },
-        { id: uid(), text: "Preciso me acalmar", emoji: "🧘", image: "" }
+        { id: uid(), text: "Não entendi a pergunta", emoji: "❔", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Pode repetir por favor?", emoji: "🔁", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Preciso de ajuda agora", emoji: "🚨", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero fazer uma pausa", emoji: "⏸️", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero escolher outra coisa", emoji: "🔄", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Estou com dificuldade", emoji: "⚠️", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Não quero isso agora", emoji: "✋", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero falar com mamãe", emoji: "👩", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Quero falar com papai", emoji: "👨", image: "", hasRecordedVoice: false },
+        { id: uid(), text: "Preciso me acalmar", emoji: "🧘", image: "", hasRecordedVoice: false }
       ]
     }
   ]
@@ -631,12 +674,24 @@ let parentPassword = localStorage.getItem(PASSWORD_KEY) || "";
 let currentLevelIndex = 0;
 let editingCardId = "";
 
+let audioDBPromise = openAudioDB();
+let currentAudio = null;
+let mediaRecorder = null;
+let recordingStream = null;
+let recordingChunks = [];
+let isRecording = false;
+
 function loadData(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return defaultData;
     const parsed = JSON.parse(raw);
     if(!parsed || !parsed.settings || !parsed.levels) return defaultData;
+    for(const lvl of parsed.levels){
+      for(const c of lvl.cards){
+        if(typeof c.hasRecordedVoice !== "boolean") c.hasRecordedVoice = false;
+      }
+    }
     return parsed;
   }catch{
     return defaultData;
@@ -650,6 +705,50 @@ function saveData(){
 function savePassword(pass){
   parentPassword = pass;
   localStorage.setItem(PASSWORD_KEY, pass);
+}
+
+function openAudioDB(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open(AUDIO_DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if(!db.objectStoreNames.contains(AUDIO_STORE)){
+        db.createObjectStore(AUDIO_STORE);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function putAudio(cardId, blob){
+  const db = await audioDBPromise;
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(AUDIO_STORE, "readwrite");
+    tx.objectStore(AUDIO_STORE).put(blob, cardId);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function getAudio(cardId){
+  const db = await audioDBPromise;
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(AUDIO_STORE, "readonly");
+    const req = tx.objectStore(AUDIO_STORE).get(cardId);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function deleteAudio(cardId){
+  const db = await audioDBPromise;
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(AUDIO_STORE, "readwrite");
+    tx.objectStore(AUDIO_STORE).delete(cardId);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
 }
 
 function openConfig(){
@@ -671,10 +770,13 @@ function openConfig(){
 
   ensureVoices();
   renderAdminSelectors();
+  updateSelectedCardLabel();
+  updateRecordStatus("Pronto para gravar.");
 }
 
 function closeConfig(){
   document.getElementById("configModal").style.display = "none";
+  stopRecordingSilently();
 }
 
 function setFirstPassword(){
@@ -709,6 +811,7 @@ function loginAdmin(){
   renderAdminSelectors();
   renderAdminCards();
   ensureVoices();
+  updateSelectedCardLabel();
 }
 
 function changePassword(){
@@ -765,6 +868,32 @@ function renderLevels(){
   });
 }
 
+async function playCard(card){
+  stopCurrentAudio();
+
+  if(card.hasRecordedVoice){
+    const blob = await getAudio(card.id);
+    if(blob){
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      currentAudio = audio;
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        currentAudio = null;
+      };
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        currentAudio = null;
+        speak(card.text);
+      };
+      audio.play().catch(()=> speak(card.text));
+      return;
+    }
+  }
+
+  speak(card.text);
+}
+
 function renderCards(){
   const level = data.levels[currentLevelIndex];
   const title = document.getElementById("levelTitle");
@@ -783,8 +912,8 @@ function renderCards(){
     btn.className = "card";
     btn.style.setProperty("--accent", level.color);
     btn.onclick = ()=>{
-      speak(card.text);
       animateTap(btn);
+      playCard(card);
     };
 
     const icon = document.createElement("div");
@@ -878,6 +1007,16 @@ function speak(text){
   speechSynthesis.speak(utter);
 }
 
+function stopCurrentAudio(){
+  if(currentAudio){
+    try{ currentAudio.pause(); }catch(e){}
+    currentAudio = null;
+  }
+  if("speechSynthesis" in window){
+    speechSynthesis.cancel();
+  }
+}
+
 function toggleTheme(){
   data.settings.themeDark = !data.settings.themeDark;
   document.body.classList.toggle("dark", data.settings.themeDark);
@@ -941,6 +1080,9 @@ function renderAdminCards(){
     const meta2 = document.createElement("div");
     meta2.textContent = card.image ? "Foto adicionada" : "Sem foto";
 
+    const meta3 = document.createElement("div");
+    meta3.textContent = card.hasRecordedVoice ? "Voz gravada: sim" : "Voz gravada: não";
+
     const actions = document.createElement("div");
     actions.className = "mini-actions";
 
@@ -960,6 +1102,7 @@ function renderAdminCards(){
     item.appendChild(title);
     item.appendChild(meta1);
     item.appendChild(meta2);
+    item.appendChild(meta3);
     item.appendChild(actions);
 
     list.appendChild(item);
@@ -994,7 +1137,8 @@ function saveCard(){
         id: uid(),
         text,
         emoji,
-        image: finalImage
+        image: finalImage,
+        hasRecordedVoice: false
       });
     }
 
@@ -1030,6 +1174,7 @@ function editCard(cardId){
 
   editingCardId = card.id;
   renderAdminCards();
+  updateSelectedCardLabel();
   document.getElementById("cardText").focus();
 }
 
@@ -1041,9 +1186,11 @@ function deleteCard(cardId){
 
   found.level.cards = found.level.cards.filter(c => c.id !== cardId);
 
+  deleteAudio(cardId).catch(()=>{});
   saveData();
   renderAll();
   renderAdminCards();
+  updateSelectedCardLabel();
 }
 
 function findCard(cardId){
@@ -1061,6 +1208,121 @@ function cancelEdit(){
   document.getElementById("cardEmoji").value = "";
   document.getElementById("cardImage").value = "";
   document.getElementById("cardFile").value = "";
+  updateSelectedCardLabel();
+}
+
+function updateSelectedCardLabel(){
+  const label = document.getElementById("selectedCardLabel");
+  if(!label) return;
+
+  const found = editingCardId ? findCard(editingCardId) : null;
+  if(found){
+    label.textContent = "Cartão selecionado: " + found.card.text;
+  }else{
+    label.textContent = "Nenhum cartão selecionado ainda. Clique em 'Editar' em um cartão.";
+  }
+}
+
+function updateRecordStatus(text){
+  const el = document.getElementById("recordStatus");
+  if(el) el.textContent = text;
+}
+
+async function startRecording(){
+  if(!editingCardId){
+    alert("Clique em Editar em um cartão antes de gravar.");
+    return;
+  }
+  if(isRecording) return;
+
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    alert("Este navegador não permite gravar áudio.");
+    return;
+  }
+  if(typeof MediaRecorder === "undefined"){
+    alert("Este navegador não suporta gravação por MediaRecorder.");
+    return;
+  }
+
+  try{
+    recordingStream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    recordingChunks = [];
+    mediaRecorder = new MediaRecorder(recordingStream);
+
+    mediaRecorder.ondataavailable = (e)=>{
+      if(e.data && e.data.size > 0){
+        recordingChunks.push(e.data);
+      }
+    };
+
+    mediaRecorder.onstop = async ()=>{
+      const cardId = editingCardId;
+      const blob = new Blob(recordingChunks, { type: mediaRecorder.mimeType || "audio/webm" });
+      await putAudio(cardId, blob);
+
+      const found = findCard(cardId);
+      if(found){
+        found.card.hasRecordedVoice = true;
+        saveData();
+      }
+
+      stopRecordingSilently();
+      renderAll();
+      renderAdminCards();
+      updateSelectedCardLabel();
+      updateRecordStatus("Voz gravada salva no cartão selecionado.");
+      alert("Voz gravada e salva no cartão.");
+    };
+
+    mediaRecorder.start();
+    isRecording = true;
+    updateRecordStatus("Gravando... clique em 'Parar gravação' quando terminar.");
+  }catch(err){
+    console.error(err);
+    updateRecordStatus("Não foi possível iniciar a gravação.");
+    alert("Não foi possível acessar o microfone.");
+  }
+}
+
+function stopRecordingSilently(){
+  if(mediaRecorder && isRecording){
+    try{
+      mediaRecorder.stop();
+    }catch(e){}
+  }
+  if(recordingStream){
+    recordingStream.getTracks().forEach(t => t.stop());
+  }
+  recordingStream = null;
+  mediaRecorder = null;
+  recordingChunks = [];
+  isRecording = false;
+}
+
+function stopRecording(){
+  if(!isRecording){
+    updateRecordStatus("Não há gravação em andamento.");
+    return;
+  }
+  updateRecordStatus("Finalizando gravação...");
+  stopRecordingSilently();
+}
+
+async function removeRecording(){
+  if(!editingCardId){
+    alert("Escolha um cartão primeiro.");
+    return;
+  }
+  await deleteAudio(editingCardId).catch(()=>{});
+  const found = findCard(editingCardId);
+  if(found){
+    found.card.hasRecordedVoice = false;
+    saveData();
+  }
+  renderAll();
+  renderAdminCards();
+  updateSelectedCardLabel();
+  updateRecordStatus("Gravação removida do cartão.");
 }
 
 function renderAll(){
@@ -1069,12 +1331,13 @@ function renderAll(){
   renderCards();
   renderAdminSelectors();
 
-  const adminVisible = document.getElementById("adminArea").style.display === "block";
+  const adminVisible = document.getElementById("adminArea")?.style.display === "block";
   if(adminVisible){
     renderAdminCards();
   }
 
   ensureVoices();
+  updateSelectedCardLabel();
 }
 
 window.addEventListener("click", (e)=>{
