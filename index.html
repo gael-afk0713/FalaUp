@@ -1,138 +1,169 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FalaUp</title>
 <style>
   :root{
-    --bg:#f4f7fb;
+    --bg1:#f9fbff;
+    --bg2:#eef6ff;
     --card:#ffffff;
     --text:#1f2937;
     --muted:#6b7280;
-    --primary:#4a90e2;
-    --primary2:#dbeafe;
-    --danger:#ef4444;
-    --ok:#10b981;
-    --shadow:0 8px 24px rgba(0,0,0,.08);
-    --radius:22px;
+    --shadow:0 12px 28px rgba(0,0,0,.10);
+    --radius:26px;
+
+    --blue:#4a90e2;
+    --pink:#ff78b4;
+    --green:#46c68a;
+    --purple:#8b7cf6;
+    --orange:#ff9f43;
+    --yellow:#f4c542;
+    --red:#ff6b6b;
   }
+
   body.dark{
-    --bg:#0f172a;
+    --bg1:#0f172a;
+    --bg2:#111827;
     --card:#111827;
     --text:#f3f4f6;
-    --muted:#94a3b8;
-    --primary:#60a5fa;
-    --primary2:#1e293b;
-    --danger:#f87171;
-    --ok:#34d399;
-    --shadow:0 8px 24px rgba(0,0,0,.28);
+    --muted:#9ca3af;
+    --shadow:0 12px 28px rgba(0,0,0,.35);
   }
-  *{box-sizing:border-box}
-  html,body{height:100%}
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; min-height:100%; }
   body{
-    margin:0;
     font-family:Arial, sans-serif;
-    background:var(--bg);
     color:var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(74,144,226,.16), transparent 28%),
+      radial-gradient(circle at top right, rgba(255,120,180,.14), transparent 26%),
+      radial-gradient(circle at bottom left, rgba(70,198,138,.14), transparent 26%),
+      linear-gradient(180deg, var(--bg1), var(--bg2));
   }
-  button, input, select, textarea{
+
+  button, input, select{
     font:inherit;
   }
 
   header{
-    background:var(--primary);
+    position:sticky;
+    top:0;
+    z-index:20;
     color:#fff;
     padding:18px 16px 16px;
     text-align:center;
-    position:sticky;
-    top:0;
-    z-index:10;
-    box-shadow:0 2px 12px rgba(0,0,0,.08);
+    background:linear-gradient(135deg, #4a90e2, #7c6cff);
+    box-shadow:0 6px 22px rgba(0,0,0,.12);
   }
+
   header h1{
     margin:0;
     font-size:34px;
-    line-height:1.1;
+    letter-spacing:.2px;
   }
+
   header p{
-    margin:8px 0 0;
+    margin:7px 0 0;
     font-size:15px;
-    opacity:.95;
+    opacity:.96;
   }
+
   .top-actions{
     margin-top:14px;
     display:flex;
+    justify-content:center;
     flex-wrap:wrap;
     gap:10px;
-    justify-content:center;
   }
+
   .btn{
     border:none;
-    border-radius:14px;
+    border-radius:16px;
     padding:12px 16px;
-    font-size:16px;
     cursor:pointer;
     background:var(--card);
     color:var(--text);
     box-shadow:var(--shadow);
     transition:transform .12s ease;
   }
-  .btn:active{transform:scale(.98)}
-  .btn.blue{background:#fff;color:#0f172a;font-weight:700}
-  .btn.primary{background:var(--primary);color:#fff}
-  .btn.danger{background:var(--danger);color:#fff}
-  .btn.ok{background:var(--ok);color:#fff}
-  .btn.small{padding:10px 12px;font-size:14px;border-radius:12px}
+  .btn:active,
+  .level-btn:active,
+  .card:active,
+  .tiny:active{
+    transform:scale(.98);
+  }
+
+  .btn.primary{
+    background:#fff;
+    color:#111827;
+    font-weight:700;
+  }
+  .btn.danger{
+    background:var(--red);
+    color:#fff;
+  }
+  .btn.blue{
+    background:var(--blue);
+    color:#fff;
+  }
+
   .wrap{
-    max-width:1220px;
+    max-width:1280px;
     margin:0 auto;
     padding:16px;
   }
 
-  .compose{
+  .hero{
     background:var(--card);
-    border-radius:var(--radius);
+    border-radius:30px;
     box-shadow:var(--shadow);
-    padding:16px;
-    margin:12px 0 16px;
+    padding:18px;
+    margin:14px 0 16px;
+    display:grid;
+    gap:10px;
+    position:relative;
+    overflow:hidden;
   }
-  .compose h2{
-    margin:0 0 8px;
-    font-size:22px;
+
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-20px;
+    top:-20px;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:rgba(124,108,255,.10);
   }
-  .hint{
-    font-size:14px;
-    color:var(--muted);
-    margin:0 0 12px;
-  }
-  .phrase-line{
-    min-height:64px;
-    padding:10px;
-    border:2px dashed #cbd5e1;
-    border-radius:18px;
-    background:rgba(148,163,184,.08);
+
+  .hero-title{
     display:flex;
-    flex-wrap:wrap;
-    gap:8px;
     align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    font-size:23px;
+    font-weight:800;
+    margin:0;
   }
-  .chip{
-    background:var(--primary2);
-    color:var(--text);
-    border-radius:999px;
-    padding:10px 14px;
-    font-size:18px;
-    font-weight:700;
+
+  .hero-title .badge{
+    width:42px;
+    height:42px;
+    border-radius:14px;
     display:inline-flex;
     align-items:center;
-    gap:6px;
+    justify-content:center;
+    background:linear-gradient(135deg, rgba(74,144,226,.18), rgba(139,124,246,.18));
+    font-size:22px;
   }
-  .compose-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:12px;
+
+  .hero p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.45;
   }
 
   .levels{
@@ -140,8 +171,10 @@
     gap:10px;
     overflow-x:auto;
     padding:4px 2px 10px;
-    margin-bottom:10px;
+    margin-bottom:12px;
+    -webkit-overflow-scrolling:touch;
   }
+
   .level-btn{
     white-space:nowrap;
     border:none;
@@ -152,12 +185,25 @@
     color:var(--text);
     box-shadow:var(--shadow);
     cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
   }
+
+  .dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    display:inline-block;
+    flex:0 0 auto;
+  }
+
   .level-btn.active{
-    background:var(--primary);
     color:#fff;
     font-weight:700;
   }
+
   .section-title{
     margin:18px 0 10px;
     font-size:20px;
@@ -165,157 +211,186 @@
 
   .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
     gap:14px;
   }
+
   .card{
-    background:var(--card);
     border:none;
-    border-radius:22px;
-    padding:14px;
+    border-radius:28px;
+    background:var(--card);
     box-shadow:var(--shadow);
     cursor:pointer;
-    min-height:168px;
+    min-height:182px;
+    padding:14px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
     gap:12px;
-    transition:transform .12s ease;
-    color:var(--text);
     text-align:center;
+    color:var(--text);
+    position:relative;
+    overflow:hidden;
   }
-  .card:active{transform:scale(.98)}
+
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto 0;
+    height:12px;
+    background:var(--accent, var(--blue));
+  }
+
+  .card:hover{
+    transform:translateY(-1px);
+  }
+
   .icon{
-    width:78px;
-    height:78px;
-    border-radius:22px;
-    background:var(--primary2);
+    width:88px;
+    height:88px;
+    border-radius:28px;
+    background:linear-gradient(135deg, rgba(74,144,226,.14), rgba(255,122,180,.14));
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
-    font-size:42px;
+    font-size:44px;
+    flex-shrink:0;
   }
+
   .icon img{
     width:100%;
     height:100%;
     object-fit:cover;
   }
+
   .card span{
     font-size:20px;
-    font-weight:700;
-    line-height:1.15;
+    font-weight:800;
+    line-height:1.12;
   }
 
   .modal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.55);
+    background:rgba(0,0,0,.56);
     display:none;
     align-items:center;
     justify-content:center;
     padding:16px;
     z-index:100;
   }
+
   .modal-content{
     width:100%;
-    max-width:900px;
+    max-width:980px;
     max-height:92vh;
     overflow:auto;
     background:var(--card);
     color:var(--text);
-    border-radius:24px;
+    border-radius:30px;
     box-shadow:var(--shadow);
     padding:18px;
   }
-  .modal-content h2,.modal-content h3{
+
+  .modal-content h2,
+  .modal-content h3{
     margin:0 0 12px;
   }
+
   .grid-form{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
     gap:10px;
   }
+
   .field{
     width:100%;
     padding:13px 14px;
-    border-radius:14px;
-    border:1px solid #cbd5e1;
+    border-radius:16px;
+    border:1px solid #d1d5db;
     background:#fff;
     color:#111827;
   }
+
   body.dark .field{
     background:#0b1220;
     color:#f3f4f6;
     border-color:#334155;
   }
+
   .admin-box{
     background:rgba(148,163,184,.12);
-    border-radius:18px;
+    border-radius:20px;
     padding:14px;
     margin-top:14px;
   }
+
   .mini-list{
     display:flex;
     flex-direction:column;
     gap:10px;
     margin-top:10px;
   }
+
   .mini-item{
     background:rgba(148,163,184,.14);
-    border-radius:14px;
+    border-radius:16px;
     padding:12px;
   }
+
   .mini-item strong{
     display:block;
     margin-bottom:4px;
   }
+
   .mini-actions{
     display:flex;
     gap:8px;
     flex-wrap:wrap;
     margin-top:10px;
   }
+
   .tiny{
     border:none;
     border-radius:12px;
     padding:10px 12px;
     font-size:14px;
     cursor:pointer;
-    background:var(--primary);
     color:#fff;
+    background:var(--blue);
   }
-  .tiny.gray{background:#64748b}
-  .tiny.danger{background:var(--danger)}
-  .tiny.ok{background:var(--ok)}
+
+  .tiny.gray{ background:#64748b; }
+  .tiny.danger{ background:var(--red); }
+  .tiny.ok{ background:var(--green); }
+
   .split{
     display:grid;
-    grid-template-columns:1.2fr .8fr;
+    grid-template-columns:1.15fr .85fr;
     gap:14px;
   }
+
   .note{
     color:var(--muted);
     font-size:14px;
-    margin-top:6px;
+    margin-top:8px;
+    line-height:1.4;
   }
-  .inline{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
-  }
+
   footer{
     text-align:center;
     padding:22px 14px 30px;
     font-size:14px;
     color:var(--muted);
   }
-  @media (max-width: 780px){
-    .split{grid-template-columns:1fr}
-    header h1{font-size:30px}
-    .card{min-height:154px}
-    .card span{font-size:18px}
+
+  @media (max-width: 800px){
+    .split{ grid-template-columns:1fr; }
+    header h1{ font-size:30px; }
+    .card{ min-height:164px; }
+    .card span{ font-size:18px; }
   }
 </style>
 </head>
@@ -323,25 +398,20 @@
 
 <header>
   <h1>FalaUp</h1>
-  <p>Botões com fala para comunicação visual, progressiva e simples.</p>
+  <p>Cartões com voz para comunicação simples, clara e divertida.</p>
   <div class="top-actions">
-    <button class="btn blue" onclick="openConfig()">Configurações / Pais</button>
-    <button class="btn blue" onclick="toggleTheme()">Modo claro/escuro</button>
-    <button class="btn blue" onclick="speakCurrentPhrase()">Falar frase</button>
-    <button class="btn blue" onclick="clearPhrase()">Limpar frase</button>
+    <button class="btn primary" onclick="openConfig()">Configurações / Pais</button>
+    <button class="btn primary" onclick="toggleTheme()">Modo claro/escuro</button>
   </div>
 </header>
 
 <div class="wrap">
-  <section class="compose">
-    <h2>Frase montada</h2>
-    <p class="hint">A criança toca nos cartões e a frase aparece aqui. Depois pode tocar em “Falar frase”.</p>
-    <div id="phraseLine" class="phrase-line" aria-live="polite"></div>
-    <div class="compose-actions">
-      <button class="btn primary" onclick="speakCurrentPhrase()">Falar frase</button>
-      <button class="btn" onclick="clearPhrase()">Apagar tudo</button>
-      <button class="btn" onclick="backspacePhrase()">Apagar último</button>
+  <section class="hero">
+    <div class="hero-title">
+      <span class="badge">⭐</span>
+      <span>Toque nos cartões para ouvir a fala</span>
     </div>
+    <p>Os cartões estão divididos em 5 níveis. As frases começam com palavras simples e vão ficando mais completas conforme a criança avança.</p>
   </section>
 
   <div id="levels" class="levels"></div>
@@ -350,7 +420,7 @@
 </div>
 
 <footer>
-  Feito para uso no iPad, GitHub Pages e navegadores modernos.
+  Feito para iPad, GitHub Pages e navegadores modernos.
 </footer>
 
 <div id="configModal" class="modal">
@@ -366,7 +436,7 @@
       <div class="mini-actions">
         <button class="tiny ok" onclick="setFirstPassword()">Criar senha</button>
       </div>
-      <p class="note">Essa senha fica salva apenas neste navegador/dispositivo.</p>
+      <p class="note">Essa senha fica salva neste navegador/dispositivo.</p>
     </div>
 
     <div id="loginArea" class="admin-box" style="display:none">
@@ -383,7 +453,7 @@
       <div class="split">
         <div>
           <div class="admin-box">
-            <h3>Voz e leitura</h3>
+            <h3>Voz</h3>
             <div class="grid-form">
               <select class="field" id="voiceSelect"></select>
               <input class="field" id="rateRange" type="range" min="0.6" max="1.4" step="0.1" value="1">
@@ -392,7 +462,7 @@
               <button class="tiny ok" onclick="saveVoiceSettings()">Salvar voz</button>
               <button class="tiny gray" onclick="testVoice()">Testar voz</button>
             </div>
-            <p class="note">A voz escolhida e a velocidade ficam guardadas no navegador.</p>
+            <p class="note">A voz e a velocidade ficam guardadas no navegador.</p>
           </div>
 
           <div class="admin-box">
@@ -410,7 +480,7 @@
 
         <div>
           <div class="admin-box">
-            <h3>Escolher nível para editar</h3>
+            <h3>Escolher nível</h3>
             <div class="grid-form">
               <select class="field" id="adminLevelSelect" onchange="renderAdminCards()"></select>
             </div>
@@ -429,18 +499,17 @@
               <button class="tiny ok" onclick="saveCard()">Salvar cartão</button>
               <button class="tiny gray" onclick="cancelEdit()">Cancelar edição</button>
             </div>
-            <p class="note">Se quiser usar foto, pode escolher um arquivo do iPad ou colar uma URL de imagem.</p>
+            <p class="note">Você pode usar foto do iPad ou colar um link de imagem.</p>
           </div>
         </div>
       </div>
 
       <div class="admin-box">
-        <h3>Editar cartões do nível selecionado</h3>
+        <h3>Cartões do nível selecionado</h3>
         <div id="adminCardList" class="mini-list"></div>
       </div>
 
       <div class="mini-actions" style="margin-top:14px;">
-        <button class="btn" onclick="toggleTheme()">Modo claro/escuro</button>
         <button class="btn danger" onclick="closeConfig()">Fechar</button>
       </div>
     </div>
@@ -452,8 +521,8 @@
 </div>
 
 <script>
-const STORAGE_KEY = "falaup_tea_app_v1";
-const PASSWORD_KEY = "falaup_parent_password_v1";
+const STORAGE_KEY = "falaup_tea_app_v3";
+const PASSWORD_KEY = "falaup_parent_password_v3";
 
 function uid(){
   if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -470,6 +539,7 @@ const defaultData = {
     {
       id: uid(),
       name: "1. Básico",
+      color: "#4a90e2",
       cards: [
         { id: uid(), text: "Sim", emoji: "✅", image: "" },
         { id: uid(), text: "Não", emoji: "❌", image: "" },
@@ -486,6 +556,7 @@ const defaultData = {
     {
       id: uid(),
       name: "2. Necessidades",
+      color: "#ff78b4",
       cards: [
         { id: uid(), text: "Quero água", emoji: "🥤", image: "" },
         { id: uid(), text: "Quero comer", emoji: "🍔", image: "" },
@@ -502,6 +573,7 @@ const defaultData = {
     {
       id: uid(),
       name: "3. Social",
+      color: "#46c68a",
       cards: [
         { id: uid(), text: "Oi", emoji: "👋", image: "" },
         { id: uid(), text: "Tchau", emoji: "👋", image: "" },
@@ -518,6 +590,7 @@ const defaultData = {
     {
       id: uid(),
       name: "4. Frases",
+      color: "#8b7cf6",
       cards: [
         { id: uid(), text: "Minha barriga dói", emoji: "🤕", image: "" },
         { id: uid(), text: "Minha cabeça dói", emoji: "🤒", image: "" },
@@ -534,6 +607,7 @@ const defaultData = {
     {
       id: uid(),
       name: "5. Mais complexas",
+      color: "#ff9f43",
       cards: [
         { id: uid(), text: "Não entendi a pergunta", emoji: "❔", image: "" },
         { id: uid(), text: "Pode repetir por favor?", emoji: "🔁", image: "" },
@@ -542,8 +616,8 @@ const defaultData = {
         { id: uid(), text: "Quero escolher outra coisa", emoji: "🔄", image: "" },
         { id: uid(), text: "Estou com dificuldade", emoji: "⚠️", image: "" },
         { id: uid(), text: "Não quero isso agora", emoji: "✋", image: "" },
-        { id: uid(), text: "Quero falar com a mamãe", emoji: "👩", image: "" },
-        { id: uid(), text: "Quero falar com o papai", emoji: "👨", image: "" },
+        { id: uid(), text: "Quero falar com mamãe", emoji: "👩", image: "" },
+        { id: uid(), text: "Quero falar com papai", emoji: "👨", image: "" },
         { id: uid(), text: "Preciso me acalmar", emoji: "🧘", image: "" }
       ]
     }
@@ -551,13 +625,11 @@ const defaultData = {
 };
 
 let data = loadData();
-let phrase = [];
-let currentLevelIndex = 0;
 let voices = [];
 let selectedVoice = null;
 let parentPassword = localStorage.getItem(PASSWORD_KEY) || "";
+let currentLevelIndex = 0;
 let editingCardId = "";
-let editingLevelId = "";
 
 function loadData(){
   try{
@@ -566,7 +638,7 @@ function loadData(){
     const parsed = JSON.parse(raw);
     if(!parsed || !parsed.settings || !parsed.levels) return defaultData;
     return parsed;
-  }catch(e){
+  }catch{
     return defaultData;
   }
 }
@@ -582,6 +654,7 @@ function savePassword(pass){
 
 function openConfig(){
   document.getElementById("configModal").style.display = "flex";
+
   const setupArea = document.getElementById("setupArea");
   const loginArea = document.getElementById("loginArea");
   const adminArea = document.getElementById("adminArea");
@@ -595,6 +668,7 @@ function openConfig(){
     loginArea.style.display = "block";
     adminArea.style.display = "none";
   }
+
   ensureVoices();
   renderAdminSelectors();
 }
@@ -604,8 +678,9 @@ function closeConfig(){
 }
 
 function setFirstPassword(){
-  const p1 = document.getElementById("newPass1").value;
-  const p2 = document.getElementById("newPass2").value;
+  const p1 = document.getElementById("newPass1").value.trim();
+  const p2 = document.getElementById("newPass2").value.trim();
+
   if(!p1 || !p2){
     alert("Digite e confirme a senha.");
     return;
@@ -614,6 +689,7 @@ function setFirstPassword(){
     alert("As senhas não conferem.");
     return;
   }
+
   savePassword(p1);
   document.getElementById("setupArea").style.display = "none";
   document.getElementById("loginArea").style.display = "block";
@@ -622,11 +698,12 @@ function setFirstPassword(){
 }
 
 function loginAdmin(){
-  const p = document.getElementById("loginPass").value;
+  const p = document.getElementById("loginPass").value.trim();
   if(p !== parentPassword){
     alert("Senha incorreta.");
     return;
   }
+
   document.getElementById("loginArea").style.display = "none";
   document.getElementById("adminArea").style.display = "block";
   renderAdminSelectors();
@@ -635,9 +712,9 @@ function loginAdmin(){
 }
 
 function changePassword(){
-  const oldPass = document.getElementById("oldPass").value;
-  const n1 = document.getElementById("changePass1").value;
-  const n2 = document.getElementById("changePass2").value;
+  const oldPass = document.getElementById("oldPass").value.trim();
+  const n1 = document.getElementById("changePass1").value.trim();
+  const n2 = document.getElementById("changePass2").value.trim();
 
   if(oldPass !== parentPassword){
     alert("Senha atual incorreta.");
@@ -651,6 +728,7 @@ function changePassword(){
     alert("As senhas novas não conferem.");
     return;
   }
+
   savePassword(n1);
   document.getElementById("oldPass").value = "";
   document.getElementById("changePass1").value = "";
@@ -661,14 +739,28 @@ function changePassword(){
 function renderLevels(){
   const container = document.getElementById("levels");
   container.innerHTML = "";
+
   data.levels.forEach((level, idx)=>{
     const btn = document.createElement("button");
     btn.className = "level-btn" + (idx === currentLevelIndex ? " active" : "");
-    btn.textContent = level.name;
+    btn.style.background = idx === currentLevelIndex ? level.color : "var(--card)";
+    btn.style.color = idx === currentLevelIndex ? "#fff" : "var(--text)";
+
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    dot.style.background = level.color;
+
+    const label = document.createElement("span");
+    label.textContent = level.name;
+
+    btn.appendChild(dot);
+    btn.appendChild(label);
+
     btn.onclick = ()=>{
       currentLevelIndex = idx;
       renderAll();
     };
+
     container.appendChild(btn);
   });
 }
@@ -678,22 +770,26 @@ function renderCards(){
   const title = document.getElementById("levelTitle");
   const grid = document.getElementById("cards");
   grid.innerHTML = "";
+
   if(!level){
     title.textContent = "";
     return;
   }
+
   title.textContent = level.name;
 
   level.cards.forEach(card=>{
     const btn = document.createElement("button");
     btn.className = "card";
+    btn.style.setProperty("--accent", level.color);
     btn.onclick = ()=>{
-      addToPhrase(card.text);
       speak(card.text);
+      animateTap(btn);
     };
 
     const icon = document.createElement("div");
     icon.className = "icon";
+
     if(card.image){
       const img = document.createElement("img");
       img.src = card.image;
@@ -712,57 +808,30 @@ function renderCards(){
   });
 }
 
-function addToPhrase(text){
-  phrase.push(text);
-  renderPhrase();
-}
-
-function renderPhrase(){
-  const line = document.getElementById("phraseLine");
-  line.innerHTML = "";
-  if(phrase.length === 0){
-    const empty = document.createElement("div");
-    empty.className = "hint";
-    empty.textContent = "A frase vai aparecer aqui conforme a criança tocar nos cartões.";
-    line.appendChild(empty);
-    return;
-  }
-  phrase.forEach(word=>{
-    const chip = document.createElement("div");
-    chip.className = "chip";
-    chip.textContent = word;
-    line.appendChild(chip);
-  });
-}
-
-function clearPhrase(){
-  phrase = [];
-  renderPhrase();
-}
-
-function backspacePhrase(){
-  phrase.pop();
-  renderPhrase();
-}
-
-function speakCurrentPhrase(){
-  if(phrase.length === 0){
-    speak("Selecione uma palavra ou frase primeiro.");
-    return;
-  }
-  speak(phrase.join(" "));
+function animateTap(el){
+  el.animate(
+    [
+      { transform:"scale(1)" },
+      { transform:"scale(.97)" },
+      { transform:"scale(1)" }
+    ],
+    { duration:180, easing:"ease-out" }
+  );
 }
 
 function ensureVoices(){
+  if(!("speechSynthesis" in window)) return;
+
   voices = speechSynthesis.getVoices() || [];
   const select = document.getElementById("voiceSelect");
   if(!select) return;
 
   select.innerHTML = "";
+
   if(voices.length === 0){
     const opt = document.createElement("option");
-    opt.textContent = "Carregando vozes...";
     opt.value = "";
+    opt.textContent = "Carregando vozes...";
     select.appendChild(opt);
     return;
   }
@@ -782,8 +851,8 @@ function ensureVoices(){
     const pt = voices.find(v => (v.lang || "").toLowerCase().includes("pt-br")) || voices[0];
     data.settings.voiceURI = pt.voiceURI;
     selectedVoice = pt;
-    saveData();
     select.value = pt.voiceURI;
+    saveData();
   }
 
   const rate = document.getElementById("rateRange");
@@ -797,6 +866,8 @@ if("speechSynthesis" in window){
 function speak(text){
   if(!("speechSynthesis" in window)) return;
 
+  speechSynthesis.cancel();
+
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = "pt-BR";
   utter.rate = data.settings.rate || 1;
@@ -804,7 +875,6 @@ function speak(text){
   const voice = voices.find(v => v.voiceURI === data.settings.voiceURI) || selectedVoice || null;
   if(voice) utter.voice = voice;
 
-  speechSynthesis.cancel();
   speechSynthesis.speak(utter);
 }
 
@@ -817,9 +887,11 @@ function toggleTheme(){
 function saveVoiceSettings(){
   const select = document.getElementById("voiceSelect");
   const rate = document.getElementById("rateRange");
+
   data.settings.voiceURI = select.value;
   data.settings.rate = Number(rate.value);
   selectedVoice = voices.find(v => v.voiceURI === data.settings.voiceURI) || null;
+
   saveData();
   alert("Voz salva.");
 }
@@ -834,6 +906,7 @@ function testVoice(){
 function renderAdminSelectors(){
   const select = document.getElementById("adminLevelSelect");
   if(!select) return;
+
   select.innerHTML = "";
   data.levels.forEach((level, idx)=>{
     const opt = document.createElement("option");
@@ -841,6 +914,7 @@ function renderAdminSelectors(){
     opt.textContent = level.name;
     select.appendChild(opt);
   });
+
   if(data.levels[currentLevelIndex]){
     select.value = String(currentLevelIndex);
   }
@@ -848,24 +922,46 @@ function renderAdminSelectors(){
 
 function renderAdminCards(){
   const levelIndex = Number(document.getElementById("adminLevelSelect").value || 0);
-  editingLevelId = data.levels[levelIndex]?.id || "";
   const level = data.levels[levelIndex];
   const list = document.getElementById("adminCardList");
   list.innerHTML = "";
+
   if(!level) return;
 
   level.cards.forEach(card=>{
     const item = document.createElement("div");
     item.className = "mini-item";
-    item.innerHTML = `
-      <strong>${card.text}</strong>
-      <div>Emoji: ${card.emoji || ""}</div>
-      <div>${card.image ? "Foto adicionada" : "Sem foto"}</div>
-      <div class="mini-actions">
-        <button class="tiny ok" onclick="editCard('${card.id}')">Editar</button>
-        <button class="tiny danger" onclick="deleteCard('${card.id}')">Excluir</button>
-      </div>
-    `;
+
+    const title = document.createElement("strong");
+    title.textContent = card.text;
+
+    const meta1 = document.createElement("div");
+    meta1.textContent = "Emoji: " + (card.emoji || "");
+
+    const meta2 = document.createElement("div");
+    meta2.textContent = card.image ? "Foto adicionada" : "Sem foto";
+
+    const actions = document.createElement("div");
+    actions.className = "mini-actions";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "tiny ok";
+    editBtn.textContent = "Editar";
+    editBtn.onclick = ()=> editCard(card.id);
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "tiny danger";
+    delBtn.textContent = "Excluir";
+    delBtn.onclick = ()=> deleteCard(card.id);
+
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+
+    item.appendChild(title);
+    item.appendChild(meta1);
+    item.appendChild(meta2);
+    item.appendChild(actions);
+
     list.appendChild(item);
   });
 }
@@ -923,28 +1019,35 @@ function saveCard(){
 function editCard(cardId){
   const found = findCard(cardId);
   if(!found) return;
+
   const { levelIndex, card } = found;
+
   document.getElementById("adminLevelSelect").value = String(levelIndex);
-  editingLevelId = data.levels[levelIndex].id;
   document.getElementById("cardText").value = card.text;
   document.getElementById("cardEmoji").value = card.emoji || "";
   document.getElementById("cardImage").value = card.image || "";
   document.getElementById("cardFile").value = "";
+
   editingCardId = card.id;
+  renderAdminCards();
+  document.getElementById("cardText").focus();
 }
 
 function deleteCard(cardId){
   if(!confirm("Excluir este cartão?")) return;
+
   const found = findCard(cardId);
   if(!found) return;
+
   found.level.cards = found.level.cards.filter(c => c.id !== cardId);
+
   saveData();
   renderAll();
   renderAdminCards();
 }
 
 function findCard(cardId){
-  for(let i=0; i<data.levels.length; i++){
+  for(let i = 0; i < data.levels.length; i++){
     const level = data.levels[i];
     const card = level.cards.find(c => c.id === cardId);
     if(card) return { levelIndex:i, level, card };
@@ -964,11 +1067,13 @@ function renderAll(){
   document.body.classList.toggle("dark", !!data.settings.themeDark);
   renderLevels();
   renderCards();
-  renderPhrase();
   renderAdminSelectors();
-  if(document.getElementById("adminArea").style.display === "block"){
+
+  const adminVisible = document.getElementById("adminArea").style.display === "block";
+  if(adminVisible){
     renderAdminCards();
   }
+
   ensureVoices();
 }
 
@@ -978,10 +1083,9 @@ window.addEventListener("click", (e)=>{
 });
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  renderAll();
   if(data.settings.themeDark) document.body.classList.add("dark");
+  renderAll();
 });
 </script>
-
 </body>
 </html>
