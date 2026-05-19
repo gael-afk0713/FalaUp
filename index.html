@@ -44,9 +44,7 @@
       linear-gradient(180deg, var(--bg1), var(--bg2));
   }
 
-  button, input, select, textarea{
-    font:inherit;
-  }
+  button, input, select{font:inherit}
 
   header{
     position:sticky;
@@ -69,6 +67,51 @@
     margin:7px 0 0;
     font-size:15px;
     opacity:.96;
+  }
+
+  .puzzle-strip{
+    margin:16px auto 0;
+    max-width:1100px;
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:10px;
+    padding:0 10px;
+  }
+
+  .piece{
+    position:relative;
+    height:46px;
+    border-radius:16px;
+    background:var(--piece-color);
+    box-shadow:
+      inset 0 0 0 3px rgba(255,255,255,.45),
+      0 6px 14px rgba(0,0,0,.14);
+    overflow:visible;
+  }
+
+  .piece::before{
+    content:"";
+    position:absolute;
+    width:22px;
+    height:22px;
+    right:-11px;
+    top:12px;
+    border-radius:50%;
+    background:var(--piece-color);
+    box-shadow:0 0 0 4px rgba(255,255,255,.50);
+  }
+
+  .piece::after{
+    content:"";
+    position:absolute;
+    width:18px;
+    height:18px;
+    left:50%;
+    top:-9px;
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:var(--bg1);
+    box-shadow:0 0 0 2px rgba(255,255,255,.45) inset;
   }
 
   .top-actions{
@@ -245,24 +288,17 @@
     transform:translateY(-1px);
   }
 
-  .icon{
+  .emoji-box{
     width:92px;
     height:92px;
     border-radius:30px;
-    background:linear-gradient(135deg, rgba(255,255,255,.85), rgba(240,245,255,.95));
     display:flex;
     align-items:center;
     justify-content:center;
-    overflow:hidden;
-    flex-shrink:0;
+    background:linear-gradient(135deg, rgba(255,255,255,.9), rgba(240,245,255,.95));
     border:1px solid rgba(0,0,0,.06);
-  }
-
-  .icon svg,
-  .icon img{
-    width:100%;
-    height:100%;
-    display:block;
+    font-size:54px;
+    line-height:1;
   }
 
   .card span{
@@ -418,7 +454,8 @@
     header h1{font-size:30px}
     .card{min-height:170px}
     .card span{font-size:18px}
-    .icon{width:84px;height:84px}
+    .emoji-box{width:84px;height:84px;font-size:48px}
+    .puzzle-strip{grid-template-columns:repeat(3, 1fr)}
   }
 </style>
 </head>
@@ -427,6 +464,16 @@
 <header>
   <h1>FalaUp</h1>
   <p>Cartões com voz para comunicação simples, clara e divertida.</p>
+
+  <div class="puzzle-strip" aria-hidden="true">
+    <div class="piece" style="--piece-color: var(--red)"></div>
+    <div class="piece" style="--piece-color: var(--orange)"></div>
+    <div class="piece" style="--piece-color: var(--yellow)"></div>
+    <div class="piece" style="--piece-color: var(--green)"></div>
+    <div class="piece" style="--piece-color: var(--blue)"></div>
+    <div class="piece" style="--piece-color: var(--purple)"></div>
+  </div>
+
   <div class="top-actions">
     <button class="btn primary" onclick="openConfig()">Configurações</button>
     <button class="btn primary" onclick="toggleTheme()">Modo claro/escuro</button>
@@ -475,7 +522,6 @@
       <div class="mini-actions">
         <button class="tiny ok" onclick="loginAdmin()">Entrar</button>
       </div>
-      <p class="note">Senha padrão inicial: <b>1234</b>, se ainda não tiver sido alterada.</p>
     </div>
 
     <div id="adminArea" style="display:none">
@@ -519,8 +565,7 @@
             <h3>Adicionar / editar cartão</h3>
             <div class="grid-form">
               <input class="field" id="cardText" placeholder="Texto da fala">
-              <input class="field" id="cardImageFile" type="file" accept="image/*">
-              <input class="field" id="cardImageUrl" placeholder="URL da imagem (opcional)">
+              <input class="field" id="cardEmoji" placeholder="Emoji (ex: 🍎)">
             </div>
             <input type="hidden" id="editingCardId">
 
@@ -528,7 +573,10 @@
               <button class="tiny ok" onclick="saveCard()">Salvar cartão</button>
               <button class="tiny gray" onclick="cancelEdit()">Cancelar edição</button>
             </div>
-            <p class="note">Você pode usar foto do iPad ou colar um link de imagem. Se nenhuma imagem for enviada, o cartão usa uma ilustração automática que combina com a palavra.</p>
+
+            <p class="note">
+              Os cartões usam emojis grandes e cores por nível. Se o emoji ficar vazio, o sistema tenta escolher um automaticamente.
+            </p>
 
             <div class="record-box">
               <div class="small-badge">🎤 Voz gravada do cartão selecionado</div>
@@ -562,14 +610,24 @@
 </div>
 
 <script>
-const STORAGE_KEY = "falaup_tea_app_v5";
-const PASSWORD_KEY = "falaup_parent_password_v5";
-const AUDIO_DB_NAME = "falaup_audio_db_v2";
+const STORAGE_KEY = "falaup_tea_app_v6";
+const PASSWORD_KEY = "falaup_parent_password_v6";
+const AUDIO_DB_NAME = "falaup_audio_db_v3";
 const AUDIO_STORE = "audio";
 
 function uid(){
   if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
   return "id_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+function makeCard(text, emoji, color){
+  return {
+    id: uid(),
+    text,
+    emoji,
+    color,
+    hasRecordedVoice: false
+  };
 }
 
 function escapeHTML(str){
@@ -579,316 +637,6 @@ function escapeHTML(str){
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
-}
-
-function slug(s){
-  return String(s)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-function iconSVG(kind, color){
-  const c = color || "#4a90e2";
-  const white = "#ffffff";
-  const bg = "#f7fbff";
-
-  const shapes = {
-    yes: `
-      <circle cx="128" cy="128" r="96" fill="${c}" />
-      <path d="M86 129l28 28 58-66" fill="none" stroke="${white}" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
-    `,
-    no: `
-      <circle cx="128" cy="128" r="96" fill="${c}" />
-      <path d="M90 90l76 76M166 90L90 166" fill="none" stroke="${white}" stroke-width="20" stroke-linecap="round"/>
-    `,
-    water: `
-      <rect x="74" y="52" width="100" height="124" rx="18" fill="${white}" stroke="${c}" stroke-width="8"/>
-      <path d="M88 126c0-30 18-58 40-58s40 28 40 58-18 50-40 50-40-20-40-50z" fill="${c}" opacity=".22"/>
-      <path d="M96 68h64" stroke="${c}" stroke-width="8" stroke-linecap="round"/>
-      <path d="M164 156c10 8 16 18 16 28" fill="none" stroke="${c}" stroke-width="10" stroke-linecap="round"/>
-      <path d="M179 180c0 10-8 18-18 18s-18-8-18-18 18-34 18-34 18 24 18 34z" fill="${c}"/>
-    `,
-    help: `
-      <circle cx="128" cy="128" r="96" fill="${c}" />
-      <path d="M98 120c0-20 13-34 30-34 15 0 27 10 27 24 0 13-9 21-21 27-8 4-10 9-10 16" fill="none" stroke="${white}" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="128" cy="187" r="10" fill="${white}"/>
-    `,
-    mom: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="106" r="32" fill="#ffd6b5"/>
-      <path d="M82 182c10-32 35-48 46-48h16c11 0 36 16 46 48" fill="#ff7ab6"/>
-      <path d="M92 102c8-22 26-34 36-34h2c10 0 28 12 36 34" fill="#8b5a2b"/>
-      <circle cx="116" cy="108" r="4" fill="#333"/>
-      <circle cx="140" cy="108" r="4" fill="#333"/>
-      <path d="M117 124c6 6 18 6 24 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
-    `,
-    dad: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="104" r="31" fill="#ffd6b5"/>
-      <path d="M82 182c10-32 35-48 46-48h16c11 0 36 16 46 48" fill="#4a90e2"/>
-      <path d="M94 99c8-22 24-35 34-35h4c10 0 26 13 34 35" fill="#6b3f1f"/>
-      <circle cx="116" cy="108" r="4" fill="#333"/>
-      <circle cx="140" cy="108" r="4" fill="#333"/>
-      <path d="M117 124c6 6 18 6 24 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
-    `,
-    eat: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="72" fill="#fff4d1"/>
-      <circle cx="128" cy="128" r="50" fill="#fff"/>
-      <circle cx="110" cy="115" r="10" fill="#8ac926"/>
-      <circle cx="134" cy="114" r="10" fill="#ff595e"/>
-      <circle cx="150" cy="130" r="10" fill="#ffca3a"/>
-      <path d="M92 120h18M92 138h18" stroke="#7c6a3f" stroke-width="8" stroke-linecap="round"/>
-      <path d="M160 108v50" stroke="#7c6a3f" stroke-width="8" stroke-linecap="round"/>
-      <path d="M169 108v50" stroke="#7c6a3f" stroke-width="8" stroke-linecap="round"/>
-    `,
-    sleep: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="138" r="54" fill="#b7e3ff"/>
-      <path d="M90 132c8-28 29-44 38-44h0c9 0 30 16 38 44" fill="#6a4c93"/>
-      <circle cx="111" cy="136" r="4" fill="#333"/>
-      <circle cx="145" cy="136" r="4" fill="#333"/>
-      <path d="M114 154c5 5 15 5 20 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
-      <path d="M170 72h20l-16 18h16" fill="none" stroke="#6a4c93" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M183 105h16l-14 16h14" fill="none" stroke="#6a4c93" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-    `,
-    food: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="70" fill="#fff1d9"/>
-      <ellipse cx="128" cy="132" rx="52" ry="32" fill="#d98c45"/>
-      <path d="M86 126c8-20 24-30 42-30 19 0 31 6 44 22" fill="none" stroke="#8ac926" stroke-width="14" stroke-linecap="round"/>
-      <circle cx="108" cy="130" r="7" fill="#8ac926"/>
-      <circle cx="128" cy="120" r="7" fill="#ff595e"/>
-      <circle cx="148" cy="130" r="7" fill="#ffca3a"/>
-    `,
-    play: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="103" cy="118" r="22" fill="#ff595e"/>
-      <circle cx="154" cy="118" r="22" fill="#1982c4"/>
-      <circle cx="128" cy="154" r="22" fill="#8ac926"/>
-      <path d="M84 166l20-36 20 34" fill="none" stroke="#ff924c" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M160 166l-18-32 18-26" fill="none" stroke="#6a4c93" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    `,
-    bathroom: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <rect x="82" y="78" width="88" height="96" rx="16" fill="#ffffff" stroke="${c}" stroke-width="8"/>
-      <path d="M92 98h46" stroke="${c}" stroke-width="10" stroke-linecap="round"/>
-      <path d="M102 118h34" stroke="${c}" stroke-width="10" stroke-linecap="round"/>
-      <path d="M150 140h22v16h-22z" fill="${c}"/>
-      <path d="M158 156v18" stroke="${c}" stroke-width="8" stroke-linecap="round"/>
-      <circle cx="168" cy="168" r="8" fill="${c}"/>
-    `,
-    hello: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="68" fill="#ffe9b8"/>
-      <path d="M70 150c14-22 34-30 58-30s44 8 58 30" fill="#8ac926"/>
-      <circle cx="118" cy="124" r="4" fill="#333"/>
-      <circle cx="138" cy="124" r="4" fill="#333"/>
-      <path d="M112 142c8 8 24 8 32 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
-      <path d="M64 114c8-8 16-8 24 0" fill="none" stroke="#ff595e" stroke-width="8" stroke-linecap="round"/>
-      <path d="M70 96c12 0 20 8 20 20" fill="none" stroke="#ff924c" stroke-width="8" stroke-linecap="round"/>
-    `,
-    bye: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="62" fill="#ffe9b8"/>
-      <path d="M72 104c16 24 32 36 56 36s40-12 56-36" fill="none" stroke="#1982c4" stroke-width="14" stroke-linecap="round"/>
-      <path d="M86 154c10 12 24 18 42 18s32-6 42-18" fill="none" stroke="#6a4c93" stroke-width="10" stroke-linecap="round"/>
-      <path d="M158 92c10 0 18 8 18 18" fill="none" stroke="#ff595e" stroke-width="8" stroke-linecap="round"/>
-    `,
-    thanks: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="120" r="40" fill="#ffca3a"/>
-      <path d="M86 172c12-28 32-42 42-42h0c10 0 30 14 42 42" fill="#ff924c"/>
-      <path d="M109 120l12 12 22-26" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    `,
-    please: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#dbeafe"/>
-      <path d="M84 116c10-18 26-26 44-26s34 8 44 26" fill="none" stroke="#1982c4" stroke-width="14" stroke-linecap="round"/>
-      <path d="M84 146c10 18 26 26 44 26s34-8 44-26" fill="none" stroke="#8b7cf6" stroke-width="14" stroke-linecap="round"/>
-    `,
-    happy: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#ffd6e7"/>
-      <circle cx="110" cy="122" r="4" fill="#333"/>
-      <circle cx="146" cy="122" r="4" fill="#333"/>
-      <path d="M112 142c8 10 24 10 32 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
-      <path d="M88 86l10 16M168 86l-10 16M80 130h18M158 130h18" stroke="#ff595e" stroke-width="8" stroke-linecap="round"/>
-    `,
-    sad: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#d6ecff"/>
-      <circle cx="110" cy="122" r="4" fill="#333"/>
-      <circle cx="146" cy="122" r="4" fill="#333"/>
-      <path d="M112 152c8-10 24-10 32 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
-      <path d="M82 78c0 0 10 8 10 18s-10 18-10 18-10-8-10-18 10-18 10-18z" fill="#1982c4"/>
-    `,
-    more: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#e7dcff"/>
-      <path d="M88 128h80" stroke="#6a4c93" stroke-width="16" stroke-linecap="round"/>
-      <path d="M128 88v80" stroke="#6a4c93" stroke-width="16" stroke-linecap="round"/>
-    `,
-    done: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#ffd9d9"/>
-      <path d="M92 128h72" stroke="#ff595e" stroke-width="18" stroke-linecap="round"/>
-      <path d="M118 104v48" stroke="#ff595e" stroke-width="18" stroke-linecap="round"/>
-    `,
-    quiet: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#e4ffe8"/>
-      <path d="M104 126l20-18v50l-20-18z" fill="#8ac926"/>
-      <path d="M150 112c12 8 12 32 0 40" fill="none" stroke="#8ac926" stroke-width="10" stroke-linecap="round"/>
-      <path d="M164 102c22 16 22 52 0 68" fill="none" stroke="#8ac926" stroke-width="10" stroke-linecap="round"/>
-    `,
-    music: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <path d="M112 72v86c0 8-6 18-18 18-10 0-18-6-18-16s8-16 18-16c6 0 12 2 18 6V98l60-14v56c0 8-6 18-18 18-10 0-18-6-18-16s8-16 18-16c6 0 12 2 18 6V62z" fill="#8b7cf6"/>
-    `,
-    tv: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <rect x="74" y="82" width="108" height="80" rx="14" fill="#111827" stroke="#1982c4" stroke-width="8"/>
-      <rect x="88" y="94" width="80" height="54" rx="8" fill="#8ad6ff"/>
-      <path d="M108 70l-10-14M148 70l10-14" stroke="#1982c4" stroke-width="8" stroke-linecap="round"/>
-      <path d="M110 176h36" stroke="#1982c4" stroke-width="10" stroke-linecap="round"/>
-    `,
-    leave: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <rect x="86" y="76" width="70" height="104" rx="14" fill="#ffffff" stroke="#6a4c93" stroke-width="8"/>
-      <path d="M118 126h42" stroke="#6a4c93" stroke-width="10" stroke-linecap="round"/>
-      <path d="M150 112l18 14-18 14" fill="none" stroke="#6a4c93" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    `,
-    home: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <path d="M68 126l60-48 60 48v56H68z" fill="#ffca3a" stroke="#ff924c" stroke-width="8" stroke-linejoin="round"/>
-      <rect x="108" y="126" width="40" height="56" rx="8" fill="#ffffff"/>
-    `,
-    fear: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#dbeafe"/>
-      <circle cx="110" cy="122" r="5" fill="#333"/>
-      <circle cx="146" cy="122" r="5" fill="#333"/>
-      <path d="M108 150c10-16 30-16 40 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
-      <path d="M80 82l18 18M176 82l-18 18" stroke="#ff595e" stroke-width="8" stroke-linecap="round"/>
-    `,
-    confusion: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#f3e8ff"/>
-      <circle cx="110" cy="122" r="4" fill="#333"/>
-      <circle cx="146" cy="122" r="4" fill="#333"/>
-      <path d="M114 145c6-6 14-8 20-8 8 0 14 4 18 10" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
-      <path d="M126 92c16 0 24 10 24 22 0 10-7 16-15 20-6 3-9 7-9 14" fill="none" stroke="#6a4c93" stroke-width="10" stroke-linecap="round"/>
-      <circle cx="128" cy="182" r="8" fill="#6a4c93"/>
-    `,
-    repeat: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <path d="M92 104c12-20 32-32 56-32 34 0 60 24 60 58" fill="none" stroke="#1982c4" stroke-width="12" stroke-linecap="round"/>
-      <path d="M194 130l-18-8 6 20" fill="#1982c4"/>
-      <path d="M164 154c-12 20-32 32-56 32-34 0-60-24-60-58" fill="none" stroke="#8ac926" stroke-width="12" stroke-linecap="round"/>
-      <path d="M62 128l18 8-6-20" fill="#8ac926"/>
-    `,
-    pause: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="128" r="66" fill="#ffe8c7"/>
-      <rect x="104" y="102" width="18" height="52" rx="6" fill="#ff924c"/>
-      <rect x="138" y="102" width="18" height="52" rx="6" fill="#ff924c"/>
-    `,
-    choose: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="92" cy="128" r="24" fill="#8ac926"/>
-      <circle cx="128" cy="128" r="24" fill="#ffca3a"/>
-      <circle cx="164" cy="128" r="24" fill="#1982c4"/>
-      <path d="M92 104v48M128 104v48M164 104v48" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
-    `,
-    difficulty: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <path d="M76 160c20-20 44-28 72-28s52 8 76 28" fill="none" stroke="#ff924c" stroke-width="12" stroke-linecap="round"/>
-      <circle cx="110" cy="112" r="10" fill="#ff595e"/>
-      <circle cx="146" cy="112" r="10" fill="#ffca3a"/>
-      <circle cx="128" cy="146" r="10" fill="#8ac926"/>
-    `,
-    notnow: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <path d="M82 92h92c18 0 32 14 32 32v28c0 18-14 32-32 32H82c-18 0-32-14-32-32v-28c0-18 14-32 32-32z" fill="#ffffff" stroke="#ff595e" stroke-width="8"/>
-      <path d="M96 104l64 64" stroke="#ff595e" stroke-width="12" stroke-linecap="round"/>
-      <path d="M160 104l-64 64" stroke="#ff595e" stroke-width="12" stroke-linecap="round"/>
-    `,
-    talkmom: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="122" r="44" fill="#ffd6b5"/>
-      <path d="M80 178c8-28 32-46 48-46s40 18 48 46" fill="#ff7ab6"/>
-      <path d="M92 104c6-18 20-30 36-30 18 0 28 10 36 30" fill="#8b5a2b"/>
-      <circle cx="114" cy="122" r="4" fill="#333"/>
-      <circle cx="142" cy="122" r="4" fill="#333"/>
-      <path d="M116 140c7 6 17 6 24 0" fill="none" stroke="#333" stroke-width="5" stroke-linecap="round"/>
-    `,
-    talkdad: `
-      <circle cx="128" cy="128" r="96" fill="${bg}" />
-      <circle cx="128" cy="122" r="44" fill="#ffd6b5"/>
-      <path d="M80 178c8-28 32-46 48-46s40 18 48 46" fill="#4a90e2"/>
-      <path d="M92 104c6-18 20-30 36-30 18 0 28 10 36 30" fill="#6b3f1f"/>
-      <circle cx="114" cy="122" r="4" fill="#333"/>
-      <circle cx="142" cy="122" r="4" fill="#333"/>
-      <path d="M116 140c7 6 17 6 24 0" fill="none" stroke="#333" stroke-width="5" stroke-linecap="round"/>
-    `
-  };
-
-  const svg = shapes[kind] || shapes.choose;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="${kind}">
-      <rect width="256" height="256" fill="#ffffff"/>
-      ${svg}
-    </svg>
-  `)}`;
-}
-
-const library = {
-  yes: iconSVG("yes", "#8ac926"),
-  no: iconSVG("no", "#ff595e"),
-  water: iconSVG("water", "#1982c4"),
-  help: iconSVG("help", "#ff924c"),
-  mom: iconSVG("mom", "#ff7ab6"),
-  dad: iconSVG("dad", "#4a90e2"),
-  eat: iconSVG("eat", "#ff924c"),
-  sleep: iconSVG("sleep", "#6a4c93"),
-  food: iconSVG("food", "#ffca3a"),
-  play: iconSVG("play", "#8ac926"),
-  bathroom: iconSVG("bathroom", "#1982c4"),
-  hello: iconSVG("hello", "#8ac926"),
-  bye: iconSVG("bye", "#ff595e"),
-  thanks: iconSVG("thanks", "#ffca3a"),
-  please: iconSVG("please", "#1982c4"),
-  happy: iconSVG("happy", "#ff595e"),
-  sad: iconSVG("sad", "#1982c4"),
-  more: iconSVG("more", "#6a4c93"),
-  done: iconSVG("done", "#ff595e"),
-  quiet: iconSVG("quiet", "#8ac926"),
-  music: iconSVG("music", "#6a4c93"),
-  tv: iconSVG("tv", "#1982c4"),
-  leave: iconSVG("leave", "#6a4c93"),
-  home: iconSVG("home", "#ffca3a"),
-  fear: iconSVG("fear", "#1982c4"),
-  confusion: iconSVG("confusion", "#6a4c93"),
-  repeat: iconSVG("repeat", "#1982c4"),
-  pause: iconSVG("pause", "#ff924c"),
-  choose: iconSVG("choose", "#8ac926"),
-  difficulty: iconSVG("difficulty", "#ff924c"),
-  notnow: iconSVG("notnow", "#ff595e"),
-  talkmom: iconSVG("talkmom", "#ff7ab6"),
-  talkdad: iconSVG("talkdad", "#4a90e2")
-};
-
-function createCard(text, iconKey, color){
-  return {
-    id: uid(),
-    text,
-    iconKey,
-    color
-  };
 }
 
 const defaultData = {
@@ -903,16 +651,16 @@ const defaultData = {
       name: "1. Básico",
       color: "#ff595e",
       cards: [
-        createCard("Sim", "yes", "#8ac926"),
-        createCard("Não", "no", "#ff595e"),
-        createCard("Água", "water", "#1982c4"),
-        createCard("Mais", "more", "#6a4c93"),
-        createCard("Acabou", "done", "#ff595e"),
-        createCard("Ajuda", "help", "#ff924c"),
-        createCard("Mamãe", "mom", "#ff7ab6"),
-        createCard("Papai", "dad", "#4a90e2"),
-        createCard("Comer", "eat", "#ff924c"),
-        createCard("Dormir", "sleep", "#6a4c93")
+        makeCard("Sim", "✅", "#8ac926"),
+        makeCard("Não", "❌", "#ff595e"),
+        makeCard("Água", "💧", "#1982c4"),
+        makeCard("Mais", "➕", "#6a4c93"),
+        makeCard("Acabou", "🛑", "#ff595e"),
+        makeCard("Ajuda", "🆘", "#ff924c"),
+        makeCard("Mamãe", "👩", "#ff7ab6"),
+        makeCard("Papai", "👨", "#4a90e2"),
+        makeCard("Comer", "🍽️", "#ff924c"),
+        makeCard("Dormir", "😴", "#6a4c93")
       ]
     },
     {
@@ -920,16 +668,16 @@ const defaultData = {
       name: "2. Necessidades",
       color: "#ff924c",
       cards: [
-        createCard("Quero água", "water", "#1982c4"),
-        createCard("Quero comer", "food", "#ffca3a"),
-        createCard("Quero brincar", "play", "#8ac926"),
-        createCard("Quero descansar", "sleep", "#6a4c93"),
-        createCard("Estou cansado", "sleep", "#6a4c93"),
-        createCard("Estou com fome", "food", "#ffca3a"),
-        createCard("Estou com sede", "water", "#1982c4"),
-        createCard("Quero ir ao banheiro", "bathroom", "#1982c4"),
-        createCard("Preciso de ajuda", "help", "#ff924c"),
-        createCard("Quero um abraço", "mom", "#ff7ab6")
+        makeCard("Quero água", "🥤", "#1982c4"),
+        makeCard("Quero comer", "🍔", "#ffca3a"),
+        makeCard("Quero brincar", "🧸", "#8ac926"),
+        makeCard("Quero descansar", "🛏️", "#6a4c93"),
+        makeCard("Estou cansado", "😪", "#6a4c93"),
+        makeCard("Estou com fome", "🍎", "#ffca3a"),
+        makeCard("Estou com sede", "🥤", "#1982c4"),
+        makeCard("Quero ir ao banheiro", "🚽", "#1982c4"),
+        makeCard("Preciso de ajuda", "🆘", "#ff924c"),
+        makeCard("Quero um abraço", "🤗", "#ff7ab6")
       ]
     },
     {
@@ -937,16 +685,16 @@ const defaultData = {
       name: "3. Social",
       color: "#8ac926",
       cards: [
-        createCard("Oi", "hello", "#8ac926"),
-        createCard("Tchau", "bye", "#ff595e"),
-        createCard("Obrigado", "thanks", "#ffca3a"),
-        createCard("Por favor", "please", "#1982c4"),
-        createCard("Quero conversar", "please", "#1982c4"),
-        createCard("Posso brincar?", "play", "#8ac926"),
-        createCard("Gostei disso", "happy", "#ff595e"),
-        createCard("Não gostei", "no", "#ff595e"),
-        createCard("Estou triste", "sad", "#1982c4"),
-        createCard("Estou feliz", "happy", "#ff595e")
+        makeCard("Oi", "👋", "#8ac926"),
+        makeCard("Tchau", "👋", "#ff595e"),
+        makeCard("Obrigado", "🙏", "#ffca3a"),
+        makeCard("Por favor", "🙂", "#1982c4"),
+        makeCard("Quero conversar", "💬", "#1982c4"),
+        makeCard("Posso brincar?", "🎮", "#8ac926"),
+        makeCard("Gostei disso", "👍", "#ff595e"),
+        makeCard("Não gostei", "👎", "#ff595e"),
+        makeCard("Estou triste", "😢", "#1982c4"),
+        makeCard("Estou feliz", "😊", "#ff595e")
       ]
     },
     {
@@ -954,16 +702,16 @@ const defaultData = {
       name: "4. Frases",
       color: "#1982c4",
       cards: [
-        createCard("Minha barriga dói", "difficulty", "#ff924c"),
-        createCard("Minha cabeça dói", "difficulty", "#ff924c"),
-        createCard("Quero silêncio", "quiet", "#8ac926"),
-        createCard("Posso ouvir música?", "music", "#6a4c93"),
-        createCard("Quero assistir desenho", "tv", "#1982c4"),
-        createCard("Quero sair", "leave", "#6a4c93"),
-        createCard("Quero voltar para casa", "home", "#ffca3a"),
-        createCard("Estou com medo", "fear", "#1982c4"),
-        createCard("Preciso de um abraço", "mom", "#ff7ab6"),
-        createCard("Estou confuso", "confusion", "#6a4c93")
+        makeCard("Minha barriga dói", "🤕", "#ff924c"),
+        makeCard("Minha cabeça dói", "🤒", "#ff924c"),
+        makeCard("Quero silêncio", "🤫", "#8ac926"),
+        makeCard("Posso ouvir música?", "🎵", "#6a4c93"),
+        makeCard("Quero assistir desenho", "📺", "#1982c4"),
+        makeCard("Quero sair", "🚪", "#6a4c93"),
+        makeCard("Quero voltar para casa", "🏠", "#ffca3a"),
+        makeCard("Estou com medo", "😨", "#1982c4"),
+        makeCard("Preciso de um abraço", "🤗", "#ff7ab6"),
+        makeCard("Estou confuso", "❓", "#6a4c93")
       ]
     },
     {
@@ -971,16 +719,16 @@ const defaultData = {
       name: "5. Mais complexas",
       color: "#6a4c93",
       cards: [
-        createCard("Não entendi a pergunta", "confusion", "#6a4c93"),
-        createCard("Pode repetir por favor?", "repeat", "#1982c4"),
-        createCard("Preciso de ajuda agora", "help", "#ff924c"),
-        createCard("Quero fazer uma pausa", "pause", "#ff924c"),
-        createCard("Quero escolher outra coisa", "choose", "#8ac926"),
-        createCard("Estou com dificuldade", "difficulty", "#ff924c"),
-        createCard("Não quero isso agora", "notnow", "#ff595e"),
-        createCard("Quero falar com mamãe", "talkmom", "#ff7ab6"),
-        createCard("Quero falar com papai", "talkdad", "#4a90e2"),
-        createCard("Preciso me acalmar", "quiet", "#8ac926")
+        makeCard("Não entendi a pergunta", "❔", "#6a4c93"),
+        makeCard("Pode repetir por favor?", "🔁", "#1982c4"),
+        makeCard("Preciso de ajuda agora", "🚨", "#ff924c"),
+        makeCard("Quero fazer uma pausa", "⏸️", "#ff924c"),
+        makeCard("Quero escolher outra coisa", "🎯", "#8ac926"),
+        makeCard("Estou com dificuldade", "⚠️", "#ff924c"),
+        makeCard("Não quero isso agora", "✋", "#ff595e"),
+        makeCard("Quero falar com mamãe", "👩", "#ff7ab6"),
+        makeCard("Quero falar com papai", "👨", "#4a90e2"),
+        makeCard("Preciso me acalmar", "🧘", "#8ac926")
       ]
     }
   ]
@@ -989,7 +737,7 @@ const defaultData = {
 let data = loadData();
 let voices = [];
 let selectedVoice = null;
-let parentPassword = localStorage.getItem(PASSWORD_KEY) || "1234";
+let parentPassword = localStorage.getItem(PASSWORD_KEY) || "";
 let currentLevelIndex = 0;
 let editingCardId = "";
 
@@ -1006,12 +754,6 @@ function loadData(){
     if(!raw) return defaultData;
     const parsed = JSON.parse(raw);
     if(!parsed || !parsed.settings || !parsed.levels) return defaultData;
-    for(const lvl of parsed.levels){
-      for(const c of lvl.cards){
-        if(typeof c.iconKey !== "string") c.iconKey = "choose";
-        if(typeof c.color !== "string") c.color = "#4a90e2";
-      }
-    }
     return parsed;
   }catch{
     return defaultData;
@@ -1232,22 +974,15 @@ function renderCards(){
     const btn = document.createElement("button");
     btn.className = "card";
     btn.style.setProperty("--accent", level.color);
+
     btn.onclick = ()=>{
       animateTap(btn);
       playCard(card);
     };
 
     const icon = document.createElement("div");
-    icon.className = "icon";
-
-    if(card.image){
-      const img = document.createElement("img");
-      img.src = card.image;
-      img.alt = card.text;
-      icon.appendChild(img);
-    }else{
-      icon.innerHTML = `<img src="${library[card.iconKey] || library.choose}" alt="${escapeHTML(card.text)}" />`;
-    }
+    icon.className = "emoji-box";
+    icon.textContent = card.emoji || "🔤";
 
     const label = document.createElement("span");
     label.textContent = card.text;
@@ -1396,13 +1131,10 @@ function renderAdminCards(){
     title.textContent = card.text;
 
     const meta1 = document.createElement("div");
-    meta1.textContent = "Ilustração: " + (card.iconKey || "custom");
+    meta1.textContent = "Emoji: " + (card.emoji || "");
 
     const meta2 = document.createElement("div");
-    meta2.textContent = card.image ? "Imagem enviada" : "Sem imagem enviada";
-
-    const meta3 = document.createElement("div");
-    meta3.textContent = card.hasRecordedVoice ? "Voz gravada: sim" : "Voz gravada: não";
+    meta2.textContent = card.hasRecordedVoice ? "Voz gravada: sim" : "Voz gravada: não";
 
     const actions = document.createElement("div");
     actions.className = "mini-actions";
@@ -1423,11 +1155,46 @@ function renderAdminCards(){
     item.appendChild(title);
     item.appendChild(meta1);
     item.appendChild(meta2);
-    item.appendChild(meta3);
     item.appendChild(actions);
 
     list.appendChild(item);
   });
+}
+
+function guessEmoji(text){
+  const t = text.toLowerCase().trim();
+
+  if(["sim", "ok", "claro"].some(w => t === w || t.includes(w))) return "✅";
+  if(["não", "nao", "pare", "sem", "nunca"].some(w => t === w || t.includes(w))) return "❌";
+  if(t.includes("água") || t.includes("agua") || t.includes("beber") || t.includes("sede")) return "💧";
+  if(t.includes("ajuda") || t.includes("socorro")) return "🆘";
+  if(t.includes("mamãe") || t.includes("mamae")) return "👩";
+  if(t.includes("papai") || t.includes("pai")) return "👨";
+  if(t.includes("comer") || t.includes("fome") || t.includes("lanche")) return "🍽️";
+  if(t.includes("dorm") || t.includes("sono") || t.includes("descans")) return "😴";
+  if(t.includes("brinc") || t.includes("jogar")) return "🧸";
+  if(t.includes("banhe") || t.includes("xixi") || t.includes("cocô") || t.includes("coco")) return "🚽";
+  if(t.includes("oi") || t.includes("olá") || t.includes("ola")) return "👋";
+  if(t.includes("tchau") || t.includes("adeus")) return "👋";
+  if(t.includes("obrig")) return "🙏";
+  if(t.includes("favor")) return "🙂";
+  if(t.includes("feliz")) return "😊";
+  if(t.includes("trist")) return "😢";
+  if(t.includes("mais")) return "➕";
+  if(t.includes("acabou") || t.includes("fim")) return "🛑";
+  if(t.includes("silên") || t.includes("silenc")) return "🤫";
+  if(t.includes("música") || t.includes("musica")) return "🎵";
+  if(t.includes("desenho") || t.includes("tv")) return "📺";
+  if(t.includes("sair") || t.includes("ir embora")) return "🚪";
+  if(t.includes("casa")) return "🏠";
+  if(t.includes("medo")) return "😨";
+  if(t.includes("confus")) return "❓";
+  if(t.includes("repet")) return "🔁";
+  if(t.includes("paus")) return "⏸️";
+  if(t.includes("escolh")) return "🎯";
+  if(t.includes("difícil") || t.includes("dificil")) return "⚠️";
+  if(t.includes("agora")) return "✋";
+  return "🔤";
 }
 
 function saveCard(){
@@ -1436,91 +1203,35 @@ function saveCard(){
   if(!level) return;
 
   const text = document.getElementById("cardText").value.trim();
-  const imageFile = document.getElementById("cardImageFile");
-  const imageUrl = document.getElementById("cardImageUrl").value.trim();
+  const emoji = document.getElementById("cardEmoji").value.trim() || guessEmoji(text);
 
   if(!text){
     alert("Digite a fala do cartão.");
     return;
   }
 
-  const finish = (finalImage, finalIconKey) => {
-    if(editingCardId){
-      const card = level.cards.find(c => c.id === editingCardId);
-      if(card){
-        card.text = text;
-        card.image = finalImage;
-        if(finalIconKey) card.iconKey = finalIconKey;
-      }
-    }else{
-      level.cards.push({
-        id: uid(),
-        text,
-        iconKey: finalIconKey || "choose",
-        color: level.color,
-        image: finalImage,
-        hasRecordedVoice: false
-      });
+  if(editingCardId){
+    const card = level.cards.find(c => c.id === editingCardId);
+    if(card){
+      card.text = text;
+      card.emoji = emoji;
+      card.color = level.color;
     }
-
-    saveData();
-    cancelEdit();
-    renderAll();
-    renderAdminCards();
-    alert("Cartão salvo.");
-  };
-
-  if(imageFile.files && imageFile.files[0]){
-    const reader = new FileReader();
-    reader.onload = function(ev){
-      finish(String(ev.target.result || ""), "choose");
-    };
-    reader.readAsDataURL(imageFile.files[0]);
-  }else if(imageUrl){
-    finish(imageUrl, "choose");
   }else{
-    const guessed = guessIconKey(text);
-    finish("", guessed);
+    level.cards.push({
+      id: uid(),
+      text,
+      emoji,
+      color: level.color,
+      hasRecordedVoice: false
+    });
   }
-}
 
-function guessIconKey(text){
-  const t = text.toLowerCase().trim();
-
-  if(["sim", "pode", "ok", "claro"].some(w => t === w || t.includes(w))) return "yes";
-  if(["não", "nao", "sem", "pare", "nunca"].some(w => t === w || t.includes(w))) return "no";
-  if(t.includes("água") || t.includes("agua") || t.includes("beber") || t.includes("sede")) return "water";
-  if(t.includes("ajuda") || t.includes("socorro")) return "help";
-  if(t.includes("mamãe") || t.includes("mamae")) return "mom";
-  if(t.includes("papai") || t.includes("pai")) return "dad";
-  if(t.includes("comer") || t.includes("fome") || t.includes("lanche") || t.includes("almoço") || t.includes("almoco")) return "food";
-  if(t.includes("dorm") || t.includes("sono") || t.includes("descans")) return "sleep";
-  if(t.includes("brinc") || t.includes("jogar") || t.includes("jogo")) return "play";
-  if(t.includes("banhe") || t.includes("toalete") || t.includes("xixi") || t.includes("cocô") || t.includes("coco")) return "bathroom";
-  if(t.includes("oi") || t.includes("olá") || t.includes("ola")) return "hello";
-  if(t.includes("tchau") || t.includes("adeus")) return "bye";
-  if(t.includes("obrig")) return "thanks";
-  if(t.includes("favor")) return "please";
-  if(t.includes("feliz")) return "happy";
-  if(t.includes("trist")) return "sad";
-  if(t.includes("mais")) return "more";
-  if(t.includes("acabou") || t.includes("fim")) return "done";
-  if(t.includes("silên") || t.includes("silenc")) return "quiet";
-  if(t.includes("música") || t.includes("musica")) return "music";
-  if(t.includes("desenho") || t.includes("tv") || t.includes("filme")) return "tv";
-  if(t.includes("sair") || t.includes("vamos embora") || t.includes("ir embora")) return "leave";
-  if(t.includes("casa")) return "home";
-  if(t.includes("medo")) return "fear";
-  if(t.includes("confus")) return "confusion";
-  if(t.includes("repet")) return "repeat";
-  if(t.includes("paus")) return "pause";
-  if(t.includes("escolh")) return "choose";
-  if(t.includes("difícil") || t.includes("dificil")) return "difficulty";
-  if(t.includes("agora")) return "notnow";
-  if(t.includes("falar com mamãe") || t.includes("falar com mamae")) return "talkmom";
-  if(t.includes("falar com papai") || t.includes("falar com pai")) return "talkdad";
-
-  return "choose";
+  saveData();
+  cancelEdit();
+  renderAll();
+  renderAdminCards();
+  alert("Cartão salvo.");
 }
 
 function editCard(cardId){
@@ -1531,8 +1242,7 @@ function editCard(cardId){
 
   document.getElementById("adminLevelSelect").value = String(levelIndex);
   document.getElementById("cardText").value = card.text;
-  document.getElementById("cardImageFile").value = "";
-  document.getElementById("cardImageUrl").value = card.image && !card.image.startsWith("data:image") ? card.image : "";
+  document.getElementById("cardEmoji").value = card.emoji || "";
 
   editingCardId = card.id;
   renderAdminCards();
@@ -1567,8 +1277,7 @@ function findCard(cardId){
 function cancelEdit(){
   editingCardId = "";
   document.getElementById("cardText").value = "";
-  document.getElementById("cardImageFile").value = "";
-  document.getElementById("cardImageUrl").value = "";
+  document.getElementById("cardEmoji").value = "";
   updateSelectedCardLabel();
 }
 
