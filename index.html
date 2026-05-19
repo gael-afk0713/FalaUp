@@ -1,1354 +1,915 @@
+<!-- SUBSTITUA TODO O SEU index.html POR ESTE -->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>FalaUp</title>
+
 <style>
-  :root{
-    --bg1:#fff7fb;
-    --bg2:#f1f7ff;
-    --card:#ffffff;
-    --text:#1f2937;
-    --muted:#6b7280;
-    --shadow:0 12px 28px rgba(0,0,0,.10);
-    --radius:26px;
 
-    --blue:#4a90e2;
-    --pink:#ff78b4;
-    --green:#46c68a;
-    --purple:#8b7cf6;
-    --orange:#ff9f43;
-    --yellow:#f4c542;
-    --red:#ff6b6b;
-    --teal:#2dd4bf;
-  }
+:root{
 
-  body.dark{
-    --bg1:#0f172a;
-    --bg2:#111827;
-    --card:#111827;
-    --text:#f3f4f6;
-    --muted:#9ca3af;
-    --shadow:0 12px 28px rgba(0,0,0,.35);
-  }
+--red:#ff595e;
+--orange:#ff924c;
+--yellow:#ffca3a;
+--green:#8ac926;
+--blue:#1982c4;
+--purple:#6a4c93;
 
-  *{ box-sizing:border-box; }
-  html,body{ margin:0; min-height:100%; }
+--bg:#f5fbff;
+--white:#ffffff;
+--text:#2f2f2f;
 
-  body{
-    font-family:Arial, sans-serif;
-    color:var(--text);
-    background:
-      radial-gradient(circle at top left, rgba(255,120,180,.18), transparent 24%),
-      radial-gradient(circle at top right, rgba(139,124,246,.18), transparent 26%),
-      radial-gradient(circle at bottom left, rgba(70,198,138,.16), transparent 24%),
-      radial-gradient(circle at bottom right, rgba(255,159,67,.16), transparent 24%),
-      linear-gradient(180deg, var(--bg1), var(--bg2));
-  }
+}
 
-  button, input, select{
-    font:inherit;
-  }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-  header{
-    position:sticky;
-    top:0;
-    z-index:20;
-    color:#fff;
-    padding:18px 16px 16px;
-    text-align:center;
-    background:linear-gradient(135deg, #4a90e2, #ff78b4, #8b7cf6);
-    background-size:200% 200%;
-    box-shadow:0 6px 22px rgba(0,0,0,.12);
-  }
+body{
 
-  header h1{
-    margin:0;
-    font-size:34px;
-    letter-spacing:.2px;
-  }
+font-family:Arial,sans-serif;
 
-  header p{
-    margin:7px 0 0;
-    font-size:15px;
-    opacity:.96;
-  }
+background:
+linear-gradient(
+180deg,
+#f6fcff,
+#eef8ff
+);
 
-  .top-actions{
-    margin-top:14px;
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:10px;
-  }
+color:var(--text);
 
-  .btn{
-    border:none;
-    border-radius:16px;
-    padding:12px 16px;
-    cursor:pointer;
-    background:var(--card);
-    color:var(--text);
-    box-shadow:var(--shadow);
-    transition:transform .12s ease;
-  }
-  .btn:active,
-  .level-btn:active,
-  .card:active,
-  .tiny:active{
-    transform:scale(.98);
-  }
+}
 
-  .btn.primary{
-    background:#fff;
-    color:#111827;
-    font-weight:700;
-  }
-  .btn.danger{ background:var(--red); color:#fff; }
-  .btn.blue{ background:var(--blue); color:#fff; }
-  .btn.green{ background:var(--green); color:#fff; }
-  .btn.purple{ background:var(--purple); color:#fff; }
+/* HEADER */
 
-  .wrap{
-    max-width:1280px;
-    margin:0 auto;
-    padding:16px;
-  }
+header{
 
-  .hero{
-    background:var(--card);
-    border-radius:30px;
-    box-shadow:var(--shadow);
-    padding:18px;
-    margin:14px 0 16px;
-    display:grid;
-    gap:10px;
-    position:relative;
-    overflow:hidden;
-  }
+background:
+linear-gradient(
+90deg,
+var(--red),
+var(--orange),
+var(--yellow),
+var(--green),
+var(--blue),
+var(--purple)
+);
 
-  .hero::after{
-    content:"";
-    position:absolute;
-    right:-18px;
-    top:-18px;
-    width:190px;
-    height:190px;
-    border-radius:50%;
-    background:rgba(124,108,255,.10);
-  }
+padding:30px;
 
-  .hero-title{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-    font-size:23px;
-    font-weight:800;
-    margin:0;
-  }
+text-align:center;
 
-  .hero-title .badge{
-    width:42px;
-    height:42px;
-    border-radius:14px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg, rgba(74,144,226,.18), rgba(255,122,180,.18));
-    font-size:22px;
-  }
+color:white;
 
-  .hero p{
-    margin:0;
-    color:var(--muted);
-    line-height:1.45;
-  }
+box-shadow:0 6px 20px rgba(0,0,0,0.15);
 
-  .levels{
-    display:flex;
-    gap:10px;
-    overflow-x:auto;
-    padding:4px 2px 10px;
-    margin-bottom:12px;
-    -webkit-overflow-scrolling:touch;
-  }
+}
 
-  .level-btn{
-    white-space:nowrap;
-    border:none;
-    border-radius:999px;
-    padding:12px 16px;
-    font-size:16px;
-    background:var(--card);
-    color:var(--text);
-    box-shadow:var(--shadow);
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    flex-shrink:0;
-  }
+header h1{
 
-  .dot{
-    width:12px;
-    height:12px;
-    border-radius:50%;
-    display:inline-block;
-    flex:0 0 auto;
-  }
+font-size:60px;
+margin-bottom:10px;
 
-  .level-btn.active{
-    color:#fff;
-    font-weight:700;
-  }
+}
 
-  .section-title{
-    margin:18px 0 10px;
-    font-size:20px;
-  }
+header p{
 
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
-    gap:14px;
-  }
+font-size:20px;
 
-  .card{
-    border:none;
-    border-radius:28px;
-    background:var(--card);
-    box-shadow:var(--shadow);
-    cursor:pointer;
-    min-height:182px;
-    padding:14px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:12px;
-    text-align:center;
-    color:var(--text);
-    position:relative;
-    overflow:hidden;
-  }
+}
 
-  .card::before{
-    content:"";
-    position:absolute;
-    inset:0 0 auto 0;
-    height:12px;
-    background:var(--accent, var(--blue));
-  }
+/* MAIN */
 
-  .card:hover{
-    transform:translateY(-1px);
-  }
+.container{
 
-  .icon{
-    width:88px;
-    height:88px;
-    border-radius:28px;
-    background:linear-gradient(135deg, rgba(74,144,226,.14), rgba(255,122,180,.14));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    font-size:44px;
-    flex-shrink:0;
-  }
+max-width:1300px;
+margin:auto;
+padding:25px;
 
-  .icon img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-  }
+}
 
-  .card span{
-    font-size:20px;
-    font-weight:800;
-    line-height:1.12;
-  }
+/* INFO BOX */
 
-  .modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.56);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:16px;
-    z-index:100;
-  }
+.info-box{
 
-  .modal-content{
-    width:100%;
-    max-width:1040px;
-    max-height:92vh;
-    overflow:auto;
-    background:var(--card);
-    color:var(--text);
-    border-radius:30px;
-    box-shadow:var(--shadow);
-    padding:18px;
-  }
+background:white;
 
-  .modal-content h2,
-  .modal-content h3{
-    margin:0 0 12px;
-  }
+border-radius:35px;
 
-  .grid-form{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
-    gap:10px;
-  }
+padding:30px;
 
-  .field{
-    width:100%;
-    padding:13px 14px;
-    border-radius:16px;
-    border:1px solid #d1d5db;
-    background:#fff;
-    color:#111827;
-  }
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:20px;
 
-  body.dark .field{
-    background:#0b1220;
-    color:#f3f4f6;
-    border-color:#334155;
-  }
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
 
-  .admin-box{
-    background:rgba(148,163,184,.12);
-    border-radius:20px;
-    padding:14px;
-    margin-top:14px;
-  }
+}
 
-  .mini-list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-top:10px;
-  }
+.info-text h2{
 
-  .mini-item{
-    background:rgba(148,163,184,.14);
-    border-radius:16px;
-    padding:12px;
-  }
+font-size:38px;
+color:var(--purple);
 
-  .mini-item strong{
-    display:block;
-    margin-bottom:4px;
-  }
+margin-bottom:10px;
 
-  .mini-actions{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:10px;
-  }
+}
 
-  .tiny{
-    border:none;
-    border-radius:12px;
-    padding:10px 12px;
-    font-size:14px;
-    cursor:pointer;
-    color:#fff;
-    background:var(--blue);
-  }
+.info-text p{
 
-  .tiny.gray{ background:#64748b; }
-  .tiny.danger{ background:var(--red); }
-  .tiny.ok{ background:var(--green); }
-  .tiny.purple{ background:var(--purple); }
-  .tiny.orange{ background:var(--orange); }
+font-size:20px;
+line-height:1.5;
 
-  .split{
-    display:grid;
-    grid-template-columns:1.15fr .85fr;
-    gap:14px;
-  }
+}
 
-  .note{
-    color:var(--muted);
-    font-size:14px;
-    margin-top:8px;
-    line-height:1.4;
-  }
+.info-box img{
 
-  .record-box{
-    border:2px dashed rgba(139,124,246,.35);
-    border-radius:18px;
-    padding:14px;
-    margin-top:12px;
-    background:rgba(139,124,246,.06);
-  }
+width:190px;
 
-  .record-status{
-    font-weight:700;
-    margin-top:8px;
-  }
+}
 
-  .small-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:6px 10px;
-    border-radius:999px;
-    background:rgba(74,144,226,.12);
-    margin-bottom:10px;
-    font-size:13px;
-    font-weight:700;
-  }
+/* LEVEL BUTTONS */
 
-  footer{
-    text-align:center;
-    padding:22px 14px 30px;
-    font-size:14px;
-    color:var(--muted);
-  }
+.levels{
 
-  @media (max-width: 800px){
-    .split{ grid-template-columns:1fr; }
-    header h1{ font-size:30px; }
-    .card{ min-height:164px; }
-    .card span{ font-size:18px; }
-  }
+display:flex;
+gap:15px;
+
+margin-top:30px;
+
+flex-wrap:wrap;
+
+}
+
+.level-btn{
+
+padding:15px 26px;
+
+border:none;
+
+border-radius:20px;
+
+font-size:18px;
+font-weight:bold;
+
+color:white;
+
+cursor:pointer;
+
+transition:0.2s;
+
+}
+
+.level-btn:hover{
+
+transform:scale(1.05);
+
+}
+
+.level1{background:var(--red);}
+.level2{background:var(--orange);}
+.level3{background:var(--yellow); color:#333;}
+.level4{background:var(--green);}
+.level5{background:var(--blue);}
+
+/* SECTION TITLE */
+
+.section-title{
+
+margin-top:40px;
+margin-bottom:20px;
+
+font-size:38px;
+color:var(--purple);
+
+}
+
+/* CARDS */
+
+.cards{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(190px,1fr));
+
+gap:25px;
+
+}
+
+/* CARD */
+
+.card{
+
+background:white;
+
+border-radius:30px;
+
+padding:20px;
+
+text-align:center;
+
+cursor:pointer;
+
+transition:0.25s;
+
+box-shadow:0 10px 20px rgba(0,0,0,0.08);
+
+border:5px solid transparent;
+
+}
+
+.card:hover{
+
+transform:
+translateY(-8px)
+scale(1.03);
+
+}
+
+.card img{
+
+width:100%;
+height:150px;
+
+object-fit:cover;
+
+border-radius:20px;
+
+margin-bottom:15px;
+
+}
+
+.card h3{
+
+font-size:28px;
+
+}
+
+/* COLORS */
+
+.red{border-color:var(--red);}
+.orange{border-color:var(--orange);}
+.yellow{border-color:var(--yellow);}
+.green{border-color:var(--green);}
+.blue{border-color:var(--blue);}
+.purple{border-color:var(--purple);}
+
+/* PARENTS AREA */
+
+.parents{
+
+margin-top:50px;
+
+background:white;
+
+border-radius:35px;
+
+padding:35px;
+
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+
+}
+
+.parents h2{
+
+font-size:42px;
+
+color:var(--purple);
+
+margin-bottom:20px;
+
+}
+
+.parents input,
+.parents select{
+
+width:100%;
+
+padding:15px;
+
+border-radius:15px;
+
+border:2px solid #ddd;
+
+margin-bottom:15px;
+
+font-size:18px;
+
+}
+
+.parents button{
+
+padding:14px 22px;
+
+border:none;
+
+border-radius:15px;
+
+font-size:18px;
+
+cursor:pointer;
+
+color:white;
+
+background:var(--purple);
+
+margin-right:10px;
+margin-top:10px;
+
+transition:0.2s;
+
+}
+
+.parents button:hover{
+
+transform:scale(1.04);
+
+}
+
+.record-box{
+
+margin-top:25px;
+
+background:#f4f0ff;
+
+padding:25px;
+
+border-radius:25px;
+
+}
+
+.record-box h3{
+
+margin-bottom:15px;
+font-size:28px;
+
+}
+
+/* FOOTER */
+
+footer{
+
+text-align:center;
+
+padding:40px;
+
+color:#777;
+
+font-size:18px;
+
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+header h1{
+font-size:42px;
+}
+
+.info-box{
+
+flex-direction:column;
+text-align:center;
+
+}
+
+.info-text h2{
+
+font-size:30px;
+
+}
+
+.card h3{
+
+font-size:22px;
+
+}
+
+}
+
 </style>
 </head>
+
 <body>
 
 <header>
-  <h1>FalaUp</h1>
-  <p>Cartões com voz para comunicação simples, clara e divertida.</p>
-  <div class="top-actions">
-    <button class="btn primary" onclick="openConfig()">Configurações / Pais</button>
-    <button class="btn primary" onclick="toggleTheme()">Modo claro/escuro</button>
-  </div>
+
+<h1>FalaUp</h1>
+
+<p>
+Comunicação alternativa divertida para crianças com TEA
+</p>
+
 </header>
 
-<div class="wrap">
-  <section class="hero">
-    <div class="hero-title">
-      <span class="badge">⭐</span>
-      <span>Toque nos cartões para ouvir a fala</span>
-    </div>
-    <p>Os cartões estão divididos em 5 níveis. As frases começam com palavras simples e vão ficando mais completas conforme a criança avança.</p>
-  </section>
+<div class="container">
 
-  <div id="levels" class="levels"></div>
-  <h2 class="section-title" id="levelTitle"></h2>
-  <div id="cards" class="grid"></div>
+<!-- INFO -->
+
+<div class="info-box">
+
+<div class="info-text">
+
+<h2>
+Toque nos cartões para ouvir a fala
+</h2>
+
+<p>
+
+Os cartões começam com palavras simples e vão evoluindo
+para frases mais completas conforme a criança avança
+pelos níveis.
+
+</p>
+
+</div>
+
+<img
+src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
+
+</div>
+
+<!-- LEVELS -->
+
+<div class="levels">
+
+<button class="level-btn level1">
+1. Básico
+</button>
+
+<button class="level-btn level2">
+2. Necessidades
+</button>
+
+<button class="level-btn level3">
+3. Social
+</button>
+
+<button class="level-btn level4">
+4. Frases
+</button>
+
+<button class="level-btn level5">
+5. Avançado
+</button>
+
+</div>
+
+<!-- TITLE -->
+
+<h2 class="section-title">
+1. Básico
+</h2>
+
+<!-- CARDS -->
+
+<div class="cards" id="cardsContainer">
+
+</div>
+
+<!-- PARENTS -->
+
+<div class="parents">
+
+<h2>
+Área dos Pais
+</h2>
+
+<input
+type="password"
+placeholder="Digite a senha">
+
+<button>
+Entrar
+</button>
+
+<!-- EDIT -->
+
+<div class="record-box">
+
+<h3>
+Editar Cartões
+</h3>
+
+<select id="cardSelect"></select>
+
+<input
+type="text"
+id="newText"
+placeholder="Novo texto do cartão">
+
+<input
+type="file"
+id="newImage"
+accept="image/*">
+
+<button onclick="saveCardEdit()">
+Salvar Alterações
+</button>
+
+</div>
+
+<!-- RECORD -->
+
+<div class="record-box">
+
+<h3>
+Gravar Voz Personalizada
+</h3>
+
+<button onclick="startRecording()">
+🎤 Gravar Voz
+</button>
+
+<button onclick="stopRecording()">
+⏹ Parar
+</button>
+
+<p id="recordStatus"
+style="margin-top:15px;">
+Nenhuma gravação.
+</p>
+
+</div>
+
+<!-- NEW CARD -->
+
+<div class="record-box">
+
+<h3>
+Adicionar Novo Cartão
+</h3>
+
+<input
+type="text"
+id="cardText"
+placeholder="Texto do cartão">
+
+<input
+type="file"
+id="cardImage"
+accept="image/*">
+
+<button onclick="addCard()">
+Adicionar Cartão
+</button>
+
+</div>
+
+</div>
+
 </div>
 
 <footer>
-  Feito para iPad, GitHub Pages e navegadores modernos.
+
+FalaUp • Comunicação alternativa para crianças com TEA
+
 </footer>
 
-<div id="configModal" class="modal">
-  <div class="modal-content">
-    <h2>Configurações / Área dos pais</h2>
-
-    <div id="setupArea" class="admin-box" style="display:none">
-      <h3>Definir senha dos pais</h3>
-      <div class="grid-form">
-        <input class="field" id="newPass1" type="password" placeholder="Nova senha">
-        <input class="field" id="newPass2" type="password" placeholder="Confirmar nova senha">
-      </div>
-      <div class="mini-actions">
-        <button class="tiny ok" onclick="setFirstPassword()">Criar senha</button>
-      </div>
-      <p class="note">Essa senha fica salva neste navegador/dispositivo.</p>
-    </div>
-
-    <div id="loginArea" class="admin-box" style="display:none">
-      <h3>Entrar</h3>
-      <div class="grid-form">
-        <input class="field" id="loginPass" type="password" placeholder="Senha dos pais">
-      </div>
-      <div class="mini-actions">
-        <button class="tiny ok" onclick="loginAdmin()">Entrar</button>
-      </div>
-    </div>
-
-    <div id="adminArea" style="display:none">
-      <div class="split">
-        <div>
-          <div class="admin-box">
-            <h3>Voz</h3>
-            <div class="grid-form">
-              <select class="field" id="voiceSelect"></select>
-              <input class="field" id="rateRange" type="range" min="0.6" max="1.4" step="0.1" value="1">
-            </div>
-            <div class="mini-actions">
-              <button class="tiny ok" onclick="saveVoiceSettings()">Salvar voz</button>
-              <button class="tiny gray" onclick="testVoice()">Testar voz</button>
-            </div>
-            <p class="note">A voz e a velocidade ficam guardadas no navegador.</p>
-          </div>
-
-          <div class="admin-box">
-            <h3>Alterar senha</h3>
-            <div class="grid-form">
-              <input class="field" id="oldPass" type="password" placeholder="Senha atual">
-              <input class="field" id="changePass1" type="password" placeholder="Nova senha">
-              <input class="field" id="changePass2" type="password" placeholder="Confirmar nova senha">
-            </div>
-            <div class="mini-actions">
-              <button class="tiny ok" onclick="changePassword()">Salvar nova senha</button>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="admin-box">
-            <h3>Escolher nível</h3>
-            <div class="grid-form">
-              <select class="field" id="adminLevelSelect" onchange="renderAdminCards()"></select>
-            </div>
-          </div>
-
-          <div class="admin-box">
-            <h3>Adicionar / editar cartão</h3>
-            <div class="grid-form">
-              <input class="field" id="cardText" placeholder="Texto da fala">
-              <input class="field" id="cardEmoji" placeholder="Emoji (opcional, ex: 🍎)">
-              <input class="field" id="cardImage" placeholder="URL da imagem (opcional)">
-              <input class="field" id="cardFile" type="file" accept="image/*">
-            </div>
-
-            <input type="hidden" id="editingCardId">
-
-            <div class="mini-actions">
-              <button class="tiny ok" onclick="saveCard()">Salvar cartão</button>
-              <button class="tiny gray" onclick="cancelEdit()">Cancelar edição</button>
-            </div>
-            <p class="note">Você pode usar foto do iPad ou colar um link de imagem.</p>
-
-            <div class="record-box">
-              <div class="small-badge">🎤 Voz gravada do cartão selecionado</div>
-              <div id="selectedCardLabel" class="note">Nenhum cartão selecionado ainda.</div>
-              <div class="mini-actions">
-                <button class="tiny purple" onclick="startRecording()">Iniciar gravação</button>
-                <button class="tiny orange" onclick="stopRecording()">Parar gravação</button>
-                <button class="tiny gray" onclick="removeRecording()">Remover gravação</button>
-              </div>
-              <div id="recordStatus" class="record-status">Pronto para gravar.</div>
-              <div class="note">Clique em <b>Editar</b> em um cartão, depois grave a voz desse cartão. A gravação fica salva neste navegador.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-box">
-        <h3>Cartões do nível selecionado</h3>
-        <div id="adminCardList" class="mini-list"></div>
-      </div>
-
-      <div class="mini-actions" style="margin-top:14px;">
-        <button class="btn danger" onclick="closeConfig()">Fechar</button>
-      </div>
-    </div>
-
-    <div class="mini-actions" style="margin-top:14px;">
-      <button class="btn danger" onclick="closeConfig()">Fechar</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const STORAGE_KEY = "falaup_tea_app_v4";
-const PASSWORD_KEY = "falaup_parent_password_v4";
-const AUDIO_DB_NAME = "falaup_audio_db_v1";
-const AUDIO_STORE = "audio";
 
-function uid(){
-  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-  return "id_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+/* DATA */
+
+let cards = [
+
+{
+text:"Sim",
+image:"https://cdn-icons-png.flaticon.com/512/845/845646.png",
+color:"red"
+},
+
+{
+text:"Não",
+image:"https://cdn-icons-png.flaticon.com/512/1828/1828665.png",
+color:"orange"
+},
+
+{
+text:"Água",
+image:"https://cdn-icons-png.flaticon.com/512/3105/3105807.png",
+color:"yellow"
+},
+
+{
+text:"Ajuda",
+image:"https://cdn-icons-png.flaticon.com/512/1048/1048941.png",
+color:"green"
+},
+
+{
+text:"Mamãe",
+image:"https://cdn-icons-png.flaticon.com/512/4140/4140048.png",
+color:"blue"
+},
+
+{
+text:"Papai",
+image:"https://cdn-icons-png.flaticon.com/512/4140/4140061.png",
+color:"purple"
+},
+
+{
+text:"Comer",
+image:"https://cdn-icons-png.flaticon.com/512/1046/1046784.png",
+color:"red"
+},
+
+{
+text:"Dormir",
+image:"https://cdn-icons-png.flaticon.com/512/2933/2933821.png",
+color:"orange"
+},
+
+{
+text:"Banheiro",
+image:"https://cdn-icons-png.flaticon.com/512/619/619034.png",
+color:"yellow"
+},
+
+{
+text:"Brincar",
+image:"https://cdn-icons-png.flaticon.com/512/3468/3468377.png",
+color:"green"
 }
 
-const defaultData = {
-  settings: {
-    themeDark: false,
-    voiceURI: "",
-    rate: 1
-  },
-  levels: [
-    {
-      id: uid(),
-      name: "1. Básico",
-      color: "#4a90e2",
-      cards: [
-        { id: uid(), text: "Sim", emoji: "✅", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Não", emoji: "❌", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Água", emoji: "💧", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Mais", emoji: "➕", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Acabou", emoji: "🛑", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Ajuda", emoji: "🆘", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Mamãe", emoji: "👩", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Papai", emoji: "👨", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Comer", emoji: "🍽️", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Dormir", emoji: "😴", image: "", hasRecordedVoice: false }
-      ]
-    },
-    {
-      id: uid(),
-      name: "2. Necessidades",
-      color: "#ff78b4",
-      cards: [
-        { id: uid(), text: "Quero água", emoji: "🥤", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero comer", emoji: "🍔", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero brincar", emoji: "🧸", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero descansar", emoji: "🛏️", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Estou cansado", emoji: "😪", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Estou com fome", emoji: "🍎", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Estou com sede", emoji: "🥤", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero ir ao banheiro", emoji: "🚽", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Preciso de ajuda", emoji: "🆘", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero um abraço", emoji: "🤗", image: "", hasRecordedVoice: false }
-      ]
-    },
-    {
-      id: uid(),
-      name: "3. Social",
-      color: "#46c68a",
-      cards: [
-        { id: uid(), text: "Oi", emoji: "👋", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Tchau", emoji: "👋", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Obrigado", emoji: "🙏", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Por favor", emoji: "🙂", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero conversar", emoji: "💬", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Posso brincar?", emoji: "🎮", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Gostei disso", emoji: "👍", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Não gostei", emoji: "👎", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Estou triste", emoji: "😢", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Estou feliz", emoji: "😊", image: "", hasRecordedVoice: false }
-      ]
-    },
-    {
-      id: uid(),
-      name: "4. Frases",
-      color: "#8b7cf6",
-      cards: [
-        { id: uid(), text: "Minha barriga dói", emoji: "🤕", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Minha cabeça dói", emoji: "🤒", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero silêncio", emoji: "🤫", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Posso ouvir música?", emoji: "🎵", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero assistir desenho", emoji: "📺", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero sair", emoji: "🚪", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero voltar para casa", emoji: "🏠", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Estou com medo", emoji: "😨", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Preciso de um abraço", emoji: "🤗", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Estou confuso", emoji: "❓", image: "", hasRecordedVoice: false }
-      ]
-    },
-    {
-      id: uid(),
-      name: "5. Mais complexas",
-      color: "#ff9f43",
-      cards: [
-        { id: uid(), text: "Não entendi a pergunta", emoji: "❔", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Pode repetir por favor?", emoji: "🔁", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Preciso de ajuda agora", emoji: "🚨", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero fazer uma pausa", emoji: "⏸️", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero escolher outra coisa", emoji: "🔄", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Estou com dificuldade", emoji: "⚠️", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Não quero isso agora", emoji: "✋", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero falar com mamãe", emoji: "👩", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Quero falar com papai", emoji: "👨", image: "", hasRecordedVoice: false },
-        { id: uid(), text: "Preciso me acalmar", emoji: "🧘", image: "", hasRecordedVoice: false }
-      ]
-    }
-  ]
-};
+];
 
-let data = loadData();
-let voices = [];
-let selectedVoice = null;
-let parentPassword = localStorage.getItem(PASSWORD_KEY) || "";
-let currentLevelIndex = 0;
-let editingCardId = "";
-
-let audioDBPromise = openAudioDB();
-let currentAudio = null;
-let mediaRecorder = null;
-let recordingStream = null;
-let recordingChunks = [];
-let isRecording = false;
-
-function loadData(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return defaultData;
-    const parsed = JSON.parse(raw);
-    if(!parsed || !parsed.settings || !parsed.levels) return defaultData;
-    for(const lvl of parsed.levels){
-      for(const c of lvl.cards){
-        if(typeof c.hasRecordedVoice !== "boolean") c.hasRecordedVoice = false;
-      }
-    }
-    return parsed;
-  }catch{
-    return defaultData;
-  }
-}
-
-function saveData(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function savePassword(pass){
-  parentPassword = pass;
-  localStorage.setItem(PASSWORD_KEY, pass);
-}
-
-function openAudioDB(){
-  return new Promise((resolve, reject)=>{
-    const req = indexedDB.open(AUDIO_DB_NAME, 1);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if(!db.objectStoreNames.contains(AUDIO_STORE)){
-        db.createObjectStore(AUDIO_STORE);
-      }
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-async function putAudio(cardId, blob){
-  const db = await audioDBPromise;
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction(AUDIO_STORE, "readwrite");
-    tx.objectStore(AUDIO_STORE).put(blob, cardId);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-async function getAudio(cardId){
-  const db = await audioDBPromise;
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction(AUDIO_STORE, "readonly");
-    const req = tx.objectStore(AUDIO_STORE).get(cardId);
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-async function deleteAudio(cardId){
-  const db = await audioDBPromise;
-  return new Promise((resolve, reject)=>{
-    const tx = db.transaction(AUDIO_STORE, "readwrite");
-    tx.objectStore(AUDIO_STORE).delete(cardId);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-function openConfig(){
-  document.getElementById("configModal").style.display = "flex";
-
-  const setupArea = document.getElementById("setupArea");
-  const loginArea = document.getElementById("loginArea");
-  const adminArea = document.getElementById("adminArea");
-
-  if(!parentPassword){
-    setupArea.style.display = "block";
-    loginArea.style.display = "none";
-    adminArea.style.display = "none";
-  }else{
-    setupArea.style.display = "none";
-    loginArea.style.display = "block";
-    adminArea.style.display = "none";
-  }
-
-  ensureVoices();
-  renderAdminSelectors();
-  updateSelectedCardLabel();
-  updateRecordStatus("Pronto para gravar.");
-}
-
-function closeConfig(){
-  document.getElementById("configModal").style.display = "none";
-  stopRecordingSilently();
-}
-
-function setFirstPassword(){
-  const p1 = document.getElementById("newPass1").value.trim();
-  const p2 = document.getElementById("newPass2").value.trim();
-
-  if(!p1 || !p2){
-    alert("Digite e confirme a senha.");
-    return;
-  }
-  if(p1 !== p2){
-    alert("As senhas não conferem.");
-    return;
-  }
-
-  savePassword(p1);
-  document.getElementById("setupArea").style.display = "none";
-  document.getElementById("loginArea").style.display = "block";
-  document.getElementById("loginPass").value = p1;
-  alert("Senha criada.");
-}
-
-function loginAdmin(){
-  const p = document.getElementById("loginPass").value.trim();
-  if(p !== parentPassword){
-    alert("Senha incorreta.");
-    return;
-  }
-
-  document.getElementById("loginArea").style.display = "none";
-  document.getElementById("adminArea").style.display = "block";
-  renderAdminSelectors();
-  renderAdminCards();
-  ensureVoices();
-  updateSelectedCardLabel();
-}
-
-function changePassword(){
-  const oldPass = document.getElementById("oldPass").value.trim();
-  const n1 = document.getElementById("changePass1").value.trim();
-  const n2 = document.getElementById("changePass2").value.trim();
-
-  if(oldPass !== parentPassword){
-    alert("Senha atual incorreta.");
-    return;
-  }
-  if(!n1 || !n2){
-    alert("Digite a nova senha e confirme.");
-    return;
-  }
-  if(n1 !== n2){
-    alert("As senhas novas não conferem.");
-    return;
-  }
-
-  savePassword(n1);
-  document.getElementById("oldPass").value = "";
-  document.getElementById("changePass1").value = "";
-  document.getElementById("changePass2").value = "";
-  alert("Senha alterada.");
-}
-
-function renderLevels(){
-  const container = document.getElementById("levels");
-  container.innerHTML = "";
-
-  data.levels.forEach((level, idx)=>{
-    const btn = document.createElement("button");
-    btn.className = "level-btn" + (idx === currentLevelIndex ? " active" : "");
-    btn.style.background = idx === currentLevelIndex ? level.color : "var(--card)";
-    btn.style.color = idx === currentLevelIndex ? "#fff" : "var(--text)";
-
-    const dot = document.createElement("span");
-    dot.className = "dot";
-    dot.style.background = level.color;
-
-    const label = document.createElement("span");
-    label.textContent = level.name;
-
-    btn.appendChild(dot);
-    btn.appendChild(label);
-
-    btn.onclick = ()=>{
-      currentLevelIndex = idx;
-      renderAll();
-    };
-
-    container.appendChild(btn);
-  });
-}
-
-async function playCard(card){
-  stopCurrentAudio();
-
-  if(card.hasRecordedVoice){
-    const blob = await getAudio(card.id);
-    if(blob){
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      currentAudio = audio;
-      audio.onended = () => {
-        URL.revokeObjectURL(url);
-        currentAudio = null;
-      };
-      audio.onerror = () => {
-        URL.revokeObjectURL(url);
-        currentAudio = null;
-        speak(card.text);
-      };
-      audio.play().catch(()=> speak(card.text));
-      return;
-    }
-  }
-
-  speak(card.text);
-}
+/* RENDER */
 
 function renderCards(){
-  const level = data.levels[currentLevelIndex];
-  const title = document.getElementById("levelTitle");
-  const grid = document.getElementById("cards");
-  grid.innerHTML = "";
 
-  if(!level){
-    title.textContent = "";
-    return;
-  }
+const container =
+document.getElementById(
+"cardsContainer"
+);
 
-  title.textContent = level.name;
+container.innerHTML = "";
 
-  level.cards.forEach(card=>{
-    const btn = document.createElement("button");
-    btn.className = "card";
-    btn.style.setProperty("--accent", level.color);
-    btn.onclick = ()=>{
-      animateTap(btn);
-      playCard(card);
-    };
+cards.forEach((card,index)=>{
 
-    const icon = document.createElement("div");
-    icon.className = "icon";
+container.innerHTML += `
 
-    if(card.image){
-      const img = document.createElement("img");
-      img.src = card.image;
-      img.alt = card.text;
-      icon.appendChild(img);
-    }else{
-      icon.textContent = card.emoji || "🔤";
-    }
+<div
+class="card ${card.color}"
+onclick="speak('${card.text}')">
 
-    const label = document.createElement("span");
-    label.textContent = card.text;
+<img src="${card.image}">
 
-    btn.appendChild(icon);
-    btn.appendChild(label);
-    grid.appendChild(btn);
-  });
+<h3>${card.text}</h3>
+
+</div>
+
+`;
+
+});
+
+updateSelect();
+
 }
 
-function animateTap(el){
-  el.animate(
-    [
-      { transform:"scale(1)" },
-      { transform:"scale(.97)" },
-      { transform:"scale(1)" }
-    ],
-    { duration:180, easing:"ease-out" }
-  );
-}
-
-function ensureVoices(){
-  if(!("speechSynthesis" in window)) return;
-
-  voices = speechSynthesis.getVoices() || [];
-  const select = document.getElementById("voiceSelect");
-  if(!select) return;
-
-  select.innerHTML = "";
-
-  if(voices.length === 0){
-    const opt = document.createElement("option");
-    opt.value = "";
-    opt.textContent = "Carregando vozes...";
-    select.appendChild(opt);
-    return;
-  }
-
-  voices.forEach(v=>{
-    const opt = document.createElement("option");
-    opt.value = v.voiceURI;
-    opt.textContent = `${v.name} (${v.lang})`;
-    if(data.settings.voiceURI && v.voiceURI === data.settings.voiceURI){
-      opt.selected = true;
-      selectedVoice = v;
-    }
-    select.appendChild(opt);
-  });
-
-  if(!data.settings.voiceURI && voices.length > 0){
-    const pt = voices.find(v => (v.lang || "").toLowerCase().includes("pt-br")) || voices[0];
-    data.settings.voiceURI = pt.voiceURI;
-    selectedVoice = pt;
-    select.value = pt.voiceURI;
-    saveData();
-  }
-
-  const rate = document.getElementById("rateRange");
-  if(rate) rate.value = data.settings.rate || 1;
-}
-
-if("speechSynthesis" in window){
-  speechSynthesis.onvoiceschanged = ensureVoices;
-}
+/* VOICE */
 
 function speak(text){
-  if(!("speechSynthesis" in window)) return;
 
-  speechSynthesis.cancel();
+let speech =
+new SpeechSynthesisUtterance(text);
 
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "pt-BR";
-  utter.rate = data.settings.rate || 1;
+speech.lang = "pt-BR";
+speech.rate = 0.9;
 
-  const voice = voices.find(v => v.voiceURI === data.settings.voiceURI) || selectedVoice || null;
-  if(voice) utter.voice = voice;
+window.speechSynthesis.speak(speech);
 
-  speechSynthesis.speak(utter);
 }
 
-function stopCurrentAudio(){
-  if(currentAudio){
-    try{ currentAudio.pause(); }catch(e){}
-    currentAudio = null;
-  }
-  if("speechSynthesis" in window){
-    speechSynthesis.cancel();
-  }
+/* SELECT */
+
+function updateSelect(){
+
+const select =
+document.getElementById(
+"cardSelect"
+);
+
+select.innerHTML = "";
+
+cards.forEach((card,index)=>{
+
+select.innerHTML += `
+
+<option value="${index}">
+${card.text}
+</option>
+
+`;
+
+});
+
 }
 
-function toggleTheme(){
-  data.settings.themeDark = !data.settings.themeDark;
-  document.body.classList.toggle("dark", data.settings.themeDark);
-  saveData();
+/* EDIT */
+
+function saveCardEdit(){
+
+const index =
+document.getElementById(
+"cardSelect"
+).value;
+
+const newText =
+document.getElementById(
+"newText"
+).value;
+
+const imageInput =
+document.getElementById(
+"newImage"
+);
+
+if(newText){
+
+cards[index].text = newText;
+
 }
 
-function saveVoiceSettings(){
-  const select = document.getElementById("voiceSelect");
-  const rate = document.getElementById("rateRange");
+if(imageInput.files[0]){
 
-  data.settings.voiceURI = select.value;
-  data.settings.rate = Number(rate.value);
-  selectedVoice = voices.find(v => v.voiceURI === data.settings.voiceURI) || null;
+const reader =
+new FileReader();
 
-  saveData();
-  alert("Voz salva.");
+reader.onload = function(e){
+
+cards[index].image =
+e.target.result;
+
+renderCards();
+
+};
+
+reader.readAsDataURL(
+imageInput.files[0]
+);
+
+}else{
+
+renderCards();
+
 }
 
-function testVoice(){
-  const rate = document.getElementById("rateRange");
-  data.settings.rate = Number(rate.value);
-  saveData();
-  speak("Olá. Esta é a voz escolhida pelos pais.");
 }
 
-function renderAdminSelectors(){
-  const select = document.getElementById("adminLevelSelect");
-  if(!select) return;
+/* ADD CARD */
 
-  select.innerHTML = "";
-  data.levels.forEach((level, idx)=>{
-    const opt = document.createElement("option");
-    opt.value = idx;
-    opt.textContent = level.name;
-    select.appendChild(opt);
-  });
+function addCard(){
 
-  if(data.levels[currentLevelIndex]){
-    select.value = String(currentLevelIndex);
-  }
+const text =
+document.getElementById(
+"cardText"
+).value;
+
+const imageInput =
+document.getElementById(
+"cardImage"
+);
+
+if(!text || !imageInput.files[0]){
+
+alert(
+"Preencha o texto e escolha uma imagem."
+);
+
+return;
+
 }
 
-function renderAdminCards(){
-  const levelIndex = Number(document.getElementById("adminLevelSelect").value || 0);
-  const level = data.levels[levelIndex];
-  const list = document.getElementById("adminCardList");
-  list.innerHTML = "";
+const colors = [
+"red",
+"orange",
+"yellow",
+"green",
+"blue",
+"purple"
+];
 
-  if(!level) return;
+const randomColor =
+colors[
+Math.floor(
+Math.random()*colors.length
+)
+];
 
-  level.cards.forEach(card=>{
-    const item = document.createElement("div");
-    item.className = "mini-item";
+const reader =
+new FileReader();
 
-    const title = document.createElement("strong");
-    title.textContent = card.text;
+reader.onload = function(e){
 
-    const meta1 = document.createElement("div");
-    meta1.textContent = "Emoji: " + (card.emoji || "");
+cards.push({
 
-    const meta2 = document.createElement("div");
-    meta2.textContent = card.image ? "Foto adicionada" : "Sem foto";
+text:text,
+image:e.target.result,
+color:randomColor
 
-    const meta3 = document.createElement("div");
-    meta3.textContent = card.hasRecordedVoice ? "Voz gravada: sim" : "Voz gravada: não";
+});
 
-    const actions = document.createElement("div");
-    actions.className = "mini-actions";
+renderCards();
 
-    const editBtn = document.createElement("button");
-    editBtn.className = "tiny ok";
-    editBtn.textContent = "Editar";
-    editBtn.onclick = ()=> editCard(card.id);
+};
 
-    const delBtn = document.createElement("button");
-    delBtn.className = "tiny danger";
-    delBtn.textContent = "Excluir";
-    delBtn.onclick = ()=> deleteCard(card.id);
+reader.readAsDataURL(
+imageInput.files[0]
+);
 
-    actions.appendChild(editBtn);
-    actions.appendChild(delBtn);
-
-    item.appendChild(title);
-    item.appendChild(meta1);
-    item.appendChild(meta2);
-    item.appendChild(meta3);
-    item.appendChild(actions);
-
-    list.appendChild(item);
-  });
 }
 
-function saveCard(){
-  const levelIndex = Number(document.getElementById("adminLevelSelect").value || 0);
-  const level = data.levels[levelIndex];
-  if(!level) return;
+/* RECORD */
 
-  const text = document.getElementById("cardText").value.trim();
-  const emoji = document.getElementById("cardEmoji").value.trim() || "🔤";
-  const imageUrl = document.getElementById("cardImage").value.trim();
-  const fileInput = document.getElementById("cardFile");
-
-  if(!text){
-    alert("Digite a fala do cartão.");
-    return;
-  }
-
-  const finish = (finalImage) => {
-    if(editingCardId){
-      const card = level.cards.find(c => c.id === editingCardId);
-      if(card){
-        card.text = text;
-        card.emoji = emoji;
-        card.image = finalImage;
-      }
-    }else{
-      level.cards.push({
-        id: uid(),
-        text,
-        emoji,
-        image: finalImage,
-        hasRecordedVoice: false
-      });
-    }
-
-    saveData();
-    cancelEdit();
-    renderAll();
-    renderAdminCards();
-    alert("Cartão salvo.");
-  };
-
-  if(fileInput.files && fileInput.files[0]){
-    const reader = new FileReader();
-    reader.onload = function(ev){
-      finish(String(ev.target.result || ""));
-    };
-    reader.readAsDataURL(fileInput.files[0]);
-  }else{
-    finish(imageUrl);
-  }
-}
-
-function editCard(cardId){
-  const found = findCard(cardId);
-  if(!found) return;
-
-  const { levelIndex, card } = found;
-
-  document.getElementById("adminLevelSelect").value = String(levelIndex);
-  document.getElementById("cardText").value = card.text;
-  document.getElementById("cardEmoji").value = card.emoji || "";
-  document.getElementById("cardImage").value = card.image || "";
-  document.getElementById("cardFile").value = "";
-
-  editingCardId = card.id;
-  renderAdminCards();
-  updateSelectedCardLabel();
-  document.getElementById("cardText").focus();
-}
-
-function deleteCard(cardId){
-  if(!confirm("Excluir este cartão?")) return;
-
-  const found = findCard(cardId);
-  if(!found) return;
-
-  found.level.cards = found.level.cards.filter(c => c.id !== cardId);
-
-  deleteAudio(cardId).catch(()=>{});
-  saveData();
-  renderAll();
-  renderAdminCards();
-  updateSelectedCardLabel();
-}
-
-function findCard(cardId){
-  for(let i = 0; i < data.levels.length; i++){
-    const level = data.levels[i];
-    const card = level.cards.find(c => c.id === cardId);
-    if(card) return { levelIndex:i, level, card };
-  }
-  return null;
-}
-
-function cancelEdit(){
-  editingCardId = "";
-  document.getElementById("cardText").value = "";
-  document.getElementById("cardEmoji").value = "";
-  document.getElementById("cardImage").value = "";
-  document.getElementById("cardFile").value = "";
-  updateSelectedCardLabel();
-}
-
-function updateSelectedCardLabel(){
-  const label = document.getElementById("selectedCardLabel");
-  if(!label) return;
-
-  const found = editingCardId ? findCard(editingCardId) : null;
-  if(found){
-    label.textContent = "Cartão selecionado: " + found.card.text;
-  }else{
-    label.textContent = "Nenhum cartão selecionado ainda. Clique em 'Editar' em um cartão.";
-  }
-}
-
-function updateRecordStatus(text){
-  const el = document.getElementById("recordStatus");
-  if(el) el.textContent = text;
-}
+let mediaRecorder;
+let audioChunks = [];
 
 async function startRecording(){
-  if(!editingCardId){
-    alert("Clique em Editar em um cartão antes de gravar.");
-    return;
-  }
-  if(isRecording) return;
 
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    alert("Este navegador não permite gravar áudio.");
-    return;
-  }
-  if(typeof MediaRecorder === "undefined"){
-    alert("Este navegador não suporta gravação por MediaRecorder.");
-    return;
-  }
+const stream =
+await navigator.mediaDevices.getUserMedia({
+audio:true
+});
 
-  try{
-    recordingStream = await navigator.mediaDevices.getUserMedia({ audio:true });
-    recordingChunks = [];
-    mediaRecorder = new MediaRecorder(recordingStream);
+mediaRecorder =
+new MediaRecorder(stream);
 
-    mediaRecorder.ondataavailable = (e)=>{
-      if(e.data && e.data.size > 0){
-        recordingChunks.push(e.data);
-      }
-    };
+mediaRecorder.start();
 
-    mediaRecorder.onstop = async ()=>{
-      const cardId = editingCardId;
-      const blob = new Blob(recordingChunks, { type: mediaRecorder.mimeType || "audio/webm" });
-      await putAudio(cardId, blob);
+audioChunks = [];
 
-      const found = findCard(cardId);
-      if(found){
-        found.card.hasRecordedVoice = true;
-        saveData();
-      }
-
-      stopRecordingSilently();
-      renderAll();
-      renderAdminCards();
-      updateSelectedCardLabel();
-      updateRecordStatus("Voz gravada salva no cartão selecionado.");
-      alert("Voz gravada e salva no cartão.");
-    };
-
-    mediaRecorder.start();
-    isRecording = true;
-    updateRecordStatus("Gravando... clique em 'Parar gravação' quando terminar.");
-  }catch(err){
-    console.error(err);
-    updateRecordStatus("Não foi possível iniciar a gravação.");
-    alert("Não foi possível acessar o microfone.");
-  }
+mediaRecorder.addEventListener(
+"dataavailable",
+event => {
+audioChunks.push(event.data);
 }
+);
 
-function stopRecordingSilently(){
-  if(mediaRecorder && isRecording){
-    try{
-      mediaRecorder.stop();
-    }catch(e){}
-  }
-  if(recordingStream){
-    recordingStream.getTracks().forEach(t => t.stop());
-  }
-  recordingStream = null;
-  mediaRecorder = null;
-  recordingChunks = [];
-  isRecording = false;
+document.getElementById(
+"recordStatus"
+).innerText =
+"Gravando...";
+
 }
 
 function stopRecording(){
-  if(!isRecording){
-    updateRecordStatus("Não há gravação em andamento.");
-    return;
-  }
-  updateRecordStatus("Finalizando gravação...");
-  stopRecordingSilently();
-}
 
-async function removeRecording(){
-  if(!editingCardId){
-    alert("Escolha um cartão primeiro.");
-    return;
-  }
-  await deleteAudio(editingCardId).catch(()=>{});
-  const found = findCard(editingCardId);
-  if(found){
-    found.card.hasRecordedVoice = false;
-    saveData();
-  }
-  renderAll();
-  renderAdminCards();
-  updateSelectedCardLabel();
-  updateRecordStatus("Gravação removida do cartão.");
-}
+mediaRecorder.stop();
 
-function renderAll(){
-  document.body.classList.toggle("dark", !!data.settings.themeDark);
-  renderLevels();
-  renderCards();
-  renderAdminSelectors();
+mediaRecorder.addEventListener(
+"stop",
+()=>{
 
-  const adminVisible = document.getElementById("adminArea")?.style.display === "block";
-  if(adminVisible){
-    renderAdminCards();
-  }
+const audioBlob =
+new Blob(audioChunks);
 
-  ensureVoices();
-  updateSelectedCardLabel();
-}
+const audioURL =
+URL.createObjectURL(audioBlob);
 
-window.addEventListener("click", (e)=>{
-  const modal = document.getElementById("configModal");
-  if(e.target === modal) closeConfig();
+const audio =
+new Audio(audioURL);
+
+document.getElementById(
+"recordStatus"
+).innerHTML =
+
+"Gravação salva!<br><br>";
+
+let playButton =
+document.createElement(
+"button"
+);
+
+playButton.innerText =
+"▶ Ouvir gravação";
+
+playButton.onclick =
+()=> audio.play();
+
+document.getElementById(
+"recordStatus"
+).appendChild(playButton);
+
 });
 
-document.addEventListener("DOMContentLoaded", ()=>{
-  if(data.settings.themeDark) document.body.classList.add("dark");
-  renderAll();
-});
+}
+
+/* START */
+
+renderCards();
+
 </script>
+
 </body>
 </html>
