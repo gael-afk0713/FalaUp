@@ -1,915 +1,1713 @@
-<!-- SUBSTITUA TODO O SEU index.html POR ESTE -->
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FalaUp</title>
-
 <style>
-
-:root{
-
---red:#ff595e;
---orange:#ff924c;
---yellow:#ffca3a;
---green:#8ac926;
---blue:#1982c4;
---purple:#6a4c93;
-
---bg:#f5fbff;
---white:#ffffff;
---text:#2f2f2f;
-
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-
-font-family:Arial,sans-serif;
-
-background:
-linear-gradient(
-180deg,
-#f6fcff,
-#eef8ff
-);
-
-color:var(--text);
-
-}
-
-/* HEADER */
-
-header{
-
-background:
-linear-gradient(
-90deg,
-var(--red),
-var(--orange),
-var(--yellow),
-var(--green),
-var(--blue),
-var(--purple)
-);
-
-padding:30px;
-
-text-align:center;
-
-color:white;
-
-box-shadow:0 6px 20px rgba(0,0,0,0.15);
-
-}
-
-header h1{
-
-font-size:60px;
-margin-bottom:10px;
-
-}
-
-header p{
-
-font-size:20px;
-
-}
-
-/* MAIN */
-
-.container{
-
-max-width:1300px;
-margin:auto;
-padding:25px;
-
-}
-
-/* INFO BOX */
-
-.info-box{
-
-background:white;
-
-border-radius:35px;
-
-padding:30px;
-
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:20px;
-
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
-
-}
-
-.info-text h2{
-
-font-size:38px;
-color:var(--purple);
-
-margin-bottom:10px;
-
-}
-
-.info-text p{
-
-font-size:20px;
-line-height:1.5;
-
-}
-
-.info-box img{
-
-width:190px;
-
-}
-
-/* LEVEL BUTTONS */
-
-.levels{
-
-display:flex;
-gap:15px;
-
-margin-top:30px;
-
-flex-wrap:wrap;
-
-}
-
-.level-btn{
-
-padding:15px 26px;
-
-border:none;
-
-border-radius:20px;
-
-font-size:18px;
-font-weight:bold;
-
-color:white;
-
-cursor:pointer;
-
-transition:0.2s;
-
-}
-
-.level-btn:hover{
-
-transform:scale(1.05);
-
-}
-
-.level1{background:var(--red);}
-.level2{background:var(--orange);}
-.level3{background:var(--yellow); color:#333;}
-.level4{background:var(--green);}
-.level5{background:var(--blue);}
-
-/* SECTION TITLE */
-
-.section-title{
-
-margin-top:40px;
-margin-bottom:20px;
-
-font-size:38px;
-color:var(--purple);
-
-}
-
-/* CARDS */
-
-.cards{
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(190px,1fr));
-
-gap:25px;
-
-}
-
-/* CARD */
-
-.card{
-
-background:white;
-
-border-radius:30px;
-
-padding:20px;
-
-text-align:center;
-
-cursor:pointer;
-
-transition:0.25s;
-
-box-shadow:0 10px 20px rgba(0,0,0,0.08);
-
-border:5px solid transparent;
-
-}
-
-.card:hover{
-
-transform:
-translateY(-8px)
-scale(1.03);
-
-}
-
-.card img{
-
-width:100%;
-height:150px;
-
-object-fit:cover;
-
-border-radius:20px;
-
-margin-bottom:15px;
-
-}
-
-.card h3{
-
-font-size:28px;
-
-}
-
-/* COLORS */
-
-.red{border-color:var(--red);}
-.orange{border-color:var(--orange);}
-.yellow{border-color:var(--yellow);}
-.green{border-color:var(--green);}
-.blue{border-color:var(--blue);}
-.purple{border-color:var(--purple);}
-
-/* PARENTS AREA */
-
-.parents{
-
-margin-top:50px;
-
-background:white;
-
-border-radius:35px;
-
-padding:35px;
-
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
-
-}
-
-.parents h2{
-
-font-size:42px;
-
-color:var(--purple);
-
-margin-bottom:20px;
-
-}
-
-.parents input,
-.parents select{
-
-width:100%;
-
-padding:15px;
-
-border-radius:15px;
-
-border:2px solid #ddd;
-
-margin-bottom:15px;
-
-font-size:18px;
-
-}
-
-.parents button{
-
-padding:14px 22px;
-
-border:none;
-
-border-radius:15px;
-
-font-size:18px;
-
-cursor:pointer;
-
-color:white;
-
-background:var(--purple);
-
-margin-right:10px;
-margin-top:10px;
-
-transition:0.2s;
-
-}
-
-.parents button:hover{
-
-transform:scale(1.04);
-
-}
-
-.record-box{
-
-margin-top:25px;
-
-background:#f4f0ff;
-
-padding:25px;
-
-border-radius:25px;
-
-}
-
-.record-box h3{
-
-margin-bottom:15px;
-font-size:28px;
-
-}
-
-/* FOOTER */
-
-footer{
-
-text-align:center;
-
-padding:40px;
-
-color:#777;
-
-font-size:18px;
-
-}
-
-/* MOBILE */
-
-@media(max-width:850px){
-
-header h1{
-font-size:42px;
-}
-
-.info-box{
-
-flex-direction:column;
-text-align:center;
-
-}
-
-.info-text h2{
-
-font-size:30px;
-
-}
-
-.card h3{
-
-font-size:22px;
-
-}
-
-}
-
+  :root{
+    --red:#ff595e;
+    --orange:#ff924c;
+    --yellow:#ffca3a;
+    --green:#8ac926;
+    --blue:#1982c4;
+    --purple:#6a4c93;
+
+    --bg1:#f6fbff;
+    --bg2:#eef8ff;
+    --card:#ffffff;
+    --text:#263238;
+    --muted:#607d8b;
+    --shadow:0 12px 28px rgba(0,0,0,.10);
+    --radius:28px;
+  }
+
+  body.dark{
+    --bg1:#0f172a;
+    --bg2:#111827;
+    --card:#111827;
+    --text:#f3f4f6;
+    --muted:#94a3b8;
+    --shadow:0 12px 28px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    font-family:Arial, sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(255,89,94,.12), transparent 25%),
+      radial-gradient(circle at top right, rgba(24,130,196,.12), transparent 26%),
+      radial-gradient(circle at bottom left, rgba(138,201,38,.12), transparent 24%),
+      radial-gradient(circle at bottom right, rgba(255,202,58,.12), transparent 24%),
+      linear-gradient(180deg, var(--bg1), var(--bg2));
+  }
+
+  button, input, select, textarea{
+    font:inherit;
+  }
+
+  header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    color:#fff;
+    padding:18px 16px 16px;
+    text-align:center;
+    background:linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
+    box-shadow:0 6px 22px rgba(0,0,0,.12);
+  }
+
+  header h1{
+    margin:0;
+    font-size:34px;
+    letter-spacing:.3px;
+  }
+
+  header p{
+    margin:7px 0 0;
+    font-size:15px;
+    opacity:.96;
+  }
+
+  .top-actions{
+    margin-top:14px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .btn{
+    border:none;
+    border-radius:16px;
+    padding:12px 16px;
+    cursor:pointer;
+    background:var(--card);
+    color:var(--text);
+    box-shadow:var(--shadow);
+    transition:transform .12s ease;
+  }
+
+  .btn:active,
+  .level-btn:active,
+  .card:active,
+  .tiny:active{
+    transform:scale(.98);
+  }
+
+  .btn.primary{
+    background:#fff;
+    color:#111827;
+    font-weight:700;
+  }
+
+  .btn.danger{background:var(--red);color:#fff}
+  .btn.blue{background:var(--blue);color:#fff}
+  .btn.green{background:var(--green);color:#fff}
+  .btn.purple{background:var(--purple);color:#fff}
+  .btn.orange{background:var(--orange);color:#fff}
+
+  .wrap{
+    max-width:1320px;
+    margin:0 auto;
+    padding:16px;
+  }
+
+  .hero{
+    background:var(--card);
+    border-radius:30px;
+    box-shadow:var(--shadow);
+    padding:18px;
+    margin:14px 0 16px;
+    display:grid;
+    gap:10px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-18px;
+    top:-18px;
+    width:190px;
+    height:190px;
+    border-radius:50%;
+    background:rgba(106,76,147,.10);
+  }
+
+  .hero-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    font-size:23px;
+    font-weight:800;
+    margin:0;
+  }
+
+  .hero-title .badge{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg, rgba(255,89,94,.18), rgba(24,130,196,.18));
+    font-size:22px;
+  }
+
+  .hero p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.45;
+  }
+
+  .levels{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:4px 2px 10px;
+    margin-bottom:12px;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .level-btn{
+    white-space:nowrap;
+    border:none;
+    border-radius:999px;
+    padding:12px 16px;
+    font-size:16px;
+    background:var(--card);
+    color:var(--text);
+    box-shadow:var(--shadow);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+
+  .dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    display:inline-block;
+    flex:0 0 auto;
+  }
+
+  .level-btn.active{
+    color:#fff;
+    font-weight:700;
+  }
+
+  .section-title{
+    margin:18px 0 10px;
+    font-size:20px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+    gap:14px;
+  }
+
+  .card{
+    border:none;
+    border-radius:28px;
+    background:var(--card);
+    box-shadow:var(--shadow);
+    cursor:pointer;
+    min-height:188px;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    text-align:center;
+    color:var(--text);
+    position:relative;
+    overflow:hidden;
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto 0;
+    height:12px;
+    background:var(--accent, var(--blue));
+  }
+
+  .card:hover{
+    transform:translateY(-1px);
+  }
+
+  .icon{
+    width:92px;
+    height:92px;
+    border-radius:30px;
+    background:linear-gradient(135deg, rgba(255,255,255,.85), rgba(240,245,255,.95));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex-shrink:0;
+    border:1px solid rgba(0,0,0,.06);
+  }
+
+  .icon svg,
+  .icon img{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+
+  .card span{
+    font-size:20px;
+    font-weight:800;
+    line-height:1.12;
+  }
+
+  .modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.56);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    z-index:100;
+  }
+
+  .modal-content{
+    width:100%;
+    max-width:1080px;
+    max-height:92vh;
+    overflow:auto;
+    background:var(--card);
+    color:var(--text);
+    border-radius:30px;
+    box-shadow:var(--shadow);
+    padding:18px;
+  }
+
+  .modal-content h2,
+  .modal-content h3{
+    margin:0 0 12px;
+  }
+
+  .grid-form{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+    gap:10px;
+  }
+
+  .field{
+    width:100%;
+    padding:13px 14px;
+    border-radius:16px;
+    border:1px solid #d1d5db;
+    background:#fff;
+    color:#111827;
+  }
+
+  body.dark .field{
+    background:#0b1220;
+    color:#f3f4f6;
+    border-color:#334155;
+  }
+
+  .admin-box{
+    background:rgba(148,163,184,.12);
+    border-radius:20px;
+    padding:14px;
+    margin-top:14px;
+  }
+
+  .mini-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:10px;
+  }
+
+  .mini-item{
+    background:rgba(148,163,184,.14);
+    border-radius:16px;
+    padding:12px;
+  }
+
+  .mini-item strong{
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .mini-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+
+  .tiny{
+    border:none;
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:14px;
+    cursor:pointer;
+    color:#fff;
+    background:var(--blue);
+  }
+
+  .tiny.gray{background:#64748b}
+  .tiny.danger{background:var(--red)}
+  .tiny.ok{background:var(--green)}
+  .tiny.purple{background:var(--purple)}
+  .tiny.orange{background:var(--orange)}
+
+  .split{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:14px;
+  }
+
+  .note{
+    color:var(--muted);
+    font-size:14px;
+    margin-top:8px;
+    line-height:1.4;
+  }
+
+  .record-box{
+    border:2px dashed rgba(106,76,147,.30);
+    border-radius:18px;
+    padding:14px;
+    margin-top:12px;
+    background:rgba(106,76,147,.06);
+  }
+
+  .record-status{
+    font-weight:700;
+    margin-top:8px;
+  }
+
+  .small-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(255,89,94,.10);
+    margin-bottom:10px;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  footer{
+    text-align:center;
+    padding:22px 14px 30px;
+    font-size:14px;
+    color:var(--muted);
+  }
+
+  @media (max-width: 820px){
+    .split{grid-template-columns:1fr}
+    header h1{font-size:30px}
+    .card{min-height:170px}
+    .card span{font-size:18px}
+    .icon{width:84px;height:84px}
+  }
 </style>
 </head>
-
 <body>
 
 <header>
-
-<h1>FalaUp</h1>
-
-<p>
-Comunicação alternativa divertida para crianças com TEA
-</p>
-
+  <h1>FalaUp</h1>
+  <p>Cartões com voz para comunicação simples, clara e divertida.</p>
+  <div class="top-actions">
+    <button class="btn primary" onclick="openConfig()">Configurações</button>
+    <button class="btn primary" onclick="toggleTheme()">Modo claro/escuro</button>
+  </div>
 </header>
 
-<div class="container">
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-title">
+      <span class="badge">⭐</span>
+      <span>Toque nos cartões para ouvir a fala</span>
+    </div>
+    <p>Os cartões estão divididos em 5 níveis. As falas começam com palavras simples e vão ficando mais completas conforme a criança avança.</p>
+  </section>
 
-<!-- INFO -->
-
-<div class="info-box">
-
-<div class="info-text">
-
-<h2>
-Toque nos cartões para ouvir a fala
-</h2>
-
-<p>
-
-Os cartões começam com palavras simples e vão evoluindo
-para frases mais completas conforme a criança avança
-pelos níveis.
-
-</p>
-
-</div>
-
-<img
-src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
-
-</div>
-
-<!-- LEVELS -->
-
-<div class="levels">
-
-<button class="level-btn level1">
-1. Básico
-</button>
-
-<button class="level-btn level2">
-2. Necessidades
-</button>
-
-<button class="level-btn level3">
-3. Social
-</button>
-
-<button class="level-btn level4">
-4. Frases
-</button>
-
-<button class="level-btn level5">
-5. Avançado
-</button>
-
-</div>
-
-<!-- TITLE -->
-
-<h2 class="section-title">
-1. Básico
-</h2>
-
-<!-- CARDS -->
-
-<div class="cards" id="cardsContainer">
-
-</div>
-
-<!-- PARENTS -->
-
-<div class="parents">
-
-<h2>
-Área dos Pais
-</h2>
-
-<input
-type="password"
-placeholder="Digite a senha">
-
-<button>
-Entrar
-</button>
-
-<!-- EDIT -->
-
-<div class="record-box">
-
-<h3>
-Editar Cartões
-</h3>
-
-<select id="cardSelect"></select>
-
-<input
-type="text"
-id="newText"
-placeholder="Novo texto do cartão">
-
-<input
-type="file"
-id="newImage"
-accept="image/*">
-
-<button onclick="saveCardEdit()">
-Salvar Alterações
-</button>
-
-</div>
-
-<!-- RECORD -->
-
-<div class="record-box">
-
-<h3>
-Gravar Voz Personalizada
-</h3>
-
-<button onclick="startRecording()">
-🎤 Gravar Voz
-</button>
-
-<button onclick="stopRecording()">
-⏹ Parar
-</button>
-
-<p id="recordStatus"
-style="margin-top:15px;">
-Nenhuma gravação.
-</p>
-
-</div>
-
-<!-- NEW CARD -->
-
-<div class="record-box">
-
-<h3>
-Adicionar Novo Cartão
-</h3>
-
-<input
-type="text"
-id="cardText"
-placeholder="Texto do cartão">
-
-<input
-type="file"
-id="cardImage"
-accept="image/*">
-
-<button onclick="addCard()">
-Adicionar Cartão
-</button>
-
-</div>
-
-</div>
-
+  <div id="levels" class="levels"></div>
+  <h2 class="section-title" id="levelTitle"></h2>
+  <div id="cards" class="grid"></div>
 </div>
 
 <footer>
-
-FalaUp • Comunicação alternativa para crianças com TEA
-
+  Feito para iPad, GitHub Pages e navegadores modernos.
 </footer>
 
-<script>
+<div id="configModal" class="modal">
+  <div class="modal-content">
+    <h2>Configurações</h2>
 
-/* DATA */
+    <div id="setupArea" class="admin-box" style="display:none">
+      <h3>Definir senha dos pais</h3>
+      <div class="grid-form">
+        <input class="field" id="newPass1" type="password" placeholder="Nova senha">
+        <input class="field" id="newPass2" type="password" placeholder="Confirmar nova senha">
+      </div>
+      <div class="mini-actions">
+        <button class="tiny ok" onclick="setFirstPassword()">Criar senha</button>
+      </div>
+      <p class="note">Essa senha fica salva neste navegador/dispositivo.</p>
+    </div>
 
-let cards = [
+    <div id="loginArea" class="admin-box" style="display:none">
+      <h3>Entrar</h3>
+      <div class="grid-form">
+        <input class="field" id="loginPass" type="password" placeholder="Senha dos pais">
+      </div>
+      <div class="mini-actions">
+        <button class="tiny ok" onclick="loginAdmin()">Entrar</button>
+      </div>
+      <p class="note">Senha padrão inicial: <b>1234</b>, se ainda não tiver sido alterada.</p>
+    </div>
 
-{
-text:"Sim",
-image:"https://cdn-icons-png.flaticon.com/512/845/845646.png",
-color:"red"
-},
+    <div id="adminArea" style="display:none">
+      <div class="split">
+        <div>
+          <div class="admin-box">
+            <h3>Voz</h3>
+            <div class="grid-form">
+              <select class="field" id="voiceSelect"></select>
+              <input class="field" id="rateRange" type="range" min="0.6" max="1.4" step="0.1" value="1">
+            </div>
+            <div class="mini-actions">
+              <button class="tiny ok" onclick="saveVoiceSettings()">Salvar voz</button>
+              <button class="tiny gray" onclick="testVoice()">Testar voz</button>
+            </div>
+            <p class="note">A voz e a velocidade ficam guardadas no navegador.</p>
+          </div>
 
-{
-text:"Não",
-image:"https://cdn-icons-png.flaticon.com/512/1828/1828665.png",
-color:"orange"
-},
+          <div class="admin-box">
+            <h3>Alterar senha</h3>
+            <div class="grid-form">
+              <input class="field" id="oldPass" type="password" placeholder="Senha atual">
+              <input class="field" id="changePass1" type="password" placeholder="Nova senha">
+              <input class="field" id="changePass2" type="password" placeholder="Confirmar nova senha">
+            </div>
+            <div class="mini-actions">
+              <button class="tiny ok" onclick="changePassword()">Salvar nova senha</button>
+            </div>
+          </div>
+        </div>
 
-{
-text:"Água",
-image:"https://cdn-icons-png.flaticon.com/512/3105/3105807.png",
-color:"yellow"
-},
+        <div>
+          <div class="admin-box">
+            <h3>Escolher nível</h3>
+            <div class="grid-form">
+              <select class="field" id="adminLevelSelect" onchange="renderAdminCards()"></select>
+            </div>
+          </div>
 
-{
-text:"Ajuda",
-image:"https://cdn-icons-png.flaticon.com/512/1048/1048941.png",
-color:"green"
-},
+          <div class="admin-box">
+            <h3>Adicionar / editar cartão</h3>
+            <div class="grid-form">
+              <input class="field" id="cardText" placeholder="Texto da fala">
+              <input class="field" id="cardImageFile" type="file" accept="image/*">
+              <input class="field" id="cardImageUrl" placeholder="URL da imagem (opcional)">
+            </div>
+            <input type="hidden" id="editingCardId">
 
-{
-text:"Mamãe",
-image:"https://cdn-icons-png.flaticon.com/512/4140/4140048.png",
-color:"blue"
-},
+            <div class="mini-actions">
+              <button class="tiny ok" onclick="saveCard()">Salvar cartão</button>
+              <button class="tiny gray" onclick="cancelEdit()">Cancelar edição</button>
+            </div>
+            <p class="note">Você pode usar foto do iPad ou colar um link de imagem. Se nenhuma imagem for enviada, o cartão usa uma ilustração automática que combina com a palavra.</p>
 
-{
-text:"Papai",
-image:"https://cdn-icons-png.flaticon.com/512/4140/4140061.png",
-color:"purple"
-},
+            <div class="record-box">
+              <div class="small-badge">🎤 Voz gravada do cartão selecionado</div>
+              <div id="selectedCardLabel" class="note">Nenhum cartão selecionado ainda.</div>
+              <div class="mini-actions">
+                <button class="tiny purple" onclick="startRecording()">Iniciar gravação</button>
+                <button class="tiny orange" onclick="stopRecording()">Parar gravação</button>
+                <button class="tiny gray" onclick="removeRecording()">Remover gravação</button>
+              </div>
+              <div id="recordStatus" class="record-status">Pronto para gravar.</div>
+              <div class="note">Clique em <b>Editar</b> em um cartão antes de gravar a voz dele.</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-{
-text:"Comer",
-image:"https://cdn-icons-png.flaticon.com/512/1046/1046784.png",
-color:"red"
-},
+      <div class="admin-box">
+        <h3>Cartões do nível selecionado</h3>
+        <div id="adminCardList" class="mini-list"></div>
+      </div>
 
-{
-text:"Dormir",
-image:"https://cdn-icons-png.flaticon.com/512/2933/2933821.png",
-color:"orange"
-},
+      <div class="mini-actions" style="margin-top:14px;">
+        <button class="btn danger" onclick="closeConfig()">Fechar</button>
+      </div>
+    </div>
 
-{
-text:"Banheiro",
-image:"https://cdn-icons-png.flaticon.com/512/619/619034.png",
-color:"yellow"
-},
-
-{
-text:"Brincar",
-image:"https://cdn-icons-png.flaticon.com/512/3468/3468377.png",
-color:"green"
-}
-
-];
-
-/* RENDER */
-
-function renderCards(){
-
-const container =
-document.getElementById(
-"cardsContainer"
-);
-
-container.innerHTML = "";
-
-cards.forEach((card,index)=>{
-
-container.innerHTML += `
-
-<div
-class="card ${card.color}"
-onclick="speak('${card.text}')">
-
-<img src="${card.image}">
-
-<h3>${card.text}</h3>
-
+    <div class="mini-actions" style="margin-top:14px;">
+      <button class="btn danger" onclick="closeConfig()">Fechar</button>
+    </div>
+  </div>
 </div>
 
-`;
+<script>
+const STORAGE_KEY = "falaup_tea_app_v5";
+const PASSWORD_KEY = "falaup_parent_password_v5";
+const AUDIO_DB_NAME = "falaup_audio_db_v2";
+const AUDIO_STORE = "audio";
 
-});
-
-updateSelect();
-
+function uid(){
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return "id_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
-/* VOICE */
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function slug(s){
+  return String(s)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function iconSVG(kind, color){
+  const c = color || "#4a90e2";
+  const white = "#ffffff";
+  const bg = "#f7fbff";
+
+  const shapes = {
+    yes: `
+      <circle cx="128" cy="128" r="96" fill="${c}" />
+      <path d="M86 129l28 28 58-66" fill="none" stroke="${white}" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    no: `
+      <circle cx="128" cy="128" r="96" fill="${c}" />
+      <path d="M90 90l76 76M166 90L90 166" fill="none" stroke="${white}" stroke-width="20" stroke-linecap="round"/>
+    `,
+    water: `
+      <rect x="74" y="52" width="100" height="124" rx="18" fill="${white}" stroke="${c}" stroke-width="8"/>
+      <path d="M88 126c0-30 18-58 40-58s40 28 40 58-18 50-40 50-40-20-40-50z" fill="${c}" opacity=".22"/>
+      <path d="M96 68h64" stroke="${c}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M164 156c10 8 16 18 16 28" fill="none" stroke="${c}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M179 180c0 10-8 18-18 18s-18-8-18-18 18-34 18-34 18 24 18 34z" fill="${c}"/>
+    `,
+    help: `
+      <circle cx="128" cy="128" r="96" fill="${c}" />
+      <path d="M98 120c0-20 13-34 30-34 15 0 27 10 27 24 0 13-9 21-21 27-8 4-10 9-10 16" fill="none" stroke="${white}" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="128" cy="187" r="10" fill="${white}"/>
+    `,
+    mom: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="106" r="32" fill="#ffd6b5"/>
+      <path d="M82 182c10-32 35-48 46-48h16c11 0 36 16 46 48" fill="#ff7ab6"/>
+      <path d="M92 102c8-22 26-34 36-34h2c10 0 28 12 36 34" fill="#8b5a2b"/>
+      <circle cx="116" cy="108" r="4" fill="#333"/>
+      <circle cx="140" cy="108" r="4" fill="#333"/>
+      <path d="M117 124c6 6 18 6 24 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
+    `,
+    dad: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="104" r="31" fill="#ffd6b5"/>
+      <path d="M82 182c10-32 35-48 46-48h16c11 0 36 16 46 48" fill="#4a90e2"/>
+      <path d="M94 99c8-22 24-35 34-35h4c10 0 26 13 34 35" fill="#6b3f1f"/>
+      <circle cx="116" cy="108" r="4" fill="#333"/>
+      <circle cx="140" cy="108" r="4" fill="#333"/>
+      <path d="M117 124c6 6 18 6 24 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
+    `,
+    eat: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="72" fill="#fff4d1"/>
+      <circle cx="128" cy="128" r="50" fill="#fff"/>
+      <circle cx="110" cy="115" r="10" fill="#8ac926"/>
+      <circle cx="134" cy="114" r="10" fill="#ff595e"/>
+      <circle cx="150" cy="130" r="10" fill="#ffca3a"/>
+      <path d="M92 120h18M92 138h18" stroke="#7c6a3f" stroke-width="8" stroke-linecap="round"/>
+      <path d="M160 108v50" stroke="#7c6a3f" stroke-width="8" stroke-linecap="round"/>
+      <path d="M169 108v50" stroke="#7c6a3f" stroke-width="8" stroke-linecap="round"/>
+    `,
+    sleep: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="138" r="54" fill="#b7e3ff"/>
+      <path d="M90 132c8-28 29-44 38-44h0c9 0 30 16 38 44" fill="#6a4c93"/>
+      <circle cx="111" cy="136" r="4" fill="#333"/>
+      <circle cx="145" cy="136" r="4" fill="#333"/>
+      <path d="M114 154c5 5 15 5 20 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M170 72h20l-16 18h16" fill="none" stroke="#6a4c93" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M183 105h16l-14 16h14" fill="none" stroke="#6a4c93" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    food: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="70" fill="#fff1d9"/>
+      <ellipse cx="128" cy="132" rx="52" ry="32" fill="#d98c45"/>
+      <path d="M86 126c8-20 24-30 42-30 19 0 31 6 44 22" fill="none" stroke="#8ac926" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="108" cy="130" r="7" fill="#8ac926"/>
+      <circle cx="128" cy="120" r="7" fill="#ff595e"/>
+      <circle cx="148" cy="130" r="7" fill="#ffca3a"/>
+    `,
+    play: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="103" cy="118" r="22" fill="#ff595e"/>
+      <circle cx="154" cy="118" r="22" fill="#1982c4"/>
+      <circle cx="128" cy="154" r="22" fill="#8ac926"/>
+      <path d="M84 166l20-36 20 34" fill="none" stroke="#ff924c" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M160 166l-18-32 18-26" fill="none" stroke="#6a4c93" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    bathroom: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <rect x="82" y="78" width="88" height="96" rx="16" fill="#ffffff" stroke="${c}" stroke-width="8"/>
+      <path d="M92 98h46" stroke="${c}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M102 118h34" stroke="${c}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M150 140h22v16h-22z" fill="${c}"/>
+      <path d="M158 156v18" stroke="${c}" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="168" cy="168" r="8" fill="${c}"/>
+    `,
+    hello: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="68" fill="#ffe9b8"/>
+      <path d="M70 150c14-22 34-30 58-30s44 8 58 30" fill="#8ac926"/>
+      <circle cx="118" cy="124" r="4" fill="#333"/>
+      <circle cx="138" cy="124" r="4" fill="#333"/>
+      <path d="M112 142c8 8 24 8 32 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M64 114c8-8 16-8 24 0" fill="none" stroke="#ff595e" stroke-width="8" stroke-linecap="round"/>
+      <path d="M70 96c12 0 20 8 20 20" fill="none" stroke="#ff924c" stroke-width="8" stroke-linecap="round"/>
+    `,
+    bye: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="62" fill="#ffe9b8"/>
+      <path d="M72 104c16 24 32 36 56 36s40-12 56-36" fill="none" stroke="#1982c4" stroke-width="14" stroke-linecap="round"/>
+      <path d="M86 154c10 12 24 18 42 18s32-6 42-18" fill="none" stroke="#6a4c93" stroke-width="10" stroke-linecap="round"/>
+      <path d="M158 92c10 0 18 8 18 18" fill="none" stroke="#ff595e" stroke-width="8" stroke-linecap="round"/>
+    `,
+    thanks: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="120" r="40" fill="#ffca3a"/>
+      <path d="M86 172c12-28 32-42 42-42h0c10 0 30 14 42 42" fill="#ff924c"/>
+      <path d="M109 120l12 12 22-26" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    please: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#dbeafe"/>
+      <path d="M84 116c10-18 26-26 44-26s34 8 44 26" fill="none" stroke="#1982c4" stroke-width="14" stroke-linecap="round"/>
+      <path d="M84 146c10 18 26 26 44 26s34-8 44-26" fill="none" stroke="#8b7cf6" stroke-width="14" stroke-linecap="round"/>
+    `,
+    happy: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#ffd6e7"/>
+      <circle cx="110" cy="122" r="4" fill="#333"/>
+      <circle cx="146" cy="122" r="4" fill="#333"/>
+      <path d="M112 142c8 10 24 10 32 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M88 86l10 16M168 86l-10 16M80 130h18M158 130h18" stroke="#ff595e" stroke-width="8" stroke-linecap="round"/>
+    `,
+    sad: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#d6ecff"/>
+      <circle cx="110" cy="122" r="4" fill="#333"/>
+      <circle cx="146" cy="122" r="4" fill="#333"/>
+      <path d="M112 152c8-10 24-10 32 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M82 78c0 0 10 8 10 18s-10 18-10 18-10-8-10-18 10-18 10-18z" fill="#1982c4"/>
+    `,
+    more: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#e7dcff"/>
+      <path d="M88 128h80" stroke="#6a4c93" stroke-width="16" stroke-linecap="round"/>
+      <path d="M128 88v80" stroke="#6a4c93" stroke-width="16" stroke-linecap="round"/>
+    `,
+    done: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#ffd9d9"/>
+      <path d="M92 128h72" stroke="#ff595e" stroke-width="18" stroke-linecap="round"/>
+      <path d="M118 104v48" stroke="#ff595e" stroke-width="18" stroke-linecap="round"/>
+    `,
+    quiet: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#e4ffe8"/>
+      <path d="M104 126l20-18v50l-20-18z" fill="#8ac926"/>
+      <path d="M150 112c12 8 12 32 0 40" fill="none" stroke="#8ac926" stroke-width="10" stroke-linecap="round"/>
+      <path d="M164 102c22 16 22 52 0 68" fill="none" stroke="#8ac926" stroke-width="10" stroke-linecap="round"/>
+    `,
+    music: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <path d="M112 72v86c0 8-6 18-18 18-10 0-18-6-18-16s8-16 18-16c6 0 12 2 18 6V98l60-14v56c0 8-6 18-18 18-10 0-18-6-18-16s8-16 18-16c6 0 12 2 18 6V62z" fill="#8b7cf6"/>
+    `,
+    tv: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <rect x="74" y="82" width="108" height="80" rx="14" fill="#111827" stroke="#1982c4" stroke-width="8"/>
+      <rect x="88" y="94" width="80" height="54" rx="8" fill="#8ad6ff"/>
+      <path d="M108 70l-10-14M148 70l10-14" stroke="#1982c4" stroke-width="8" stroke-linecap="round"/>
+      <path d="M110 176h36" stroke="#1982c4" stroke-width="10" stroke-linecap="round"/>
+    `,
+    leave: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <rect x="86" y="76" width="70" height="104" rx="14" fill="#ffffff" stroke="#6a4c93" stroke-width="8"/>
+      <path d="M118 126h42" stroke="#6a4c93" stroke-width="10" stroke-linecap="round"/>
+      <path d="M150 112l18 14-18 14" fill="none" stroke="#6a4c93" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    `,
+    home: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <path d="M68 126l60-48 60 48v56H68z" fill="#ffca3a" stroke="#ff924c" stroke-width="8" stroke-linejoin="round"/>
+      <rect x="108" y="126" width="40" height="56" rx="8" fill="#ffffff"/>
+    `,
+    fear: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#dbeafe"/>
+      <circle cx="110" cy="122" r="5" fill="#333"/>
+      <circle cx="146" cy="122" r="5" fill="#333"/>
+      <path d="M108 150c10-16 30-16 40 0" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M80 82l18 18M176 82l-18 18" stroke="#ff595e" stroke-width="8" stroke-linecap="round"/>
+    `,
+    confusion: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#f3e8ff"/>
+      <circle cx="110" cy="122" r="4" fill="#333"/>
+      <circle cx="146" cy="122" r="4" fill="#333"/>
+      <path d="M114 145c6-6 14-8 20-8 8 0 14 4 18 10" stroke="#333" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M126 92c16 0 24 10 24 22 0 10-7 16-15 20-6 3-9 7-9 14" fill="none" stroke="#6a4c93" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="128" cy="182" r="8" fill="#6a4c93"/>
+    `,
+    repeat: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <path d="M92 104c12-20 32-32 56-32 34 0 60 24 60 58" fill="none" stroke="#1982c4" stroke-width="12" stroke-linecap="round"/>
+      <path d="M194 130l-18-8 6 20" fill="#1982c4"/>
+      <path d="M164 154c-12 20-32 32-56 32-34 0-60-24-60-58" fill="none" stroke="#8ac926" stroke-width="12" stroke-linecap="round"/>
+      <path d="M62 128l18 8-6-20" fill="#8ac926"/>
+    `,
+    pause: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="128" r="66" fill="#ffe8c7"/>
+      <rect x="104" y="102" width="18" height="52" rx="6" fill="#ff924c"/>
+      <rect x="138" y="102" width="18" height="52" rx="6" fill="#ff924c"/>
+    `,
+    choose: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="92" cy="128" r="24" fill="#8ac926"/>
+      <circle cx="128" cy="128" r="24" fill="#ffca3a"/>
+      <circle cx="164" cy="128" r="24" fill="#1982c4"/>
+      <path d="M92 104v48M128 104v48M164 104v48" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+    `,
+    difficulty: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <path d="M76 160c20-20 44-28 72-28s52 8 76 28" fill="none" stroke="#ff924c" stroke-width="12" stroke-linecap="round"/>
+      <circle cx="110" cy="112" r="10" fill="#ff595e"/>
+      <circle cx="146" cy="112" r="10" fill="#ffca3a"/>
+      <circle cx="128" cy="146" r="10" fill="#8ac926"/>
+    `,
+    notnow: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <path d="M82 92h92c18 0 32 14 32 32v28c0 18-14 32-32 32H82c-18 0-32-14-32-32v-28c0-18 14-32 32-32z" fill="#ffffff" stroke="#ff595e" stroke-width="8"/>
+      <path d="M96 104l64 64" stroke="#ff595e" stroke-width="12" stroke-linecap="round"/>
+      <path d="M160 104l-64 64" stroke="#ff595e" stroke-width="12" stroke-linecap="round"/>
+    `,
+    talkmom: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="122" r="44" fill="#ffd6b5"/>
+      <path d="M80 178c8-28 32-46 48-46s40 18 48 46" fill="#ff7ab6"/>
+      <path d="M92 104c6-18 20-30 36-30 18 0 28 10 36 30" fill="#8b5a2b"/>
+      <circle cx="114" cy="122" r="4" fill="#333"/>
+      <circle cx="142" cy="122" r="4" fill="#333"/>
+      <path d="M116 140c7 6 17 6 24 0" fill="none" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+    `,
+    talkdad: `
+      <circle cx="128" cy="128" r="96" fill="${bg}" />
+      <circle cx="128" cy="122" r="44" fill="#ffd6b5"/>
+      <path d="M80 178c8-28 32-46 48-46s40 18 48 46" fill="#4a90e2"/>
+      <path d="M92 104c6-18 20-30 36-30 18 0 28 10 36 30" fill="#6b3f1f"/>
+      <circle cx="114" cy="122" r="4" fill="#333"/>
+      <circle cx="142" cy="122" r="4" fill="#333"/>
+      <path d="M116 140c7 6 17 6 24 0" fill="none" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+    `
+  };
+
+  const svg = shapes[kind] || shapes.choose;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="${kind}">
+      <rect width="256" height="256" fill="#ffffff"/>
+      ${svg}
+    </svg>
+  `)}`;
+}
+
+const library = {
+  yes: iconSVG("yes", "#8ac926"),
+  no: iconSVG("no", "#ff595e"),
+  water: iconSVG("water", "#1982c4"),
+  help: iconSVG("help", "#ff924c"),
+  mom: iconSVG("mom", "#ff7ab6"),
+  dad: iconSVG("dad", "#4a90e2"),
+  eat: iconSVG("eat", "#ff924c"),
+  sleep: iconSVG("sleep", "#6a4c93"),
+  food: iconSVG("food", "#ffca3a"),
+  play: iconSVG("play", "#8ac926"),
+  bathroom: iconSVG("bathroom", "#1982c4"),
+  hello: iconSVG("hello", "#8ac926"),
+  bye: iconSVG("bye", "#ff595e"),
+  thanks: iconSVG("thanks", "#ffca3a"),
+  please: iconSVG("please", "#1982c4"),
+  happy: iconSVG("happy", "#ff595e"),
+  sad: iconSVG("sad", "#1982c4"),
+  more: iconSVG("more", "#6a4c93"),
+  done: iconSVG("done", "#ff595e"),
+  quiet: iconSVG("quiet", "#8ac926"),
+  music: iconSVG("music", "#6a4c93"),
+  tv: iconSVG("tv", "#1982c4"),
+  leave: iconSVG("leave", "#6a4c93"),
+  home: iconSVG("home", "#ffca3a"),
+  fear: iconSVG("fear", "#1982c4"),
+  confusion: iconSVG("confusion", "#6a4c93"),
+  repeat: iconSVG("repeat", "#1982c4"),
+  pause: iconSVG("pause", "#ff924c"),
+  choose: iconSVG("choose", "#8ac926"),
+  difficulty: iconSVG("difficulty", "#ff924c"),
+  notnow: iconSVG("notnow", "#ff595e"),
+  talkmom: iconSVG("talkmom", "#ff7ab6"),
+  talkdad: iconSVG("talkdad", "#4a90e2")
+};
+
+function createCard(text, iconKey, color){
+  return {
+    id: uid(),
+    text,
+    iconKey,
+    color
+  };
+}
+
+const defaultData = {
+  settings: {
+    themeDark: false,
+    voiceURI: "",
+    rate: 1
+  },
+  levels: [
+    {
+      id: uid(),
+      name: "1. Básico",
+      color: "#ff595e",
+      cards: [
+        createCard("Sim", "yes", "#8ac926"),
+        createCard("Não", "no", "#ff595e"),
+        createCard("Água", "water", "#1982c4"),
+        createCard("Mais", "more", "#6a4c93"),
+        createCard("Acabou", "done", "#ff595e"),
+        createCard("Ajuda", "help", "#ff924c"),
+        createCard("Mamãe", "mom", "#ff7ab6"),
+        createCard("Papai", "dad", "#4a90e2"),
+        createCard("Comer", "eat", "#ff924c"),
+        createCard("Dormir", "sleep", "#6a4c93")
+      ]
+    },
+    {
+      id: uid(),
+      name: "2. Necessidades",
+      color: "#ff924c",
+      cards: [
+        createCard("Quero água", "water", "#1982c4"),
+        createCard("Quero comer", "food", "#ffca3a"),
+        createCard("Quero brincar", "play", "#8ac926"),
+        createCard("Quero descansar", "sleep", "#6a4c93"),
+        createCard("Estou cansado", "sleep", "#6a4c93"),
+        createCard("Estou com fome", "food", "#ffca3a"),
+        createCard("Estou com sede", "water", "#1982c4"),
+        createCard("Quero ir ao banheiro", "bathroom", "#1982c4"),
+        createCard("Preciso de ajuda", "help", "#ff924c"),
+        createCard("Quero um abraço", "mom", "#ff7ab6")
+      ]
+    },
+    {
+      id: uid(),
+      name: "3. Social",
+      color: "#8ac926",
+      cards: [
+        createCard("Oi", "hello", "#8ac926"),
+        createCard("Tchau", "bye", "#ff595e"),
+        createCard("Obrigado", "thanks", "#ffca3a"),
+        createCard("Por favor", "please", "#1982c4"),
+        createCard("Quero conversar", "please", "#1982c4"),
+        createCard("Posso brincar?", "play", "#8ac926"),
+        createCard("Gostei disso", "happy", "#ff595e"),
+        createCard("Não gostei", "no", "#ff595e"),
+        createCard("Estou triste", "sad", "#1982c4"),
+        createCard("Estou feliz", "happy", "#ff595e")
+      ]
+    },
+    {
+      id: uid(),
+      name: "4. Frases",
+      color: "#1982c4",
+      cards: [
+        createCard("Minha barriga dói", "difficulty", "#ff924c"),
+        createCard("Minha cabeça dói", "difficulty", "#ff924c"),
+        createCard("Quero silêncio", "quiet", "#8ac926"),
+        createCard("Posso ouvir música?", "music", "#6a4c93"),
+        createCard("Quero assistir desenho", "tv", "#1982c4"),
+        createCard("Quero sair", "leave", "#6a4c93"),
+        createCard("Quero voltar para casa", "home", "#ffca3a"),
+        createCard("Estou com medo", "fear", "#1982c4"),
+        createCard("Preciso de um abraço", "mom", "#ff7ab6"),
+        createCard("Estou confuso", "confusion", "#6a4c93")
+      ]
+    },
+    {
+      id: uid(),
+      name: "5. Mais complexas",
+      color: "#6a4c93",
+      cards: [
+        createCard("Não entendi a pergunta", "confusion", "#6a4c93"),
+        createCard("Pode repetir por favor?", "repeat", "#1982c4"),
+        createCard("Preciso de ajuda agora", "help", "#ff924c"),
+        createCard("Quero fazer uma pausa", "pause", "#ff924c"),
+        createCard("Quero escolher outra coisa", "choose", "#8ac926"),
+        createCard("Estou com dificuldade", "difficulty", "#ff924c"),
+        createCard("Não quero isso agora", "notnow", "#ff595e"),
+        createCard("Quero falar com mamãe", "talkmom", "#ff7ab6"),
+        createCard("Quero falar com papai", "talkdad", "#4a90e2"),
+        createCard("Preciso me acalmar", "quiet", "#8ac926")
+      ]
+    }
+  ]
+};
+
+let data = loadData();
+let voices = [];
+let selectedVoice = null;
+let parentPassword = localStorage.getItem(PASSWORD_KEY) || "1234";
+let currentLevelIndex = 0;
+let editingCardId = "";
+
+let audioDBPromise = openAudioDB();
+let currentAudio = null;
+let mediaRecorder = null;
+let recordingStream = null;
+let recordingChunks = [];
+let isRecording = false;
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultData;
+    const parsed = JSON.parse(raw);
+    if(!parsed || !parsed.settings || !parsed.levels) return defaultData;
+    for(const lvl of parsed.levels){
+      for(const c of lvl.cards){
+        if(typeof c.iconKey !== "string") c.iconKey = "choose";
+        if(typeof c.color !== "string") c.color = "#4a90e2";
+      }
+    }
+    return parsed;
+  }catch{
+    return defaultData;
+  }
+}
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function savePassword(pass){
+  parentPassword = pass;
+  localStorage.setItem(PASSWORD_KEY, pass);
+}
+
+function openAudioDB(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open(AUDIO_DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if(!db.objectStoreNames.contains(AUDIO_STORE)){
+        db.createObjectStore(AUDIO_STORE);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function putAudio(cardId, blob){
+  const db = await audioDBPromise;
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(AUDIO_STORE, "readwrite");
+    tx.objectStore(AUDIO_STORE).put(blob, cardId);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function getAudio(cardId){
+  const db = await audioDBPromise;
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(AUDIO_STORE, "readonly");
+    const req = tx.objectStore(AUDIO_STORE).get(cardId);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function deleteAudio(cardId){
+  const db = await audioDBPromise;
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(AUDIO_STORE, "readwrite");
+    tx.objectStore(AUDIO_STORE).delete(cardId);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+function openConfig(){
+  document.getElementById("configModal").style.display = "flex";
+
+  const setupArea = document.getElementById("setupArea");
+  const loginArea = document.getElementById("loginArea");
+  const adminArea = document.getElementById("adminArea");
+
+  if(!localStorage.getItem(PASSWORD_KEY)){
+    setupArea.style.display = "block";
+    loginArea.style.display = "none";
+    adminArea.style.display = "none";
+  }else{
+    setupArea.style.display = "none";
+    loginArea.style.display = "block";
+    adminArea.style.display = "none";
+  }
+
+  ensureVoices();
+  renderAdminSelectors();
+  updateSelectedCardLabel();
+  updateRecordStatus("Pronto para gravar.");
+}
+
+function closeConfig(){
+  document.getElementById("configModal").style.display = "none";
+  stopRecordingSilently();
+}
+
+function setFirstPassword(){
+  const p1 = document.getElementById("newPass1").value.trim();
+  const p2 = document.getElementById("newPass2").value.trim();
+
+  if(!p1 || !p2){
+    alert("Digite e confirme a senha.");
+    return;
+  }
+  if(p1 !== p2){
+    alert("As senhas não conferem.");
+    return;
+  }
+
+  savePassword(p1);
+  document.getElementById("setupArea").style.display = "none";
+  document.getElementById("loginArea").style.display = "block";
+  document.getElementById("loginPass").value = p1;
+  alert("Senha criada.");
+}
+
+function loginAdmin(){
+  const p = document.getElementById("loginPass").value.trim();
+
+  if(p !== parentPassword){
+    alert("Senha incorreta.");
+    return;
+  }
+
+  document.getElementById("loginArea").style.display = "none";
+  document.getElementById("adminArea").style.display = "block";
+  renderAdminSelectors();
+  renderAdminCards();
+  ensureVoices();
+  updateSelectedCardLabel();
+}
+
+function changePassword(){
+  const oldPass = document.getElementById("oldPass").value.trim();
+  const n1 = document.getElementById("changePass1").value.trim();
+  const n2 = document.getElementById("changePass2").value.trim();
+
+  if(oldPass !== parentPassword){
+    alert("Senha atual incorreta.");
+    return;
+  }
+  if(!n1 || !n2){
+    alert("Digite a nova senha e confirme.");
+    return;
+  }
+  if(n1 !== n2){
+    alert("As senhas novas não conferem.");
+    return;
+  }
+
+  savePassword(n1);
+  document.getElementById("oldPass").value = "";
+  document.getElementById("changePass1").value = "";
+  document.getElementById("changePass2").value = "";
+  alert("Senha alterada.");
+}
+
+function renderLevels(){
+  const container = document.getElementById("levels");
+  container.innerHTML = "";
+
+  data.levels.forEach((level, idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "level-btn" + (idx === currentLevelIndex ? " active" : "");
+    btn.style.background = idx === currentLevelIndex ? level.color : "var(--card)";
+    btn.style.color = idx === currentLevelIndex ? "#fff" : "var(--text)";
+
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    dot.style.background = level.color;
+
+    const label = document.createElement("span");
+    label.textContent = level.name;
+
+    btn.appendChild(dot);
+    btn.appendChild(label);
+
+    btn.onclick = ()=>{
+      currentLevelIndex = idx;
+      renderAll();
+    };
+
+    container.appendChild(btn);
+  });
+}
+
+async function playCard(card){
+  stopCurrentAudio();
+
+  if(card.hasRecordedVoice){
+    const blob = await getAudio(card.id);
+    if(blob){
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      currentAudio = audio;
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        currentAudio = null;
+      };
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        currentAudio = null;
+        speak(card.text);
+      };
+      audio.play().catch(()=> speak(card.text));
+      return;
+    }
+  }
+
+  speak(card.text);
+}
+
+function renderCards(){
+  const level = data.levels[currentLevelIndex];
+  const title = document.getElementById("levelTitle");
+  const grid = document.getElementById("cards");
+  grid.innerHTML = "";
+
+  if(!level){
+    title.textContent = "";
+    return;
+  }
+
+  title.textContent = level.name;
+
+  level.cards.forEach(card=>{
+    const btn = document.createElement("button");
+    btn.className = "card";
+    btn.style.setProperty("--accent", level.color);
+    btn.onclick = ()=>{
+      animateTap(btn);
+      playCard(card);
+    };
+
+    const icon = document.createElement("div");
+    icon.className = "icon";
+
+    if(card.image){
+      const img = document.createElement("img");
+      img.src = card.image;
+      img.alt = card.text;
+      icon.appendChild(img);
+    }else{
+      icon.innerHTML = `<img src="${library[card.iconKey] || library.choose}" alt="${escapeHTML(card.text)}" />`;
+    }
+
+    const label = document.createElement("span");
+    label.textContent = card.text;
+
+    btn.appendChild(icon);
+    btn.appendChild(label);
+    grid.appendChild(btn);
+  });
+}
+
+function animateTap(el){
+  el.animate(
+    [
+      { transform:"scale(1)" },
+      { transform:"scale(.97)" },
+      { transform:"scale(1)" }
+    ],
+    { duration:180, easing:"ease-out" }
+  );
+}
+
+function ensureVoices(){
+  if(!("speechSynthesis" in window)) return;
+
+  voices = speechSynthesis.getVoices() || [];
+  const select = document.getElementById("voiceSelect");
+  if(!select) return;
+
+  select.innerHTML = "";
+
+  if(voices.length === 0){
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "Carregando vozes...";
+    select.appendChild(opt);
+    return;
+  }
+
+  voices.forEach(v=>{
+    const opt = document.createElement("option");
+    opt.value = v.voiceURI;
+    opt.textContent = `${v.name} (${v.lang})`;
+    if(data.settings.voiceURI && v.voiceURI === data.settings.voiceURI){
+      opt.selected = true;
+      selectedVoice = v;
+    }
+    select.appendChild(opt);
+  });
+
+  if(!data.settings.voiceURI && voices.length > 0){
+    const pt = voices.find(v => (v.lang || "").toLowerCase().includes("pt-br")) || voices[0];
+    data.settings.voiceURI = pt.voiceURI;
+    selectedVoice = pt;
+    select.value = pt.voiceURI;
+    saveData();
+  }
+
+  const rate = document.getElementById("rateRange");
+  if(rate) rate.value = data.settings.rate || 1;
+}
+
+if("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged = ensureVoices;
+}
 
 function speak(text){
+  if(!("speechSynthesis" in window)) return;
 
-let speech =
-new SpeechSynthesisUtterance(text);
+  speechSynthesis.cancel();
 
-speech.lang = "pt-BR";
-speech.rate = 0.9;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "pt-BR";
+  utter.rate = data.settings.rate || 1;
 
-window.speechSynthesis.speak(speech);
+  const voice = voices.find(v => v.voiceURI === data.settings.voiceURI) || selectedVoice || null;
+  if(voice) utter.voice = voice;
 
+  speechSynthesis.speak(utter);
 }
 
-/* SELECT */
-
-function updateSelect(){
-
-const select =
-document.getElementById(
-"cardSelect"
-);
-
-select.innerHTML = "";
-
-cards.forEach((card,index)=>{
-
-select.innerHTML += `
-
-<option value="${index}">
-${card.text}
-</option>
-
-`;
-
-});
-
+function stopCurrentAudio(){
+  if(currentAudio){
+    try{ currentAudio.pause(); }catch(e){}
+    currentAudio = null;
+  }
+  if("speechSynthesis" in window){
+    speechSynthesis.cancel();
+  }
 }
 
-/* EDIT */
-
-function saveCardEdit(){
-
-const index =
-document.getElementById(
-"cardSelect"
-).value;
-
-const newText =
-document.getElementById(
-"newText"
-).value;
-
-const imageInput =
-document.getElementById(
-"newImage"
-);
-
-if(newText){
-
-cards[index].text = newText;
-
+function toggleTheme(){
+  data.settings.themeDark = !data.settings.themeDark;
+  document.body.classList.toggle("dark", data.settings.themeDark);
+  saveData();
 }
 
-if(imageInput.files[0]){
+function saveVoiceSettings(){
+  const select = document.getElementById("voiceSelect");
+  const rate = document.getElementById("rateRange");
 
-const reader =
-new FileReader();
+  data.settings.voiceURI = select.value;
+  data.settings.rate = Number(rate.value);
+  selectedVoice = voices.find(v => v.voiceURI === data.settings.voiceURI) || null;
 
-reader.onload = function(e){
-
-cards[index].image =
-e.target.result;
-
-renderCards();
-
-};
-
-reader.readAsDataURL(
-imageInput.files[0]
-);
-
-}else{
-
-renderCards();
-
+  saveData();
+  alert("Voz salva.");
 }
 
+function testVoice(){
+  const rate = document.getElementById("rateRange");
+  data.settings.rate = Number(rate.value);
+  saveData();
+  speak("Olá. Esta é a voz escolhida pelos pais.");
 }
 
-/* ADD CARD */
+function renderAdminSelectors(){
+  const select = document.getElementById("adminLevelSelect");
+  if(!select) return;
 
-function addCard(){
+  select.innerHTML = "";
+  data.levels.forEach((level, idx)=>{
+    const opt = document.createElement("option");
+    opt.value = idx;
+    opt.textContent = level.name;
+    select.appendChild(opt);
+  });
 
-const text =
-document.getElementById(
-"cardText"
-).value;
-
-const imageInput =
-document.getElementById(
-"cardImage"
-);
-
-if(!text || !imageInput.files[0]){
-
-alert(
-"Preencha o texto e escolha uma imagem."
-);
-
-return;
-
+  if(data.levels[currentLevelIndex]){
+    select.value = String(currentLevelIndex);
+  }
 }
 
-const colors = [
-"red",
-"orange",
-"yellow",
-"green",
-"blue",
-"purple"
-];
+function renderAdminCards(){
+  const levelIndex = Number(document.getElementById("adminLevelSelect").value || 0);
+  const level = data.levels[levelIndex];
+  const list = document.getElementById("adminCardList");
+  list.innerHTML = "";
 
-const randomColor =
-colors[
-Math.floor(
-Math.random()*colors.length
-)
-];
+  if(!level) return;
 
-const reader =
-new FileReader();
+  level.cards.forEach(card=>{
+    const item = document.createElement("div");
+    item.className = "mini-item";
 
-reader.onload = function(e){
+    const title = document.createElement("strong");
+    title.textContent = card.text;
 
-cards.push({
+    const meta1 = document.createElement("div");
+    meta1.textContent = "Ilustração: " + (card.iconKey || "custom");
 
-text:text,
-image:e.target.result,
-color:randomColor
+    const meta2 = document.createElement("div");
+    meta2.textContent = card.image ? "Imagem enviada" : "Sem imagem enviada";
 
-});
+    const meta3 = document.createElement("div");
+    meta3.textContent = card.hasRecordedVoice ? "Voz gravada: sim" : "Voz gravada: não";
 
-renderCards();
+    const actions = document.createElement("div");
+    actions.className = "mini-actions";
 
-};
+    const editBtn = document.createElement("button");
+    editBtn.className = "tiny ok";
+    editBtn.textContent = "Editar";
+    editBtn.onclick = ()=> editCard(card.id);
 
-reader.readAsDataURL(
-imageInput.files[0]
-);
+    const delBtn = document.createElement("button");
+    delBtn.className = "tiny danger";
+    delBtn.textContent = "Excluir";
+    delBtn.onclick = ()=> deleteCard(card.id);
 
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+
+    item.appendChild(title);
+    item.appendChild(meta1);
+    item.appendChild(meta2);
+    item.appendChild(meta3);
+    item.appendChild(actions);
+
+    list.appendChild(item);
+  });
 }
 
-/* RECORD */
+function saveCard(){
+  const levelIndex = Number(document.getElementById("adminLevelSelect").value || 0);
+  const level = data.levels[levelIndex];
+  if(!level) return;
 
-let mediaRecorder;
-let audioChunks = [];
+  const text = document.getElementById("cardText").value.trim();
+  const imageFile = document.getElementById("cardImageFile");
+  const imageUrl = document.getElementById("cardImageUrl").value.trim();
+
+  if(!text){
+    alert("Digite a fala do cartão.");
+    return;
+  }
+
+  const finish = (finalImage, finalIconKey) => {
+    if(editingCardId){
+      const card = level.cards.find(c => c.id === editingCardId);
+      if(card){
+        card.text = text;
+        card.image = finalImage;
+        if(finalIconKey) card.iconKey = finalIconKey;
+      }
+    }else{
+      level.cards.push({
+        id: uid(),
+        text,
+        iconKey: finalIconKey || "choose",
+        color: level.color,
+        image: finalImage,
+        hasRecordedVoice: false
+      });
+    }
+
+    saveData();
+    cancelEdit();
+    renderAll();
+    renderAdminCards();
+    alert("Cartão salvo.");
+  };
+
+  if(imageFile.files && imageFile.files[0]){
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      finish(String(ev.target.result || ""), "choose");
+    };
+    reader.readAsDataURL(imageFile.files[0]);
+  }else if(imageUrl){
+    finish(imageUrl, "choose");
+  }else{
+    const guessed = guessIconKey(text);
+    finish("", guessed);
+  }
+}
+
+function guessIconKey(text){
+  const t = text.toLowerCase().trim();
+
+  if(["sim", "pode", "ok", "claro"].some(w => t === w || t.includes(w))) return "yes";
+  if(["não", "nao", "sem", "pare", "nunca"].some(w => t === w || t.includes(w))) return "no";
+  if(t.includes("água") || t.includes("agua") || t.includes("beber") || t.includes("sede")) return "water";
+  if(t.includes("ajuda") || t.includes("socorro")) return "help";
+  if(t.includes("mamãe") || t.includes("mamae")) return "mom";
+  if(t.includes("papai") || t.includes("pai")) return "dad";
+  if(t.includes("comer") || t.includes("fome") || t.includes("lanche") || t.includes("almoço") || t.includes("almoco")) return "food";
+  if(t.includes("dorm") || t.includes("sono") || t.includes("descans")) return "sleep";
+  if(t.includes("brinc") || t.includes("jogar") || t.includes("jogo")) return "play";
+  if(t.includes("banhe") || t.includes("toalete") || t.includes("xixi") || t.includes("cocô") || t.includes("coco")) return "bathroom";
+  if(t.includes("oi") || t.includes("olá") || t.includes("ola")) return "hello";
+  if(t.includes("tchau") || t.includes("adeus")) return "bye";
+  if(t.includes("obrig")) return "thanks";
+  if(t.includes("favor")) return "please";
+  if(t.includes("feliz")) return "happy";
+  if(t.includes("trist")) return "sad";
+  if(t.includes("mais")) return "more";
+  if(t.includes("acabou") || t.includes("fim")) return "done";
+  if(t.includes("silên") || t.includes("silenc")) return "quiet";
+  if(t.includes("música") || t.includes("musica")) return "music";
+  if(t.includes("desenho") || t.includes("tv") || t.includes("filme")) return "tv";
+  if(t.includes("sair") || t.includes("vamos embora") || t.includes("ir embora")) return "leave";
+  if(t.includes("casa")) return "home";
+  if(t.includes("medo")) return "fear";
+  if(t.includes("confus")) return "confusion";
+  if(t.includes("repet")) return "repeat";
+  if(t.includes("paus")) return "pause";
+  if(t.includes("escolh")) return "choose";
+  if(t.includes("difícil") || t.includes("dificil")) return "difficulty";
+  if(t.includes("agora")) return "notnow";
+  if(t.includes("falar com mamãe") || t.includes("falar com mamae")) return "talkmom";
+  if(t.includes("falar com papai") || t.includes("falar com pai")) return "talkdad";
+
+  return "choose";
+}
+
+function editCard(cardId){
+  const found = findCard(cardId);
+  if(!found) return;
+
+  const { levelIndex, card } = found;
+
+  document.getElementById("adminLevelSelect").value = String(levelIndex);
+  document.getElementById("cardText").value = card.text;
+  document.getElementById("cardImageFile").value = "";
+  document.getElementById("cardImageUrl").value = card.image && !card.image.startsWith("data:image") ? card.image : "";
+
+  editingCardId = card.id;
+  renderAdminCards();
+  updateSelectedCardLabel();
+  document.getElementById("cardText").focus();
+}
+
+function deleteCard(cardId){
+  if(!confirm("Excluir este cartão?")) return;
+
+  const found = findCard(cardId);
+  if(!found) return;
+
+  found.level.cards = found.level.cards.filter(c => c.id !== cardId);
+
+  deleteAudio(cardId).catch(()=>{});
+  saveData();
+  renderAll();
+  renderAdminCards();
+  updateSelectedCardLabel();
+}
+
+function findCard(cardId){
+  for(let i = 0; i < data.levels.length; i++){
+    const level = data.levels[i];
+    const card = level.cards.find(c => c.id === cardId);
+    if(card) return { levelIndex:i, level, card };
+  }
+  return null;
+}
+
+function cancelEdit(){
+  editingCardId = "";
+  document.getElementById("cardText").value = "";
+  document.getElementById("cardImageFile").value = "";
+  document.getElementById("cardImageUrl").value = "";
+  updateSelectedCardLabel();
+}
+
+function updateSelectedCardLabel(){
+  const label = document.getElementById("selectedCardLabel");
+  if(!label) return;
+
+  const found = editingCardId ? findCard(editingCardId) : null;
+  if(found){
+    label.textContent = "Cartão selecionado: " + found.card.text;
+  }else{
+    label.textContent = "Nenhum cartão selecionado ainda. Clique em Editar em um cartão.";
+  }
+}
+
+function updateRecordStatus(text){
+  const el = document.getElementById("recordStatus");
+  if(el) el.textContent = text;
+}
 
 async function startRecording(){
+  if(!editingCardId){
+    alert("Clique em Editar em um cartão antes de gravar.");
+    return;
+  }
+  if(isRecording) return;
 
-const stream =
-await navigator.mediaDevices.getUserMedia({
-audio:true
-});
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    alert("Este navegador não permite gravar áudio.");
+    return;
+  }
+  if(typeof MediaRecorder === "undefined"){
+    alert("Este navegador não suporta gravação por MediaRecorder.");
+    return;
+  }
 
-mediaRecorder =
-new MediaRecorder(stream);
+  try{
+    recordingStream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    recordingChunks = [];
+    mediaRecorder = new MediaRecorder(recordingStream);
 
-mediaRecorder.start();
+    mediaRecorder.ondataavailable = (e)=>{
+      if(e.data && e.data.size > 0){
+        recordingChunks.push(e.data);
+      }
+    };
 
-audioChunks = [];
+    mediaRecorder.onstop = async ()=>{
+      const cardId = editingCardId;
+      const blob = new Blob(recordingChunks, { type: mediaRecorder.mimeType || "audio/webm" });
+      await putAudio(cardId, blob);
 
-mediaRecorder.addEventListener(
-"dataavailable",
-event => {
-audioChunks.push(event.data);
+      const found = findCard(cardId);
+      if(found){
+        found.card.hasRecordedVoice = true;
+        saveData();
+      }
+
+      stopRecordingSilently();
+      renderAll();
+      renderAdminCards();
+      updateSelectedCardLabel();
+      updateRecordStatus("Voz gravada salva no cartão selecionado.");
+      alert("Voz gravada e salva no cartão.");
+    };
+
+    mediaRecorder.start();
+    isRecording = true;
+    updateRecordStatus("Gravando... clique em Parar gravação quando terminar.");
+  }catch(err){
+    console.error(err);
+    updateRecordStatus("Não foi possível iniciar a gravação.");
+    alert("Não foi possível acessar o microfone.");
+  }
 }
-);
 
-document.getElementById(
-"recordStatus"
-).innerText =
-"Gravando...";
-
+function stopRecordingSilently(){
+  if(mediaRecorder && isRecording){
+    try{ mediaRecorder.stop(); }catch(e){}
+  }
+  if(recordingStream){
+    recordingStream.getTracks().forEach(t => t.stop());
+  }
+  recordingStream = null;
+  mediaRecorder = null;
+  recordingChunks = [];
+  isRecording = false;
 }
 
 function stopRecording(){
-
-mediaRecorder.stop();
-
-mediaRecorder.addEventListener(
-"stop",
-()=>{
-
-const audioBlob =
-new Blob(audioChunks);
-
-const audioURL =
-URL.createObjectURL(audioBlob);
-
-const audio =
-new Audio(audioURL);
-
-document.getElementById(
-"recordStatus"
-).innerHTML =
-
-"Gravação salva!<br><br>";
-
-let playButton =
-document.createElement(
-"button"
-);
-
-playButton.innerText =
-"▶ Ouvir gravação";
-
-playButton.onclick =
-()=> audio.play();
-
-document.getElementById(
-"recordStatus"
-).appendChild(playButton);
-
-});
-
+  if(!isRecording){
+    updateRecordStatus("Não há gravação em andamento.");
+    return;
+  }
+  updateRecordStatus("Finalizando gravação...");
+  stopRecordingSilently();
 }
 
-/* START */
+async function removeRecording(){
+  if(!editingCardId){
+    alert("Escolha um cartão primeiro.");
+    return;
+  }
+  await deleteAudio(editingCardId).catch(()=>{});
+  const found = findCard(editingCardId);
+  if(found){
+    found.card.hasRecordedVoice = false;
+    saveData();
+  }
+  renderAll();
+  renderAdminCards();
+  updateSelectedCardLabel();
+  updateRecordStatus("Gravação removida do cartão.");
+}
 
-renderCards();
+function renderAll(){
+  document.body.classList.toggle("dark", !!data.settings.themeDark);
+  renderLevels();
+  renderCards();
+  renderAdminSelectors();
 
+  const adminVisible = document.getElementById("adminArea")?.style.display === "block";
+  if(adminVisible){
+    renderAdminCards();
+  }
+
+  ensureVoices();
+  updateSelectedCardLabel();
+}
+
+window.addEventListener("click", (e)=>{
+  const modal = document.getElementById("configModal");
+  if(e.target === modal) closeConfig();
+});
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  if(data.settings.themeDark) document.body.classList.add("dark");
+  renderAll();
+});
 </script>
-
 </body>
 </html>
