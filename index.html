@@ -44,83 +44,115 @@
       linear-gradient(180deg, var(--bg1), var(--bg2));
   }
 
-  button, input, select{font:inherit}
+  button, input, select{
+    font:inherit;
+  }
 
   header{
     position:sticky;
     top:0;
     z-index:20;
-    color:#fff;
-    padding:18px 16px 16px;
-    text-align:center;
-    background:linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
-    box-shadow:0 6px 22px rgba(0,0,0,.12);
+    padding:14px 16px 12px;
+    background:transparent;
+    box-shadow:none;
   }
 
-  header h1{
+  .top-shell{
+    max-width:1280px;
+    margin:0 auto;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(10px);
+    border-radius:28px;
+    box-shadow:0 10px 24px rgba(0,0,0,.10);
+    padding:16px 18px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+
+  body.dark .top-shell{
+    background:rgba(17,24,39,.88);
+  }
+
+  .logo-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-width:0;
+  }
+
+  .logo-mark{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    background:linear-gradient(135deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    box-shadow:0 8px 16px rgba(0,0,0,.14);
+    flex:0 0 auto;
+  }
+
+  .logo-row h1{
     margin:0;
     font-size:34px;
-    letter-spacing:.3px;
+    line-height:1;
+    color:var(--text);
   }
 
-  header p{
-    margin:7px 0 0;
-    font-size:15px;
-    opacity:.96;
+  .logo-row p{
+    margin:6px 0 0;
+    font-size:14px;
+    color:var(--muted);
   }
 
-  .puzzle-strip{
-    margin:16px auto 0;
-    max-width:1100px;
+  .top-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+
+  .puzzle-ribbon{
+    max-width:1280px;
+    margin:10px auto 0;
     display:grid;
     grid-template-columns:repeat(6, 1fr);
     gap:10px;
-    padding:0 10px;
+    padding:0 6px;
   }
 
   .piece{
     position:relative;
-    height:46px;
-    border-radius:16px;
-    background:var(--piece-color);
-    box-shadow:
-      inset 0 0 0 3px rgba(255,255,255,.45),
-      0 6px 14px rgba(0,0,0,.14);
-    overflow:visible;
+    height:28px;
+    border-radius:12px;
+    box-shadow:0 6px 14px rgba(0,0,0,.12);
   }
 
-  .piece::before{
-    content:"";
-    position:absolute;
-    width:22px;
-    height:22px;
-    right:-11px;
-    top:12px;
-    border-radius:50%;
-    background:var(--piece-color);
-    box-shadow:0 0 0 4px rgba(255,255,255,.50);
-  }
-
+  .piece::before,
   .piece::after{
     content:"";
     position:absolute;
-    width:18px;
-    height:18px;
-    left:50%;
-    top:-9px;
-    transform:translateX(-50%);
+    width:16px;
+    height:16px;
     border-radius:50%;
-    background:var(--bg1);
-    box-shadow:0 0 0 2px rgba(255,255,255,.45) inset;
+    background:inherit;
+    top:50%;
+    transform:translateY(-50%);
+    box-shadow:0 0 0 3px rgba(255,255,255,.45);
   }
 
-  .top-actions{
-    margin-top:14px;
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:center;
-  }
+  .piece::before{ left:-8px; }
+  .piece::after{ right:-8px; }
+
+  .piece.red{ background:var(--red); }
+  .piece.orange{ background:var(--orange); }
+  .piece.yellow{ background:var(--yellow); }
+  .piece.green{ background:var(--green); }
+  .piece.blue{ background:var(--blue); }
+  .piece.purple{ background:var(--purple); }
 
   .btn{
     border:none;
@@ -132,7 +164,6 @@
     box-shadow:var(--shadow);
     transition:transform .12s ease;
   }
-
   .btn:active,
   .level-btn:active,
   .card:active,
@@ -145,7 +176,6 @@
     color:#111827;
     font-weight:700;
   }
-
   .btn.danger{background:var(--red);color:#fff}
   .btn.blue{background:var(--blue);color:#fff}
   .btn.green{background:var(--green);color:#fff}
@@ -450,33 +480,53 @@
   }
 
   @media (max-width: 820px){
+    .top-shell{
+      flex-direction:column;
+      align-items:stretch;
+    }
+    .logo-row{
+      justify-content:center;
+      text-align:left;
+    }
+    .top-actions{
+      justify-content:center;
+    }
+    .puzzle-ribbon{
+      grid-template-columns:repeat(3, 1fr);
+    }
     .split{grid-template-columns:1fr}
     header h1{font-size:30px}
     .card{min-height:170px}
     .card span{font-size:18px}
     .emoji-box{width:84px;height:84px;font-size:48px}
-    .puzzle-strip{grid-template-columns:repeat(3, 1fr)}
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>FalaUp</h1>
-  <p>Cartões com voz para comunicação simples, clara e divertida.</p>
+  <div class="top-shell">
+    <div class="logo-row">
+      <div class="logo-mark">🧩</div>
+      <div>
+        <h1>FalaUp</h1>
+        <p>Cartões com voz para comunicação simples, clara e divertida.</p>
+      </div>
+    </div>
 
-  <div class="puzzle-strip" aria-hidden="true">
-    <div class="piece" style="--piece-color: var(--red)"></div>
-    <div class="piece" style="--piece-color: var(--orange)"></div>
-    <div class="piece" style="--piece-color: var(--yellow)"></div>
-    <div class="piece" style="--piece-color: var(--green)"></div>
-    <div class="piece" style="--piece-color: var(--blue)"></div>
-    <div class="piece" style="--piece-color: var(--purple)"></div>
+    <div class="top-actions">
+      <button class="btn primary" onclick="openConfig()">Configurações</button>
+      <button class="btn primary" onclick="toggleTheme()">Modo claro/escuro</button>
+    </div>
   </div>
 
-  <div class="top-actions">
-    <button class="btn primary" onclick="openConfig()">Configurações</button>
-    <button class="btn primary" onclick="toggleTheme()">Modo claro/escuro</button>
+  <div class="puzzle-ribbon" aria-hidden="true">
+    <div class="piece red"></div>
+    <div class="piece orange"></div>
+    <div class="piece yellow"></div>
+    <div class="piece green"></div>
+    <div class="piece blue"></div>
+    <div class="piece purple"></div>
   </div>
 </header>
 
@@ -630,15 +680,6 @@ function makeCard(text, emoji, color){
   };
 }
 
-function escapeHTML(str){
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
 const defaultData = {
   settings: {
     themeDark: false,
@@ -754,6 +795,13 @@ function loadData(){
     if(!raw) return defaultData;
     const parsed = JSON.parse(raw);
     if(!parsed || !parsed.settings || !parsed.levels) return defaultData;
+    for(const lvl of parsed.levels){
+      for(const c of lvl.cards){
+        if(typeof c.emoji !== "string") c.emoji = "🔤";
+        if(typeof c.color !== "string") c.color = "#4a90e2";
+        if(typeof c.hasRecordedVoice !== "boolean") c.hasRecordedVoice = false;
+      }
+    }
     return parsed;
   }catch{
     return defaultData;
@@ -1203,7 +1251,8 @@ function saveCard(){
   if(!level) return;
 
   const text = document.getElementById("cardText").value.trim();
-  const emoji = document.getElementById("cardEmoji").value.trim() || guessEmoji(text);
+  const emojiInput = document.getElementById("cardEmoji").value.trim();
+  const emoji = emojiInput || guessEmoji(text);
 
   if(!text){
     alert("Digite a fala do cartão.");
