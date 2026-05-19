@@ -31,9 +31,8 @@
     --shadow:0 12px 28px rgba(0,0,0,.35);
   }
 
-  *{ box-sizing:border-box; }
-  html,body{ margin:0; min-height:100%; }
-
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
   body{
     font-family:Arial, sans-serif;
     color:var(--text);
@@ -332,6 +331,14 @@
     border:1px solid rgba(0,0,0,.06);
     font-size:54px;
     line-height:1;
+    overflow:hidden;
+  }
+
+  .emoji-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
   }
 
   .card span{
@@ -435,6 +442,26 @@
     background:#0b1220;
     color:#f3f4f6;
     border-color:#334155;
+  }
+
+  .check-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 14px;
+    border-radius:16px;
+    border:1px solid #d1d5db;
+    background:#fff;
+  }
+
+  body.dark .check-row{
+    background:#0b1220;
+    border-color:#334155;
+  }
+
+  .check-row input{
+    width:18px;
+    height:18px;
   }
 
   .mini-actions{
@@ -573,6 +600,13 @@
     line-height:1.45;
   }
 
+  .support-row{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:10px;
+    align-items:center;
+  }
+
   footer{
     text-align:center;
     padding:22px 14px 30px;
@@ -661,7 +695,7 @@
     <div class="modal-top">
       <div>
         <h2>Configurações</h2>
-        <p>Área dos pais para voz, cartões, gravação e senha.</p>
+        <p>Área dos pais para voz, cartões, gravação, imagens e senha.</p>
       </div>
       <button class="close-btn" onclick="closeConfig()">Fechar</button>
     </div>
@@ -675,6 +709,7 @@
       <div class="mini-actions">
         <button class="tiny ok" onclick="loginAdmin()">Entrar</button>
       </div>
+      <p class="note">Se abrir pela primeira vez, use <b>1234</b>.</p>
     </div>
 
     <div id="adminArea" style="display:none">
@@ -682,43 +717,57 @@
         <div class="intro-card">
           <div class="num">1</div>
           <h4>Voz do app</h4>
-          <p>Escolha a voz e a velocidade que vão falar quando a criança tocar nos cartões.</p>
+          <p>Escolha a voz do navegador para falar quando a criança tocar nos cartões.</p>
         </div>
         <div class="intro-card">
           <div class="num">2</div>
-          <h4>Cartões</h4>
-          <p>Adicione, edite ou apague cartões. Também dá para escolher o nível onde eles ficam.</p>
+          <h4>Microfone</h4>
+          <p>Escolha a entrada de áudio do PC ou do iPad para gravar a voz personalizada.</p>
         </div>
         <div class="intro-card">
           <div class="num">3</div>
-          <h4>Gravação</h4>
-          <p>Grave uma fala própria para o cartão selecionado e salve no navegador.</p>
+          <h4>Cartões</h4>
+          <p>Adicione, edite, mova entre níveis e coloque imagens do dispositivo ou por URL.</p>
         </div>
         <div class="intro-card">
           <div class="num">4</div>
           <h4>Senha</h4>
-          <p>Troque a senha dos pais a qualquer momento para manter o controle do painel.</p>
+          <p>Troque a senha dos pais a qualquer momento para manter o painel protegido.</p>
         </div>
       </div>
 
       <div class="admin-dashboard">
         <section class="panel">
           <h3>Voz do app</h3>
-          <p class="sub">Essas opções controlam como o site fala quando a criança tocar nos cartões.</p>
+          <p class="sub">Essa voz fala quando a criança toca nos cartões.</p>
           <div class="grid-form">
             <select class="field" id="voiceSelect"></select>
             <input class="field" id="rateRange" type="range" min="0.6" max="1.4" step="0.1" value="1">
           </div>
           <div class="mini-actions">
             <button class="tiny ok" onclick="saveVoiceSettings()">Salvar voz</button>
-            <button class="tiny gray" onclick="testVoice()">Testar voz</button>
+            <button class="tiny gray" onclick="refreshVoices()">Atualizar vozes</button>
+            <button class="tiny blue" onclick="testVoice()">Testar voz</button>
           </div>
           <p class="note">A voz e a velocidade ficam guardadas no navegador.</p>
         </section>
 
         <section class="panel">
+          <h3>Microfone para gravação</h3>
+          <p class="sub">Escolha a entrada de áudio usada para gravar a voz dos cartões no PC ou no iPad.</p>
+          <div class="grid-form">
+            <select class="field" id="micSelect" onchange="saveMicSelection()"></select>
+          </div>
+          <div class="mini-actions">
+            <button class="tiny ok" onclick="refreshMics()">Atualizar microfones</button>
+            <button class="tiny gray" onclick="testMicPermission()">Liberar mic</button>
+          </div>
+          <p class="note">Se o navegador ainda não mostrou nomes dos microfones, clique em “Liberar mic” ou “Atualizar microfones”.</p>
+        </section>
+
+        <section class="panel">
           <h3>Senha dos pais</h3>
-          <p class="sub">Troque a senha sempre que precisar. Se ninguém alterou antes, a senha padrão é 1234.</p>
+          <p class="sub">Troque a senha sempre que precisar.</p>
           <div class="grid-form">
             <input class="field" id="oldPass" type="password" placeholder="Senha atual">
             <input class="field" id="changePass1" type="password" placeholder="Nova senha">
@@ -731,7 +780,7 @@
 
         <section class="panel" style="grid-column:1 / -1;">
           <h3>Cartões</h3>
-          <p class="sub">Selecione um nível, veja os cartões desse nível e use o formulário para adicionar ou editar.</p>
+          <p class="sub">Selecione um nível, veja os cartões e use o formulário abaixo para criar ou editar.</p>
 
           <div class="grid-form">
             <select class="field" id="adminLevelSelect" onchange="renderAdminCards()"></select>
@@ -745,12 +794,21 @@
 
             <div class="panel" style="background:rgba(255,255,255,.22);">
               <h3 style="margin-top:0;">Adicionar ou editar cartão</h3>
-              <p class="sub">Escolha um cartão da lista para editar ou crie um novo com os campos abaixo.</p>
+              <p class="sub">Preencha o texto, o emoji e, se quiser, uma imagem do dispositivo ou uma imagem por link.</p>
 
               <div class="grid-form">
                 <input class="field" id="cardText" placeholder="Texto da fala">
                 <input class="field" id="cardEmoji" placeholder="Emoji (ex: 🍎)">
+                <input class="field" id="cardImageFile" type="file" accept="image/*">
+                <input class="field" id="cardImageUrl" placeholder="URL da imagem (opcional)">
               </div>
+
+              <div class="check-row" style="margin-top:10px;">
+                <input type="checkbox" id="clearImageCheck">
+                <label for="clearImageCheck">Remover imagem atual ao salvar</label>
+              </div>
+
+              <input type="hidden" id="editingCardId">
 
               <div class="mini-actions">
                 <button class="tiny ok" onclick="saveCard()">Salvar cartão</button>
@@ -791,9 +849,9 @@
 </div>
 
 <script>
-const STORAGE_KEY = "falaup_tea_app_v7";
-const PASSWORD_KEY = "falaup_parent_password_v7";
-const AUDIO_DB_NAME = "falaup_audio_db_v4";
+const STORAGE_KEY = "falaup_tea_app_v8";
+const PASSWORD_KEY = "falaup_parent_password_v8";
+const AUDIO_DB_NAME = "falaup_audio_db_v5";
 const AUDIO_STORE = "audio";
 const DEFAULT_PASSWORD = "1234";
 
@@ -802,12 +860,13 @@ function uid(){
   return "id_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
-function makeCard(text, emoji, color){
+function makeCard(text, emoji, color, image = ""){
   return {
     id: uid(),
     text,
     emoji,
     color,
+    image,
     hasRecordedVoice: false
   };
 }
@@ -818,24 +877,17 @@ function cloneCard(card){
     text: card.text || "",
     emoji: card.emoji || "🔤",
     color: card.color || "#4a90e2",
+    image: card.image || "",
     hasRecordedVoice: !!card.hasRecordedVoice
   };
-}
-
-function escapeHTML(str){
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
 }
 
 const defaultData = {
   settings: {
     themeDark: false,
     voiceURI: "",
-    rate: 1
+    rate: 1,
+    micDeviceId: ""
   },
   levels: [
     {
@@ -949,6 +1001,12 @@ function loadData(){
     if(!raw) return defaultData;
     const parsed = JSON.parse(raw);
     if(!parsed || !parsed.settings || !parsed.levels) return defaultData;
+    parsed.settings = {
+      themeDark: !!parsed.settings.themeDark,
+      voiceURI: parsed.settings.voiceURI || "",
+      rate: typeof parsed.settings.rate === "number" ? parsed.settings.rate : 1,
+      micDeviceId: parsed.settings.micDeviceId || ""
+    };
     parsed.levels = parsed.levels.map(level => ({
       ...level,
       cards: Array.isArray(level.cards) ? level.cards.map(cloneCard) : []
@@ -1015,7 +1073,8 @@ async function deleteAudio(cardId){
 function openConfig(){
   document.getElementById("configModal").style.display = "flex";
   updateLoginAndAdminViews();
-  ensureVoices();
+  refreshVoices();
+  refreshMics();
   renderAdminSelectors();
   renderAdminCards();
   updateSelectedCardLabel();
@@ -1052,7 +1111,8 @@ function loginAdmin(){
   }
   isAdminLogged = true;
   updateLoginAndAdminViews();
-  ensureVoices();
+  refreshVoices();
+  refreshMics();
   renderAdminSelectors();
   renderAdminCards();
   updateSelectedCardLabel();
@@ -1163,7 +1223,15 @@ function renderCards(){
 
     const icon = document.createElement("div");
     icon.className = "emoji-box";
-    icon.textContent = card.emoji || "🔤";
+
+    if(card.image){
+      const img = document.createElement("img");
+      img.src = card.image;
+      img.alt = card.text;
+      icon.appendChild(img);
+    }else{
+      icon.textContent = card.emoji || "🔤";
+    }
 
     const label = document.createElement("span");
     label.textContent = card.text;
@@ -1188,7 +1256,7 @@ function animateTap(el){
 function ensureVoices(){
   if(!("speechSynthesis" in window)) return;
 
-  voices = speechSynthesis.getVoices() || [];
+  voices = window.speechSynthesis.getVoices() || [];
   const select = document.getElementById("voiceSelect");
   if(!select) return;
 
@@ -1202,6 +1270,10 @@ function ensureVoices(){
     return;
   }
 
+  const preferred = voices.find(v => (v.lang || "").toLowerCase().includes("pt-br"))
+                 || voices.find(v => (v.lang || "").toLowerCase().startsWith("pt"))
+                 || voices[0];
+
   voices.forEach(v=>{
     const opt = document.createElement("option");
     opt.value = v.voiceURI;
@@ -1213,35 +1285,57 @@ function ensureVoices(){
     select.appendChild(opt);
   });
 
-  if(!data.settings.voiceURI && voices.length > 0){
-    const pt = voices.find(v => (v.lang || "").toLowerCase().includes("pt-br")) || voices[0];
-    data.settings.voiceURI = pt.voiceURI;
-    selectedVoice = pt;
-    select.value = pt.voiceURI;
+  if(!data.settings.voiceURI && preferred){
+    data.settings.voiceURI = preferred.voiceURI;
+    selectedVoice = preferred;
+    select.value = preferred.voiceURI;
     saveData();
+  }else if(data.settings.voiceURI){
+    selectedVoice = voices.find(v => v.voiceURI === data.settings.voiceURI) || preferred;
   }
 
   const rate = document.getElementById("rateRange");
   if(rate) rate.value = data.settings.rate || 1;
 }
 
+function refreshVoices(){
+  ensureVoices();
+  setTimeout(ensureVoices, 400);
+  setTimeout(ensureVoices, 1200);
+}
+
 if("speechSynthesis" in window){
   speechSynthesis.onvoiceschanged = ensureVoices;
+}
+
+function getSpeechVoice(){
+  const list = window.speechSynthesis.getVoices() || voices || [];
+  const selected = list.find(v => v.voiceURI === data.settings.voiceURI);
+  if(selected) return selected;
+  const pt = list.find(v => (v.lang || "").toLowerCase().includes("pt-br"))
+          || list.find(v => (v.lang || "").toLowerCase().startsWith("pt"))
+          || list[0]
+          || selectedVoice
+          || null;
+  return pt || null;
 }
 
 function speak(text){
   if(!("speechSynthesis" in window)) return;
 
-  speechSynthesis.cancel();
+  try{
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "pt-BR";
+    utter.rate = data.settings.rate || 1;
 
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "pt-BR";
-  utter.rate = data.settings.rate || 1;
+    const voice = getSpeechVoice();
+    if(voice) utter.voice = voice;
 
-  const voice = voices.find(v => v.voiceURI === data.settings.voiceURI) || selectedVoice || null;
-  if(voice) utter.voice = voice;
-
-  speechSynthesis.speak(utter);
+    window.speechSynthesis.speak(utter);
+  }catch(err){
+    console.error(err);
+  }
 }
 
 function stopCurrentAudio(){
@@ -1250,7 +1344,7 @@ function stopCurrentAudio(){
     currentAudio = null;
   }
   if("speechSynthesis" in window){
-    speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
   }
 }
 
@@ -1266,7 +1360,7 @@ function saveVoiceSettings(){
 
   data.settings.voiceURI = select.value;
   data.settings.rate = Number(rate.value);
-  selectedVoice = voices.find(v => v.voiceURI === data.settings.voiceURI) || null;
+  selectedVoice = voices.find(v => v.voiceURI === data.settings.voiceURI) || selectedVoice;
 
   saveData();
   alert("Voz salva.");
@@ -1277,6 +1371,75 @@ function testVoice(){
   data.settings.rate = Number(rate.value);
   saveData();
   speak("Olá. Esta é a voz escolhida pelos pais.");
+}
+
+async function refreshMics(){
+  const select = document.getElementById("micSelect");
+  if(!select) return;
+
+  if(!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices){
+    select.innerHTML = '<option value="">Microfone não suportado</option>';
+    return;
+  }
+
+  try{
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const mics = devices.filter(d => d.kind === "audioinput");
+
+    select.innerHTML = "";
+
+    if(!mics.length){
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.textContent = "Nenhum microfone encontrado";
+      select.appendChild(opt);
+      return;
+    }
+
+    mics.forEach((d, i)=>{
+      const opt = document.createElement("option");
+      opt.value = d.deviceId;
+      opt.textContent = d.label || `Microfone ${i + 1}`;
+      if(data.settings.micDeviceId && d.deviceId === data.settings.micDeviceId){
+        opt.selected = true;
+      }
+      select.appendChild(opt);
+    });
+
+    if(data.settings.micDeviceId && mics.some(m => m.deviceId === data.settings.micDeviceId)){
+      select.value = data.settings.micDeviceId;
+    }else{
+      data.settings.micDeviceId = select.value || mics[0].deviceId;
+      select.value = data.settings.micDeviceId;
+      saveData();
+    }
+  }catch(err){
+    console.error(err);
+    select.innerHTML = '<option value="">Não foi possível carregar</option>';
+  }
+}
+
+function saveMicSelection(){
+  const select = document.getElementById("micSelect");
+  data.settings.micDeviceId = select.value || "";
+  saveData();
+}
+
+async function testMicPermission(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    alert("Este navegador não permite microfone.");
+    return;
+  }
+
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    stream.getTracks().forEach(t => t.stop());
+    alert("Microfone liberado. Agora a lista de microfones deve aparecer.");
+    refreshMics();
+  }catch(err){
+    console.error(err);
+    alert("Não foi possível liberar o microfone.");
+  }
 }
 
 function renderAdminSelectors(){
@@ -1315,7 +1478,10 @@ function renderAdminCards(){
     meta1.textContent = "Emoji: " + (card.emoji || "");
 
     const meta2 = document.createElement("div");
-    meta2.textContent = card.hasRecordedVoice ? "Voz gravada: sim" : "Voz gravada: não";
+    meta2.textContent = card.image ? "Imagem: sim" : "Imagem: não";
+
+    const meta3 = document.createElement("div");
+    meta3.textContent = card.hasRecordedVoice ? "Voz gravada: sim" : "Voz gravada: não";
 
     const actions = document.createElement("div");
     actions.className = "mini-actions";
@@ -1336,6 +1502,7 @@ function renderAdminCards(){
     item.appendChild(title);
     item.appendChild(meta1);
     item.appendChild(meta2);
+    item.appendChild(meta3);
     item.appendChild(actions);
 
     list.appendChild(item);
@@ -1378,19 +1545,30 @@ function guessEmoji(text){
   return "🔤";
 }
 
+function fileToDataURL(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(String(reader.result || ""));
+    reader.onerror = ()=> reject(reader.error || new Error("Erro ao ler arquivo"));
+    reader.readAsDataURL(file);
+  });
+}
+
 function setEditorCard(card, levelIndex){
   editingCardId = card ? card.id : "";
   selectedCardId = card ? card.id : "";
-  const level = data.levels[levelIndex ?? currentLevelIndex];
   if(levelIndex !== undefined){
     document.getElementById("adminLevelSelect").value = String(levelIndex);
   }
   document.getElementById("cardText").value = card ? card.text : "";
   document.getElementById("cardEmoji").value = card ? card.emoji : "";
+  document.getElementById("cardImageFile").value = "";
+  document.getElementById("cardImageUrl").value = card && card.image && !card.image.startsWith("data:") ? card.image : "";
+  document.getElementById("clearImageCheck").checked = false;
   updateSelectedCardLabel();
 }
 
-function saveCard(){
+async function saveCard(){
   const levelIndex = Number(document.getElementById("adminLevelSelect").value || 0);
   const targetLevel = data.levels[levelIndex];
   if(!targetLevel) return;
@@ -1399,23 +1577,40 @@ function saveCard(){
   const emojiInput = document.getElementById("cardEmoji").value.trim();
   const emoji = emojiInput || guessEmoji(text);
 
+  const fileInput = document.getElementById("cardImageFile");
+  const urlInput = document.getElementById("cardImageUrl");
+  const clearImage = document.getElementById("clearImageCheck").checked;
+
   if(!text){
     alert("Digite a fala do cartão.");
     return;
   }
 
-  let savedId = editingCardId || uid();
   const existing = editingCardId ? findCard(editingCardId) : null;
+  const targetCardId = editingCardId || uid();
+
+  let finalImage = "";
+
+  if(clearImage){
+    finalImage = "";
+  }else if(fileInput.files && fileInput.files[0]){
+    finalImage = await fileToDataURL(fileInput.files[0]);
+  }else if(urlInput.value.trim()){
+    finalImage = urlInput.value.trim();
+  }else if(existing){
+    finalImage = existing.card.image || "";
+  }
 
   if(existing && existing.levelIndex !== levelIndex){
     existing.level.cards = existing.level.cards.filter(c => c.id !== editingCardId);
   }
 
   const nextCard = {
-    id: savedId,
+    id: targetCardId,
     text,
     emoji,
     color: targetLevel.color,
+    image: finalImage,
     hasRecordedVoice: existing ? existing.card.hasRecordedVoice : false
   };
 
@@ -1425,18 +1620,19 @@ function saveCard(){
       card.text = text;
       card.emoji = emoji;
       card.color = targetLevel.color;
+      card.image = finalImage;
     }
   }else{
-    const indexInTarget = targetLevel.cards.findIndex(c => c.id === savedId);
-    if(indexInTarget >= 0){
-      targetLevel.cards[indexInTarget] = nextCard;
+    const idx = targetLevel.cards.findIndex(c => c.id === targetCardId);
+    if(idx >= 0){
+      targetLevel.cards[idx] = nextCard;
     }else{
       targetLevel.cards.push(nextCard);
     }
   }
 
-  editingCardId = savedId;
-  selectedCardId = savedId;
+  editingCardId = targetCardId;
+  selectedCardId = targetCardId;
 
   saveData();
   renderAll();
@@ -1450,6 +1646,9 @@ function newCard(){
   selectedCardId = "";
   document.getElementById("cardText").value = "";
   document.getElementById("cardEmoji").value = "";
+  document.getElementById("cardImageFile").value = "";
+  document.getElementById("cardImageUrl").value = "";
+  document.getElementById("clearImageCheck").checked = false;
   updateSelectedCardLabel();
   updateRecordStatus("Você pode criar um novo cartão agora.");
 }
@@ -1463,6 +1662,9 @@ function editCard(cardId){
   selectedCardId = found.card.id;
   document.getElementById("cardText").value = found.card.text;
   document.getElementById("cardEmoji").value = found.card.emoji || "";
+  document.getElementById("cardImageFile").value = "";
+  document.getElementById("cardImageUrl").value = found.card.image && !found.card.image.startsWith("data:") ? found.card.image : "";
+  document.getElementById("clearImageCheck").checked = false;
   renderAdminCards();
   updateSelectedCardLabel();
   document.getElementById("cardText").focus();
@@ -1501,6 +1703,9 @@ function findCard(cardId){
 function cancelEdit(){
   document.getElementById("cardText").value = "";
   document.getElementById("cardEmoji").value = "";
+  document.getElementById("cardImageFile").value = "";
+  document.getElementById("cardImageUrl").value = "";
+  document.getElementById("clearImageCheck").checked = false;
   editingCardId = "";
   selectedCardId = "";
   updateSelectedCardLabel();
@@ -1523,6 +1728,24 @@ function updateRecordStatus(text){
   if(el) el.textContent = text;
 }
 
+async function getRecordingStream(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    throw new Error("getUserMedia não suportado");
+  }
+
+  const deviceId = data.settings.micDeviceId;
+  const constraints = deviceId
+    ? { audio: { deviceId: { exact: deviceId } } }
+    : { audio: true };
+
+  try{
+    return await navigator.mediaDevices.getUserMedia(constraints);
+  }catch(err){
+    console.warn("Falhou com dispositivo escolhido, tentando mic padrão.", err);
+    return await navigator.mediaDevices.getUserMedia({ audio:true });
+  }
+}
+
 async function startRecording(){
   if(!selectedCardId){
     alert("Clique em Editar em um cartão antes de gravar.");
@@ -1540,7 +1763,7 @@ async function startRecording(){
   }
 
   try{
-    recordingStream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    recordingStream = await getRecordingStream();
     recordingChunks = [];
     mediaRecorder = new MediaRecorder(recordingStream);
 
@@ -1550,7 +1773,8 @@ async function startRecording(){
       }
     };
 
-    mediaRecorder.onerror = () => {
+    mediaRecorder.onerror = (e) => {
+      console.error(e);
       updateRecordStatus("Erro na gravação.");
       stopRecordingSilently();
     };
@@ -1609,7 +1833,7 @@ function stopRecordingSilently(){
 
   if(mediaRecorder && mediaRecorder.state !== "inactive"){
     try{
-      mediaRecorder.onstop = null;
+      mediaRecorder.onstop = mediaRecorder.onstop;
       mediaRecorder.stop();
     }catch(e){}
   }
@@ -1687,6 +1911,9 @@ window.addEventListener("click", (e)=>{
 document.addEventListener("DOMContentLoaded", ()=>{
   if(data.settings.themeDark) document.body.classList.add("dark");
   renderAll();
+  refreshVoices();
+  setTimeout(refreshVoices, 600);
+  setTimeout(refreshVoices, 1500);
 });
 </script>
 </body>
